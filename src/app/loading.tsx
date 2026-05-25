@@ -3,43 +3,53 @@
 import React from 'react';
 import Image from 'next/image';
 
-const GREEN = '#3DAA35';
-
 export default function Loading() {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9999,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(15,17,23,0.85)', backdropFilter: 'blur(6px)',
+      background: '#fff',
     }}>
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
 
         {/* Logo */}
-        <div style={{ background: '#fff', borderRadius: 12, padding: '12px 20px', boxShadow: `0 0 40px rgba(61,170,53,0.25)` }}>
+        <div style={{ animation: 'atulya-pulse 2s ease-in-out infinite' }}>
           <Image
-            src="/sachdeva-logo.jpeg"
-            alt="Sachdeva Medline"
+            src="/atulya-logo.png"
+            alt="Atulya Medilink"
             width={160}
             height={52}
-            style={{ height: 48, width: 'auto', objectFit: 'contain', display: 'block' }}
+            style={{ height: 52, width: 'auto', objectFit: 'contain', display: 'block' }}
             priority
           />
         </div>
 
-        {/* Loading bar */}
-        <div style={{ width: 120, height: 3, background: 'rgba(255,255,255,0.12)', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: '45%', background: GREEN, borderRadius: 99,
-            animation: 'sm-loading 1s infinite linear',
-          }} />
+        {/* Animated dots */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              style={{
+                width: 8, height: 8, borderRadius: '50%', background: '#ff5f1f',
+                animation: `atulya-dot 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }}
+            />
+          ))}
         </div>
 
+        <p style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#9ca3af', fontWeight: 600 }}>
+          Natural · Pure · Effective
+        </p>
       </div>
 
       <style>{`
-        @keyframes sm-loading {
-          0%   { transform: translateX(-120%); }
-          100% { transform: translateX(360%); }
+        @keyframes atulya-dot {
+          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+          40%            { transform: scale(1.2); opacity: 1; }
+        }
+        @keyframes atulya-pulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.7; }
         }
       `}</style>
     </div>

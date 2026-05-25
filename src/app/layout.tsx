@@ -8,12 +8,13 @@ import Script from 'next/script';
 import AnnouncementBar from '../../components/anouncement';
 import { Suspense } from 'react';
 import Whatsapp from '../../components/Whatsapp';
-import Loading from './loading'; // Import the new loading component
+import Loading from './loading';
 import { AuthProvider } from '../../lib/auth-context';
+import { BrandProvider } from '../../lib/brand-context';
 
 export const metadata = {
-  title: 'Sachdeva Medline — Authorised Longfian Oxygen Concentrator Dealer',
-  description: 'India\'s trusted medical equipment provider since 1981. Authorised dealer for Longfian oxygen concentrators and patient beds. Pan-India delivery, genuine products, expert after-sale service.',
+  title: 'Atulya Medilink — Natural Cosmetics & Nutraceuticals',
+  description: 'Atulya Medilink Pvt Ltd — Premium natural cosmetics and clinical-grade nutraceuticals. Dermatologist-tested, cruelty-free products. Delhi, India.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -26,10 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
-        {/* Facebook Pixel Script - Updated */}
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -44,9 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             fbq('track', 'PageView');
           `}
         </Script>
-
-        {/* Google Analytics - Cleaned Up */}
-        <Script 
+        <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
           strategy="afterInteractive"
         />
@@ -58,8 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', '${gtagId}');
           `}
         </Script>
-
-        {/* Facebook Pixel noscript fallback */}
         <noscript>
           <img
             height="1"
@@ -72,35 +68,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="overflow-x-hidden overflow-y-scroll antialiased">
         <ReactQueryProvider>
-          <CartProvider>
-            <AuthProvider>
-            {/* 
-              Flex Layout Structure:
-              Ensures Footer stays at bottom and Content takes remaining space
-            */}
-            <div className="flex flex-col min-h-screen">
-              <AnnouncementBar />
-              <Header />
-              
-              {/* Main Content Area */}
-              <main className="flex-grow">
-                {/* Suspense Wrapper keeps Header/Footer visible while loading content */}
-                <Suspense fallback={<Loading />}>
-                  {children}
+          <BrandProvider>
+            <CartProvider>
+              <AuthProvider>
+                <div className="flex flex-col min-h-screen">
+                  <AnnouncementBar />
+                  <Header />
+                  <main className="flex-grow">
+                    <Suspense fallback={<Loading />}>
+                      {children}
+                    </Suspense>
+                  </main>
+                  <Footer />
+                </div>
+                <Whatsapp />
+                <Suspense fallback={null}>
+                  <FacebookPixel pixelId={1648859765778662} />
                 </Suspense>
-              </main>
-
-              <Footer />
-            </div>
-            
-            <Whatsapp/>
-            
-            {/* Facebook Pixel Route Tracking */}
-            <Suspense fallback={null}>
-              <FacebookPixel pixelId={1648859765778662} />
-            </Suspense>
-            </AuthProvider>
-          </CartProvider>
+              </AuthProvider>
+            </CartProvider>
+          </BrandProvider>
         </ReactQueryProvider>
       </body>
     </html>

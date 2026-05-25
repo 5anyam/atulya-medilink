@@ -3,83 +3,108 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useBrand } from '../../lib/brand-context';
 import { PRODUCTS, StaticProduct } from '../../lib/products-data';
-import { Star, ShieldCheck, Truck, Check, ChevronRight, Phone, Clock, Wrench, BadgeCheck, HeartPulse, Package } from 'lucide-react';
+import {
+  Star, ChevronRight, Leaf, ShieldCheck, Truck, Award, Sparkles, Pill,
+  FlaskConical, Heart, Package, BadgeCheck
+} from 'lucide-react';
 
-const GREEN = '#3DAA35';
-const PINK = '#E8175D';
-const DARK = '#0F1117';
-const BG = '#F5FAF4';
-
-function useReveal(threshold = 0.1) {
+function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) el.classList.add('visible'); }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) el.classList.add('visible'); },
+      { threshold: 0.08 }
+    );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold]);
+  }, []);
   return ref;
 }
 
-function StarRating({ rating }: { rating: number }) {
+function StarRating({ rating, size = 13 }: { rating: number; size?: number }) {
+  const { theme } = useBrand();
   return (
     <div style={{ display: 'flex', gap: 2 }}>
-      {[1,2,3,4,5].map((i) => (
-        <Star key={i} style={{ width: 13, height: 13, fill: i <= Math.round(rating) ? GREEN : '#dde8dd', color: i <= Math.round(rating) ? GREEN : '#dde8dd' }} />
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Star
+          key={i}
+          style={{
+            width: size, height: size,
+            fill: i <= Math.round(rating) ? theme.primary : '#e5e7eb',
+            color: i <= Math.round(rating) ? theme.primary : '#e5e7eb',
+          }}
+        />
       ))}
     </div>
   );
 }
 
 function ProductCard({ product }: { product: StaticProduct }) {
-  const discount = Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100);
+  const { theme } = useBrand();
+  const discount = product.regularPrice > product.price
+    ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
+    : 0;
+
   return (
     <Link
       href={`/product/${product.slug}`}
-      style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', border: `2px solid #e8f0e8`, boxShadow: '0 2px 12px rgba(61,170,53,0.08)', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s' }}
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(61,170,53,0.18)'; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(61,170,53,0.08)'; }}
+      style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', border: '1px solid #f0f0f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = `0 12px 32px rgba(${theme.primaryRgb},0.15)`; }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
     >
       {/* Image */}
-      <div style={{ position: 'relative', aspectRatio: '4/3', background: '#edf6ec', overflow: 'hidden' }}>
-        <Image src={product.images[0]} alt={product.name} fill style={{ objectFit: 'contain', padding: '12px', transition: 'transform 0.5s' }} sizes="(max-width: 768px) 100vw, 33vw" />
+      <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight, overflow: 'hidden' }}>
+        <Image
+          src={product.images[0]}
+          alt={product.name}
+          fill
+          style={{ objectFit: 'contain', padding: '20px', transition: 'transform 0.5s' }}
+          sizes="(max-width: 768px) 100vw, 33vw"
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; }}
+        />
         {product.badge && (
-          <span style={{ position: 'absolute', top: 12, left: 12, background: GREEN, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4 }}>
+          <span style={{ position: 'absolute', top: 12, left: 12, background: theme.primary, color: '#fff', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4, textTransform: 'uppercase' }}>
             {product.badge}
           </span>
         )}
         {discount > 0 && (
-          <span style={{ position: 'absolute', top: 12, right: 12, background: PINK, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 8px', borderRadius: 4 }}>
+          <span style={{ position: 'absolute', top: 12, right: 12, background: '#1a1a1a', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>
             {discount}% OFF
           </span>
         )}
       </div>
 
       {/* Info */}
-      <div style={{ padding: '20px 22px 22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <p style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: GREEN, marginBottom: 6, fontWeight: 600 }}>{product.category}</p>
-        <h3 style={{ fontSize: 20, fontWeight: 700, color: DARK, marginBottom: 6, lineHeight: 1.2, letterSpacing: '-0.01em' }}>{product.name}</h3>
-        <p style={{ fontSize: 13, color: 'rgba(15,17,23,0.55)', marginBottom: 12, lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.tagline}</p>
+      <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <p style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 6, fontWeight: 600 }}>{product.category}</p>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.25 }}>{product.name}</h3>
+        <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {product.tagline}
+        </p>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <StarRating rating={product.rating} />
-          <span style={{ fontSize: 11, color: 'rgba(15,17,23,0.4)' }}>({product.reviewCount} reviews)</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <StarRating rating={product.rating} size={12} />
+          <span style={{ fontSize: 11, color: '#9ca3af' }}>({product.reviewCount})</span>
         </div>
 
         <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 14 }}>
-            <span style={{ fontSize: 26, fontWeight: 800, color: DARK, letterSpacing: '-0.02em' }}>₹{product.price.toLocaleString('en-IN')}</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>₹{product.price.toLocaleString('en-IN')}</span>
             {product.regularPrice > product.price && (
-              <span style={{ fontSize: 14, color: 'rgba(15,17,23,0.35)', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
+              <span style={{ fontSize: 13, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
             )}
           </div>
-          <div style={{ background: GREEN, color: '#fff', textAlign: 'center', padding: '12px 16px', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = '#2e9128')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = GREEN)}
+          <div
+            style={{ background: theme.primary, color: '#fff', textAlign: 'center', padding: '11px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.2s' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
           >
-            VIEW DETAILS <ChevronRight size={14} />
+            VIEW PRODUCT <ChevronRight size={13} />
           </div>
         </div>
       </div>
@@ -88,93 +113,134 @@ function ProductCard({ product }: { product: StaticProduct }) {
 }
 
 function HeroSection() {
-  return (
-    <section style={{ background: DARK, position: 'relative', overflow: 'hidden', borderBottom: `4px solid ${GREEN}` }}>
-      {/* grid pattern */}
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(61,170,53,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(61,170,53,0.04) 1px, transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none' }} />
-      {/* Pink glow */}
-      <div style={{ position: 'absolute', top: -80, right: -80, width: 400, height: 400, background: `radial-gradient(circle, rgba(232,23,93,0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+  const { theme, mode } = useBrand();
 
-      <div className="hero-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '70px 40px 80px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 56, alignItems: 'center' }}>
+  const heroData = {
+    cosmetics: {
+      eyebrow: '✦ Natural Skincare Collection',
+      heading: ['SKINCARE', 'THAT', 'WORKS.'],
+      sub: 'Dermatologist-tested cosmetics crafted with natural ingredients. No harmful chemicals — just skin that looks and feels its best.',
+      chips: ['Cruelty Free', 'No Parabens', 'Dermatologist Tested'],
+      cta: 'Shop Cosmetics',
+    },
+    nutraceuticals: {
+      eyebrow: '✦ Clinical-Grade Supplements',
+      heading: ['WELLNESS', 'STARTS', 'INSIDE.'],
+      sub: 'Science-backed nutraceuticals formulated for daily health. GMP-certified, third-party tested — for nutrition you can trust.',
+      chips: ['GMP Certified', 'Third-Party Tested', 'No Artificial Colours'],
+      cta: 'Shop Supplements',
+    },
+  }[mode];
+
+  const featuredProduct = PRODUCTS.filter(p => p.type === mode).find(p => p.badge === 'Best Seller') || PRODUCTS.filter(p => p.type === mode)[0];
+
+  return (
+    <section
+      style={{
+        background: '#0f0f0f',
+        position: 'relative',
+        overflow: 'hidden',
+        minHeight: 580,
+      }}
+    >
+      {/* Glow blob */}
+      <div style={{ position: 'absolute', top: -120, right: -120, width: 560, height: 560, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.18) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -100, left: -60, width: 360, height: 360, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+
+      <div className="hero-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 40px 80px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 60, alignItems: 'center', position: 'relative', zIndex: 2 }}>
+
         {/* Left */}
         <div>
-          {/* Since badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(61,170,53,0.1)`, border: `1.5px solid rgba(61,170,53,0.35)`, color: GREEN, fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', padding: '6px 14px', borderRadius: 4, marginBottom: 28 }}>
-            ◆ Trusted Since 1981 — 45+ Years of Service
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(${theme.primaryRgb},0.12)`, border: `1px solid rgba(${theme.primaryRgb},0.3)`, color: theme.primary, fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '6px 14px', borderRadius: 4, marginBottom: 28 }}>
+            {heroData.eyebrow}
           </div>
 
-          <h1 style={{ fontSize: 'clamp(52px, 7.5vw, 108px)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.025em', marginBottom: 24 }}>
-            <span style={{ display: 'block', color: '#fff' }}>BREATHE</span>
-            <span style={{ display: 'block', color: 'transparent', WebkitTextStroke: `2.5px ${GREEN}` }}>BETTER.</span>
-            <span style={{ display: 'block', color: GREEN }}>LIVE</span>
-            <span style={{ display: 'block', color: '#fff', opacity: 0.9 }}>BETTER.</span>
+          <h1 style={{ fontSize: 'clamp(56px, 8vw, 112px)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.03em', marginBottom: 28, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+            {heroData.heading.map((line, i) => (
+              <span
+                key={i}
+                style={{
+                  display: 'block',
+                  color: i === 1 ? theme.primary : '#fff',
+                  WebkitTextStroke: i === 2 ? `2px rgba(255,255,255,0.2)` : undefined,
+                }}
+              >
+                {line}
+              </span>
+            ))}
           </h1>
 
-          <p style={{ fontSize: 15, fontWeight: 300, color: 'rgba(255,255,255,0.6)', lineHeight: 1.85, maxWidth: 420, marginBottom: 36 }}>
-            India&apos;s authorised dealer for <strong style={{ color: GREEN, fontWeight: 600 }}>Longfian Oxygen Concentrators</strong>. Genuine products, expert support, and pan-India delivery — straight to your doorstep.
+          <p style={{ fontSize: 15, fontWeight: 300, color: 'rgba(255,255,255,0.55)', lineHeight: 1.9, maxWidth: 440, marginBottom: 36 }}>
+            {heroData.sub}
           </p>
 
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
-            <Link href="/shop" style={{ background: GREEN, color: '#fff', padding: '14px 30px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: `0 4px 18px rgba(61,170,53,0.4)`, transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = `0 8px 24px rgba(61,170,53,0.5)`; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = `0 4px 18px rgba(61,170,53,0.4)`; }}
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
+            <Link href="/shop"
+              style={{ background: theme.primary, color: '#fff', padding: '14px 28px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: `0 4px 20px rgba(${theme.primaryRgb},0.4)` }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = `0 8px 28px rgba(${theme.primaryRgb},0.5)`; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = `0 4px 20px rgba(${theme.primaryRgb},0.4)`; }}
             >
-              SHOP NOW <ChevronRight size={15} />
+              {heroData.cta} <ChevronRight size={14} />
             </Link>
-            <a href="tel:+919999999999" style={{ color: '#fff', padding: '14px 30px', border: `1.5px solid rgba(255,255,255,0.25)`, borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'border-color 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(61,170,53,0.6)`)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(255,255,255,0.25)`)}
+            <Link href="/about"
+              style={{ color: 'rgba(255,255,255,0.8)', padding: '14px 28px', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.5)`)}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)')}
             >
-              <Phone size={14} /> CALL US
-            </a>
+              Our Story
+            </Link>
           </div>
 
-          {/* Trust chips */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            {[
-              { icon: BadgeCheck, label: 'Authorised Dealer' },
-              { icon: Truck, label: 'Pan-India Delivery' },
-              { icon: Wrench, label: 'After-Sale Service' },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '7px 14px', borderRadius: 6 }}>
-                <item.icon style={{ width: 14, height: 14, color: GREEN }} />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: '0.05em' }}>{item.label}</span>
-              </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {heroData.chips.map((chip) => (
+              <span key={chip} style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)', padding: '5px 12px', borderRadius: 20, letterSpacing: '0.06em' }}>
+                {chip}
+              </span>
             ))}
           </div>
         </div>
 
-        {/* Right — Logo card */}
-        <div className="hero-img-col" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: 380 }}>
-            {/* Decorative ring */}
-            <div style={{ position: 'absolute', inset: -16, border: `2px dashed rgba(61,170,53,0.25)`, borderRadius: 20, pointerEvents: 'none' }} />
-            <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(61,170,53,0.2)`, borderRadius: 16, padding: '48px 40px', backdropFilter: 'blur(8px)', textAlign: 'center' }}>
-              <div style={{ background: '#fff', borderRadius: 12, padding: '28px 24px', marginBottom: 28 }}>
-                <Image src="/sachdeva-logo.jpeg" alt="Sachdeva Medline" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+        {/* Right — Featured Product Card */}
+        <div className="hero-right" style={{ display: 'flex', justifyContent: 'center' }}>
+          {featuredProduct && (
+            <Link
+              href={`/product/${featuredProduct.slug}`}
+              style={{ textDecoration: 'none', width: '100%', maxWidth: 320 }}
+            >
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(${theme.primaryRgb},0.2)`, borderRadius: 20, padding: 24, backdropFilter: 'blur(10px)', transition: 'border-color 0.3s', cursor: 'pointer' }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.5)`)}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.2)`)}
+              >
+                <div style={{ background: theme.bgLight, borderRadius: 14, padding: 28, marginBottom: 18, aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image src={featuredProduct.images[0]} alt={featuredProduct.name} width={240} height={240} style={{ objectFit: 'contain', width: '100%', height: 'auto' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary }}>{featuredProduct.category}</span>
+                  {featuredProduct.badge && (
+                    <span style={{ background: theme.primary, color: '#fff', fontSize: 8, fontWeight: 700, padding: '3px 8px', borderRadius: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{featuredProduct.badge}</span>
+                  )}
+                </div>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.2 }}>{featuredProduct.name}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                  <StarRating rating={featuredProduct.rating} size={11} />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>({featuredProduct.reviewCount})</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>₹{featuredProduct.price}</span>
+                  {featuredProduct.regularPrice > featuredProduct.price && (
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textDecoration: 'line-through' }}>₹{featuredProduct.regularPrice}</span>
+                  )}
+                </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                {[
-                  { num: '45+', label: 'Years' },
-                  { num: '10K+', label: 'Units Sold' },
-                  { num: '500+', label: 'Cities' },
-                  { num: '100%', label: 'Genuine' },
-                ].map(s => (
-                  <div key={s.label} style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 8, padding: '14px 10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div style={{ fontSize: 26, fontWeight: 900, color: GREEN, lineHeight: 1 }}>{s.num}</div>
-                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 4 }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+            </Link>
+          )}
         </div>
       </div>
 
       <style>{`
         @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; padding: 44px 20px 52px !important; gap: 36px !important; }
-          .hero-img-col { display: none !important; }
+          .hero-grid { grid-template-columns: 1fr !important; padding: 48px 20px 56px !important; gap: 36px !important; }
+          .hero-right { display: none !important; }
         }
       `}</style>
     </section>
@@ -182,30 +248,40 @@ function HeroSection() {
 }
 
 function MarqueeBelt() {
-  const row1 = ['BREATHE BETTER', 'LIVE BETTER', 'TRUSTED SINCE 1981', 'PAN-INDIA DELIVERY', 'GENUINE PRODUCTS'];
-  const row2 = ['OXYGEN CONCENTRATORS', 'RECLINER BEDS', 'AUTHORISED DEALER', 'FREE HOME DELIVERY', 'EMI AVAILABLE'];
+  const { theme, mode } = useBrand();
+
+  const line1 = mode === 'cosmetics'
+    ? ['CLEAN BEAUTY', 'SKIN FIRST', 'CRUELTY FREE', 'DERMATOLOGIST TESTED', 'NO PARABENS']
+    : ['CLINICAL GRADE', 'SCIENCE BACKED', 'GMP CERTIFIED', 'THIRD-PARTY TESTED', 'NO ARTIFICIAL COLOURS'];
+
+  const line2 = mode === 'cosmetics'
+    ? ['NATURAL INGREDIENTS', 'DAILY SKINCARE', 'GLOWING SKIN', 'TRUSTED FORMULAS', 'MADE IN INDIA']
+    : ['DAILY WELLNESS', 'IMMUNITY BOOST', 'PURE FORMULAS', 'TRUSTED QUALITY', 'MADE IN INDIA'];
+
   return (
-    <div style={{ borderTop: `3px solid ${DARK}`, borderBottom: `3px solid ${DARK}` }}>
-      <div style={{ overflow: 'hidden', borderBottom: `2px solid ${DARK}`, background: GREEN, padding: '10px 0' }}>
-        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-fwd 20s linear infinite' }}>
+    <div style={{ borderTop: '2px solid #111', borderBottom: '2px solid #111', overflow: 'hidden' }}>
+      {/* Line 1 — theme color bg */}
+      <div style={{ background: theme.primary, padding: '10px 0', overflow: 'hidden', borderBottom: '2px solid #111' }}>
+        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-fwd 22s linear infinite' }}>
           {[...Array(2)].map((_, r) => (
             <span key={r} style={{ display: 'inline-flex' }}>
-              {row1.map((t) => (
-                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '0 22px', fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#fff' }}>
-                  {t} <span style={{ fontSize: 12 }}>◆</span>
+              {line1.map((t) => (
+                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '0 22px', fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#fff' }}>
+                  {t} <span style={{ fontSize: 10, opacity: 0.5 }}>◆</span>
                 </span>
               ))}
             </span>
           ))}
         </div>
       </div>
-      <div style={{ overflow: 'hidden', background: DARK, padding: '10px 0' }}>
-        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-rev 16s linear infinite' }}>
+      {/* Line 2 — dark bg */}
+      <div style={{ background: '#111', padding: '10px 0', overflow: 'hidden' }}>
+        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-rev 18s linear infinite' }}>
           {[...Array(2)].map((_, r) => (
             <span key={r} style={{ display: 'inline-flex' }}>
-              {row2.map((t) => (
-                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '0 22px', fontSize: 13, fontWeight: 700, letterSpacing: '0.18em', color: GREEN }}>
-                  {t} <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)' }}>▶</span>
+              {line2.map((t) => (
+                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '0 22px', fontSize: 11, fontWeight: 600, letterSpacing: '0.18em', color: theme.primary }}>
+                  {t} <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)' }}>▶</span>
                 </span>
               ))}
             </span>
@@ -217,20 +293,30 @@ function MarqueeBelt() {
 }
 
 function TrustBar() {
-  const items = [
-    { icon: BadgeCheck, label: 'Authorised Longfian Dealer' },
-    { icon: ShieldCheck, label: 'ISO Certified Products' },
-    { icon: Truck, label: 'Free Pan-India Delivery' },
-    { icon: Wrench, label: 'After-Sale Service' },
-    { icon: Clock, label: 'Fast Dispatch in 24 hrs' },
-  ];
+  const { theme, mode } = useBrand();
+  const items = mode === 'cosmetics'
+    ? [
+        { icon: Leaf, label: 'Natural Ingredients' },
+        { icon: ShieldCheck, label: 'Dermatologist Tested' },
+        { icon: Heart, label: 'Cruelty Free' },
+        { icon: Truck, label: 'Free Delivery ₹499+' },
+        { icon: Award, label: 'No Harmful Chemicals' },
+      ]
+    : [
+        { icon: FlaskConical, label: 'Clinical Grade' },
+        { icon: ShieldCheck, label: 'GMP Certified' },
+        { icon: BadgeCheck, label: 'Third-Party Tested' },
+        { icon: Truck, label: 'Free Delivery ₹499+' },
+        { icon: Package, label: 'Pure Formulas' },
+      ];
+
   return (
-    <section style={{ background: '#fff', borderBottom: `2px solid #e8f0e8` }}>
+    <section style={{ background: '#fff', borderBottom: '1px solid #f0f0f0' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '14px 32px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px 36px', alignItems: 'center' }}>
           {items.map((item, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: DARK }}>
-              <item.icon style={{ width: 15, height: 15, color: GREEN }} />
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#374151' }}>
+              <item.icon style={{ width: 14, height: 14, color: theme.primary }} />
               {item.label}
             </div>
           ))}
@@ -241,30 +327,201 @@ function TrustBar() {
 }
 
 function ProductsSection() {
-  const ref = useReveal(0.1);
+  const { theme, mode } = useBrand();
+  const ref = useReveal();
+  const products = PRODUCTS.filter(p => p.type === mode).slice(0, 4);
+
   return (
-    <section style={{ padding: '80px 0', background: BG }} id="products">
+    <section style={{ padding: '80px 0', background: '#fafafa' }} id="products">
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
 
         <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
-          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: GREEN, fontWeight: 600, display: 'block', marginBottom: 10 }}>◆ Our Equipment</span>
+          <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 600, display: 'block', marginBottom: 10 }}>
+            ✦ {mode === 'cosmetics' ? 'Skincare & Beauty' : 'Health & Wellness'}
+          </span>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
-            <h2 style={{ fontSize: 'clamp(40px,5.5vw,72px)', fontWeight: 900, letterSpacing: '-0.025em', color: DARK, lineHeight: 1 }}>
-              MEDICAL EQUIPMENT<br />
-              <span style={{ color: GREEN }}>YOU CAN TRUST.</span>
+            <h2 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+              {mode === 'cosmetics' ? 'TOP PICKS FOR' : 'BESTSELLING'}<br />
+              <span style={{ color: theme.primary }}>{mode === 'cosmetics' ? 'YOUR SKIN.' : 'SUPPLEMENTS.'}</span>
             </h2>
-            <Link href="/shop" style={{ background: DARK, color: '#fff', padding: '12px 26px', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = GREEN)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = DARK)}
+            <Link href="/shop"
+              style={{ background: '#111', color: '#fff', padding: '12px 24px', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
             >
               VIEW ALL →
             </Link>
           </div>
         </div>
 
-        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+          {products.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CategoryBanner() {
+  const { mode, setMode } = useBrand();
+  const ref = useReveal();
+
+  return (
+    <section ref={ref} className="reveal" style={{ background: '#fff', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0' }}>
+      <div className="cat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', maxWidth: 1280, margin: '0 auto' }}>
+
+        {/* Cosmetics block */}
+        <div
+          onClick={() => setMode('cosmetics')}
+          style={{
+            padding: '64px 48px',
+            background: mode === 'cosmetics' ? '#ff5f1f' : '#fff',
+            cursor: 'pointer',
+            transition: 'background 0.35s ease',
+            borderRight: '1px solid #f0f0f0',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: mode === 'cosmetics' ? 'rgba(255,255,255,0.1)' : 'rgba(255,95,31,0.06)', transition: 'all 0.35s' }} />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ width: 48, height: 48, background: mode === 'cosmetics' ? 'rgba(255,255,255,0.15)' : 'rgba(255,95,31,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <Sparkles style={{ color: mode === 'cosmetics' ? '#fff' : '#ff5f1f' }} size={22} />
+            </div>
+            <p style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', fontWeight: 700, color: mode === 'cosmetics' ? 'rgba(255,255,255,0.7)' : '#9ca3af', marginBottom: 10 }}>CATEGORY</p>
+            <h3 style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 900, color: mode === 'cosmetics' ? '#fff' : '#111', lineHeight: 1, marginBottom: 14, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+              Cosmetics
+            </h3>
+            <p style={{ fontSize: 14, color: mode === 'cosmetics' ? 'rgba(255,255,255,0.75)' : '#6b7280', lineHeight: 1.7, maxWidth: 280, marginBottom: 28 }}>
+              Natural skincare, face care, hair care and body care — dermatologist tested, cruelty-free.
+            </p>
+            <span
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                color: mode === 'cosmetics' ? '#fff' : '#ff5f1f',
+                border: `1.5px solid ${mode === 'cosmetics' ? 'rgba(255,255,255,0.4)' : '#ff5f1f'}`,
+                padding: '10px 20px', borderRadius: 8,
+              }}
+            >
+              SHOP COSMETICS <ChevronRight size={13} />
+            </span>
+          </div>
+        </div>
+
+        {/* Nutraceuticals block */}
+        <div
+          onClick={() => setMode('nutraceuticals')}
+          style={{
+            padding: '64px 48px',
+            background: mode === 'nutraceuticals' ? '#0d9488' : '#fff',
+            cursor: 'pointer',
+            transition: 'background 0.35s ease',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: mode === 'nutraceuticals' ? 'rgba(255,255,255,0.1)' : 'rgba(13,148,136,0.06)', transition: 'all 0.35s' }} />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ width: 48, height: 48, background: mode === 'nutraceuticals' ? 'rgba(255,255,255,0.15)' : 'rgba(13,148,136,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <Pill style={{ color: mode === 'nutraceuticals' ? '#fff' : '#0d9488' }} size={22} />
+            </div>
+            <p style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', fontWeight: 700, color: mode === 'nutraceuticals' ? 'rgba(255,255,255,0.7)' : '#9ca3af', marginBottom: 10 }}>CATEGORY</p>
+            <h3 style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 900, color: mode === 'nutraceuticals' ? '#fff' : '#111', lineHeight: 1, marginBottom: 14, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+              Nutraceuticals
+            </h3>
+            <p style={{ fontSize: 14, color: mode === 'nutraceuticals' ? 'rgba(255,255,255,0.75)' : '#6b7280', lineHeight: 1.7, maxWidth: 280, marginBottom: 28 }}>
+              Clinical-grade vitamins, supplements and Ayurvedic formulations — science-backed, GMP certified.
+            </p>
+            <span
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                color: mode === 'nutraceuticals' ? '#fff' : '#0d9488',
+                border: `1.5px solid ${mode === 'nutraceuticals' ? 'rgba(255,255,255,0.4)' : '#0d9488'}`,
+                padding: '10px 20px', borderRadius: 8,
+              }}
+            >
+              SHOP SUPPLEMENTS <ChevronRight size={13} />
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AllProductsPreview() {
+  const { mode } = useBrand();
+  const ref = useReveal();
+  const otherMode = mode === 'cosmetics' ? 'nutraceuticals' : 'cosmetics';
+  const otherProducts = PRODUCTS.filter(p => p.type === otherMode).slice(0, 4);
+
+  return (
+    <section style={{ padding: '80px 0', background: '#fff' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+        <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
+          <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: 10 }}>✦ Also Available</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+            <h2 style={{ fontSize: 'clamp(32px,4.5vw,56px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+              EXPLORE<br />
+              <span style={{ color: otherMode === 'cosmetics' ? '#ff5f1f' : '#0d9488' }}>
+                {otherMode === 'cosmetics' ? 'COSMETICS.' : 'NUTRACEUTICALS.'}
+              </span>
+            </h2>
+            <Link href="/shop"
+              style={{ background: otherMode === 'cosmetics' ? '#ff5f1f' : '#0d9488', color: '#fff', padding: '12px 24px', borderRadius: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            >
+              SEE ALL →
+            </Link>
+          </div>
+        </div>
+        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+          {otherProducts.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhySection() {
+  const { theme, mode } = useBrand();
+  const ref = useReveal();
+
+  const features = mode === 'cosmetics'
+    ? [
+        { icon: Leaf, title: 'Natural Formulas', desc: 'Each product is crafted with plant-based, natural ingredients free from harmful chemicals, sulphates and parabens.' },
+        { icon: ShieldCheck, title: 'Dermatologist Tested', desc: 'Every product undergoes rigorous dermatological testing to ensure it is safe for all skin types, including sensitive skin.' },
+        { icon: Heart, title: 'Cruelty Free', desc: 'We never test on animals. Our products are certified cruelty-free and ethically produced from start to finish.' },
+      ]
+    : [
+        { icon: FlaskConical, title: 'Clinical Grade', desc: 'Our nutraceuticals are formulated using clinical-grade ingredients with scientifically validated dosages for real results.' },
+        { icon: ShieldCheck, title: 'GMP Certified', desc: 'All our supplements are manufactured in GMP-certified facilities under strict quality control protocols.' },
+        { icon: BadgeCheck, title: 'Third-Party Tested', desc: 'Each batch is independently tested for purity, potency and safety — you get exactly what is on the label.' },
+      ];
+
+  return (
+    <section style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 32px' }}>
+        <div ref={ref} className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
+          <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 600, display: 'block', marginBottom: 12 }}>✦ The Atulya Difference</span>
+          <h2 style={{ fontSize: 'clamp(32px,4.5vw,56px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+            WHY CHOOSE<br /><span style={{ color: theme.primary }}>ATULYA?</span>
+          </h2>
+        </div>
+
+        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {features.map((f, i) => (
+            <div
+              key={i}
+              style={{ background: '#fff', borderRadius: 14, padding: '36px 30px', border: '1px solid #f0f0f0', transition: 'box-shadow 0.2s, transform 0.2s' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow = `0 8px 24px rgba(${theme.primaryRgb},0.1)`; el.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow = 'none'; el.style.transform = 'none'; }}
+            >
+              <div style={{ width: 48, height: 48, background: theme.bgLight, border: `1.5px solid ${theme.border}`, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <f.icon style={{ width: 22, height: 22, color: theme.primary }} />
+              </div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 12, letterSpacing: '-0.01em' }}>{f.title}</h3>
+              <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8 }}>{f.desc}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -273,22 +530,24 @@ function ProductsSection() {
 }
 
 function StatsBar() {
-  const ref = useReveal(0.15);
+  const { theme } = useBrand();
+  const ref = useReveal();
   const stats = [
-    { num: '45+', label: 'Years in Business' },
-    { num: '10,000+', label: 'Units Delivered' },
-    { num: '500+', label: 'Cities Served' },
-    { num: '100%', label: 'Genuine Products' },
+    { num: '5,000+', label: 'Happy Customers' },
+    { num: '50+', label: 'Products' },
+    { num: '100%', label: 'Natural' },
+    { num: '4.7★', label: 'Avg. Rating' },
   ];
+
   return (
-    <section style={{ background: GREEN, borderTop: `3px solid ${DARK}`, borderBottom: `3px solid ${DARK}`, padding: '48px 40px' }}>
+    <section style={{ background: theme.primary, padding: '52px 40px', borderTop: '2px solid #111', borderBottom: '2px solid #111' }}>
       <div ref={ref} className="reveal" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap', gap: 24 }}>
         {stats.map((s, i) => (
           <React.Fragment key={s.label}>
-            {i > 0 && <div style={{ width: 1, height: 52, background: 'rgba(255,255,255,0.3)', flexShrink: 0 }} />}
+            {i > 0 && <div style={{ width: 1, height: 48, background: 'rgba(255,255,255,0.25)', flexShrink: 0 }} />}
             <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: 'clamp(44px,5vw,72px)', fontWeight: 900, color: '#fff', display: 'block', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.num}</span>
-              <p style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)', marginTop: 6, fontWeight: 500 }}>{s.label}</p>
+              <span style={{ fontSize: 'clamp(40px,5vw,68px)', fontWeight: 900, color: '#fff', display: 'block', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.num}</span>
+              <p style={{ fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', marginTop: 6, fontWeight: 500 }}>{s.label}</p>
             </div>
           </React.Fragment>
         ))}
@@ -297,123 +556,37 @@ function StatsBar() {
   );
 }
 
-const whyItems = [
-  { icon: BadgeCheck, title: 'Authorised Dealer', desc: 'Official and authorised dealer for Longfian Science — guaranteed genuine equipment with full manufacturer warranty.', num: '01' },
-  { icon: HeartPulse, title: 'Expert Guidance', desc: 'Our trained biomedical team helps you choose the right equipment for your specific medical condition and prescription.', num: '02' },
-  { icon: Truck, title: 'Pan-India Delivery', desc: 'Fast and safe delivery across India. Dispatched within 24 hours, fully insured, with real-time tracking.', num: '03' },
-  { icon: Wrench, title: 'After-Sale Service', desc: 'Dedicated service network for maintenance, spare parts, and troubleshooting — long after your purchase.', num: '04' },
-  { icon: Package, title: 'Genuine Products Only', desc: 'Every unit is brand new, sealed, and comes with full documentation — no refurbished or grey-market goods.', num: '05' },
-  { icon: ShieldCheck, title: 'Warranty Backed', desc: 'All Longfian concentrators come with manufacturer warranty. We assist with claims from day one.', num: '06' },
-];
-
-function WhySection() {
-  return (
-    <section style={{ background: '#fff', borderBottom: `3px solid ${DARK}` }} id="why">
-      <div style={{ borderBottom: `2px solid #e8f0e8`, padding: '52px 40px', background: `linear-gradient(135deg,#edf6ec,#f5faf4)`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
-        <div>
-          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: GREEN, fontWeight: 600, display: 'block', marginBottom: 10 }}>◆ The Sachdeva Medline Difference</span>
-          <h2 style={{ fontSize: 'clamp(40px,5.5vw,72px)', fontWeight: 900, letterSpacing: '-0.025em', color: DARK, lineHeight: 1 }}>
-            TRUSTED BY<br /><span style={{ color: GREEN }}>THOUSANDS.</span>
-          </h2>
-        </div>
-        <Link href="/contact" style={{ background: DARK, color: '#fff', padding: '14px 30px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 0.2s' }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = GREEN)}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = DARK)}
-        >
-          CONTACT US →
-        </Link>
-      </div>
-      <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-        {whyItems.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              padding: '40px 32px',
-              borderRight: (i + 1) % 3 !== 0 ? `2px solid #e8f0e8` : 'none',
-              borderBottom: i < 3 ? `2px solid #e8f0e8` : 'none',
-              position: 'relative', overflow: 'hidden', cursor: 'default',
-              transition: 'background 0.2s',
-            }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = BG)}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#fff')}
-          >
-            <span style={{ position: 'absolute', top: -8, right: 16, fontSize: 80, fontWeight: 900, color: `rgba(61,170,53,0.05)`, lineHeight: 1, pointerEvents: 'none', letterSpacing: '-0.02em' }}>{item.num}</span>
-            <div style={{ width: 44, height: 44, background: `rgba(61,170,53,0.1)`, border: `1.5px solid rgba(61,170,53,0.25)`, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-              <item.icon style={{ width: 20, height: 20, color: GREEN }} />
-            </div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em', color: DARK, marginBottom: 10 }}>{item.title}</h3>
-            <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(15,17,23,0.55)', lineHeight: 1.85 }}>{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function HowToOrderSection() {
-  return (
-    <section className="how-section" style={{ padding: '80px 48px', background: BG, borderBottom: `2px solid #e8f0e8` }}>
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
-          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: GREEN, fontWeight: 600, display: 'block', marginBottom: 12 }}>◆ Simple Process</span>
-          <h2 style={{ fontSize: 'clamp(40px,5vw,68px)', fontWeight: 900, letterSpacing: '-0.025em', color: DARK, lineHeight: 1 }}>
-            ORDER IN<br /><span style={{ color: GREEN }}>4 EASY STEPS.</span>
-          </h2>
-        </div>
-        <div className="how-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: `2px solid #e8f0e8`, borderRadius: 12, overflow: 'hidden' }}>
-          {[
-            { step: '01', title: 'Browse Products', desc: 'Explore our range of Longfian oxygen concentrators and recliner beds.' },
-            { step: '02', title: 'Call or WhatsApp', desc: 'Confirm your requirement and get expert guidance from our team.' },
-            { step: '03', title: 'Easy Payment', desc: 'Pay online, via UPI, or choose EMI — quick and secure checkout.' },
-            { step: '04', title: 'Doorstep Delivery', desc: 'Dispatched within 24 hrs. Delivered safely with installation guidance.' },
-          ].map((item, i) => (
-            <div key={i} style={{ padding: '36px 26px', textAlign: 'center', borderRight: i < 3 ? `2px solid #e8f0e8` : 'none', background: i % 2 === 0 ? '#fff' : BG }}>
-              <div style={{ width: 52, height: 52, background: GREEN, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px', boxShadow: `0 4px 12px rgba(61,170,53,0.3)` }}>
-                <span style={{ fontSize: 20, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>{item.step}</span>
-              </div>
-              <h4 style={{ fontSize: 16, fontWeight: 700, color: DARK, marginBottom: 10 }}>{item.title}</h4>
-              <p style={{ fontSize: 12, color: 'rgba(15,17,23,0.55)', lineHeight: 1.75 }}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function CTASection() {
+  const { theme, mode } = useBrand();
   return (
-    <section style={{ background: DARK, padding: '80px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(61,170,53,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(61,170,53,0.05) 1px, transparent 1px)`, backgroundSize: '40px 40px', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, background: `radial-gradient(circle, rgba(232,23,93,0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
-      <div style={{ maxWidth: 680, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(61,170,53,0.1)`, border: `1.5px solid rgba(61,170,53,0.3)`, color: GREEN, fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', padding: '6px 14px', borderRadius: 4, marginBottom: 24 }}>
-          ◆ We&apos;re Here to Help
+    <section style={{ background: '#0f0f0f', padding: '80px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '40px 40px', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -80, right: -80, width: 400, height: 400, background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+      <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(${theme.primaryRgb},0.1)`, border: `1px solid rgba(${theme.primaryRgb},0.3)`, color: theme.primary, fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', padding: '6px 14px', borderRadius: 4, marginBottom: 24, textTransform: 'uppercase' }}>
+          ✦ Start Your Journey
         </div>
-        <h2 style={{ fontSize: 'clamp(44px,6.5vw,88px)', fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 20, letterSpacing: '-0.025em' }}>
-          NEED HELP<br /><span style={{ color: GREEN }}>CHOOSING?</span><br />CALL US.
+        <h2 style={{ fontSize: 'clamp(40px,6.5vw,80px)', fontWeight: 900, color: '#fff', lineHeight: 0.95, marginBottom: 20, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+          {mode === 'cosmetics' ? 'YOUR BEST SKIN' : 'YOUR BEST HEALTH'}<br />
+          <span style={{ color: theme.primary }}>STARTS TODAY.</span>
         </h2>
-        <p style={{ fontSize: 15, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginBottom: 40, lineHeight: 1.75 }}>
-          Our experts will guide you to the right oxygen concentrator for your prescription and budget — no pushy sales, just honest advice.
+        <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.45)', marginBottom: 36, lineHeight: 1.85 }}>
+          {mode === 'cosmetics'
+            ? 'Discover skincare that works with your skin, not against it. Made with love, backed by science.'
+            : 'Give your body the nutrition it deserves. Clinical-grade supplements for a healthier you.'}
         </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', marginBottom: 40 }}>
-          <Link href="/shop" style={{ background: GREEN, color: '#fff', padding: '15px 32px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none', boxShadow: `0 4px 18px rgba(61,170,53,0.4)`, transition: 'transform 0.2s, box-shadow 0.2s' }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = `0 8px 28px rgba(61,170,53,0.5)`; }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = `0 4px 18px rgba(61,170,53,0.4)`; }}
-          >
-            EXPLORE PRODUCTS →
-          </Link>
-          <Link href="/contact" style={{ color: '#fff', padding: '15px 32px', border: `1.5px solid rgba(255,255,255,0.25)`, borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(61,170,53,0.5)`)}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(255,255,255,0.25)`)}
-          >
-            CONTACT US
-          </Link>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, flexWrap: 'wrap' }}>
-          {['Free Delivery', 'Genuine Products', 'Secure Payment', 'EMI Available'].map((t) => (
-            <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em' }}>
-              <Check style={{ width: 12, height: 12, color: GREEN }} /> {t}
+        <Link href="/shop"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: theme.primary, color: '#fff', padding: '15px 32px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none', boxShadow: `0 4px 20px rgba(${theme.primaryRgb},0.4)`, transition: 'transform 0.2s, box-shadow 0.2s' }}
+          onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = `0 8px 28px rgba(${theme.primaryRgb},0.5)`; }}
+          onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = `0 4px 20px rgba(${theme.primaryRgb},0.4)`; }}
+        >
+          EXPLORE ALL PRODUCTS →
+        </Link>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, flexWrap: 'wrap', marginTop: 36 }}>
+          {['Free Delivery', 'Natural Ingredients', 'Secure Payment', 'Easy Returns'].map((t) => (
+            <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: theme.primary, display: 'inline-block' }} /> {t}
             </span>
           ))}
         </div>
@@ -424,35 +597,35 @@ function CTASection() {
 
 export default function Homepage() {
   return (
-    <div style={{ minHeight: '100vh', background: BG, overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: '#fff', overflow: 'hidden' }}>
       <HeroSection />
       <MarqueeBelt />
       <TrustBar />
       <ProductsSection />
-      <StatsBar />
+      <CategoryBanner />
+      <AllProductsPreview />
       <WhySection />
-      <HowToOrderSection />
+      <StatsBar />
       <CTASection />
 
       <style>{`
         @keyframes mq-fwd { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes mq-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
-        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
         .reveal.visible { opacity: 1; transform: none; }
 
-        @media (max-width: 900px) {
+        @media (max-width: 960px) {
           .products-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; }
-          .how-section { padding: 48px 20px !important; }
-          .how-grid { grid-template-columns: 1fr 1fr !important; }
+          .cat-grid { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 600px) {
-          .products-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 560px) {
+          .products-grid { grid-template-columns: 1fr 1fr !important; }
           .why-grid { grid-template-columns: 1fr !important; }
-          .how-grid { grid-template-columns: 1fr !important; }
-          .how-grid > div { border-right: none !important; border-bottom: 2px solid #e8f0e8 !important; }
-          .why-grid > div { border-right: none !important; }
+        }
+        @media (max-width: 420px) {
+          .products-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

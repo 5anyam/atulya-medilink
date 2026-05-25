@@ -1,31 +1,33 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useBrand } from '../lib/brand-context';
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { theme, mode } = useBrand();
 
   const handleClose = () => {
     setIsAnimating(true);
-    setTimeout(() => {
-      setIsVisible(false);
-    }, 300);
+    setTimeout(() => setIsVisible(false), 300);
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleClose();
-    }, 30000);
+    const timer = setTimeout(handleClose, 30000);
     return () => clearTimeout(timer);
   }, []);
 
   if (!isVisible) return null;
 
+  const message = mode === 'cosmetics'
+    ? '✦ Free Delivery on orders above ₹499 &nbsp;|&nbsp; Dermatologist Tested &nbsp;|&nbsp; Cruelty Free'
+    : '✦ Free Delivery on orders above ₹499 &nbsp;|&nbsp; GMP Certified &nbsp;|&nbsp; Third-Party Tested';
+
   return (
     <div
       style={{
-        background: '#3DAA35',
+        background: theme.primary,
         color: '#fff',
         padding: '9px 16px',
         position: 'relative',
@@ -37,9 +39,10 @@ export default function AnnouncementBar() {
     >
       <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div style={{ flex: 1 }} />
-        <p style={{ fontSize: 13, fontWeight: 600, textAlign: 'center', letterSpacing: '0.02em' }}>
-          🚚 Free Pan-India Delivery on all orders &nbsp;|&nbsp; 🏥 Authorised Longfian Dealer &nbsp;|&nbsp; 📞 Call for expert guidance
-        </p>
+        <p
+          style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', letterSpacing: '0.04em' }}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={handleClose}

@@ -1,24 +1,25 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from 'react-icons/fa';
-
-const GREEN = '#3DAA35';
-const DARK = '#0F1117';
+import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaLinkedinIn } from 'react-icons/fa';
+import { useBrand } from '../lib/brand-context';
 
 export default function Footer() {
+  const { theme } = useBrand();
+  const DARK = '#0f0f0f';
+
   return (
-    <footer style={{ background: DARK, borderTop: `4px solid ${GREEN}` }}>
+    <footer style={{ background: DARK, borderTop: `3px solid ${theme.primary}` }}>
 
       {/* ── Marquee belt ── */}
-      <div style={{ overflow: 'hidden', borderBottom: '2px solid rgba(255,255,255,0.06)', padding: '12px 0' }}>
-        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-fwd 24s linear infinite' }}>
+      <div style={{ overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '11px 0' }}>
+        <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-fwd 26s linear infinite' }}>
           {[...Array(2)].map((_, r) => (
             <span key={r} style={{ display: 'inline-flex' }}>
-              {['AUTHORISED LONGFIAN DEALER', 'TRUSTED SINCE 1981', 'PAN-INDIA DELIVERY', 'GENUINE PRODUCTS ONLY', 'EXPERT AFTER-SALE SERVICE'].map((t) => (
-                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 16, padding: '0 24px', fontSize: 10, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+              {['ATULYA MEDILINK', 'NATURAL COSMETICS', 'CLINICAL NUTRACEUTICALS', 'CRUELTY FREE', 'GMP CERTIFIED', 'MADE IN INDIA'].map((t) => (
+                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 16, padding: '0 24px', fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
                   {t}
-                  <span style={{ color: GREEN, fontSize: 6 }}>◆</span>
+                  <span style={{ color: theme.primary, fontSize: 6 }}>◆</span>
                 </span>
               ))}
             </span>
@@ -27,30 +28,45 @@ export default function Footer() {
       </div>
 
       {/* ── Main content ── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 32px 40px' }}>
-        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: '40px 32px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 32px 44px' }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr 1fr 1fr', gap: '40px 32px' }}>
 
           {/* Brand */}
           <div>
             <Link href="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: 20 }}>
-              <div style={{ background: '#fff', borderRadius: 8, padding: '10px 16px', display: 'inline-block' }}>
-                <Image src="/sachdeva-logo.jpeg" alt="Sachdeva Medline" width={180} height={56} style={{ height: 46, width: 'auto', objectFit: 'contain', display: 'block' }} />
+              <div style={{ background: '#fff', borderRadius: 10, padding: '10px 18px', display: 'inline-block' }}>
+                <Image
+                  src="/atulya-logo.png"
+                  alt="Atulya Medilink"
+                  width={160}
+                  height={48}
+                  style={{ height: 40, width: 'auto', objectFit: 'contain', display: 'block' }}
+                />
               </div>
             </Link>
-            <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.45)', lineHeight: 1.85, marginBottom: 24, maxWidth: 260 }}>
-              Authorised dealer for Longfian oxygen concentrators and medical equipment. Serving India since 1981 with genuine products and expert service.
+            <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', lineHeight: 1.85, marginBottom: 10, maxWidth: 260 }}>
+              Natural cosmetics and clinical-grade nutraceuticals — formulated for your health and beauty.
+            </p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.7, maxWidth: 260, marginBottom: 24 }}>
+              Unit-604, Ring Road Mall Manglam Place Plot 21,<br />Sector-3 Rohini, Delhi — 110085
             </p>
             <div style={{ display: 'flex', gap: 8 }}>
               {[
-                { href: '#', icon: <FaFacebookF size={13} /> },
-                { href: '#', icon: <FaInstagram size={13} /> },
-                { href: '#', icon: <FaYoutube size={13} /> },
-                { href: 'https://wa.me/919891521090', icon: <FaWhatsapp size={13} /> },
-              ].map(({ href, icon }, i) => (
-                <Link key={i} href={href} target="_blank" rel="noopener noreferrer"
-                  style={{ width: 34, height: 34, border: '1.5px solid rgba(255,255,255,0.15)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s, background 0.2s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.color = GREEN; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}
+                { href: '#', icon: <FaFacebookF size={12} />, label: 'Facebook' },
+                { href: '#', icon: <FaInstagram size={12} />, label: 'Instagram' },
+                { href: '#', icon: <FaYoutube size={12} />, label: 'YouTube' },
+                { href: '#', icon: <FaLinkedinIn size={12} />, label: 'LinkedIn' },
+                { href: 'https://wa.me/911141447223', icon: <FaWhatsapp size={12} />, label: 'WhatsApp' },
+              ].map(({ href, icon, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  style={{ width: 34, height: 34, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = theme.primary; e.currentTarget.style.color = theme.primary; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
                 >
                   {icon}
                 </Link>
@@ -60,19 +76,22 @@ export default function Footer() {
 
           {/* Products */}
           <div>
-            <h4 style={{ fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: GREEN, marginBottom: 20, fontWeight: 700 }}>PRODUCTS</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>PRODUCTS</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                { name: 'Longfian JAY-5 (5 LPM)', to: '/product/longfian-jay-5' },
-                { name: 'Longfian JAY-10 (10 LPM)', to: '/product/longfian-jay-10' },
-                { name: 'Longfian JAY-5W (Wheels)', to: '/product/longfian-jay-5w' },
-                { name: 'Electric Recliner Bed', to: '/product/electric-recliner-bed' },
+                { name: 'Cosmetics', to: '/shop?type=cosmetics' },
+                { name: 'Nutraceuticals', to: '/shop?type=nutraceuticals' },
+                { name: 'Face Care', to: '/shop?cat=face' },
+                { name: 'Hair Care', to: '/shop?cat=hair' },
+                { name: 'Vitamins & Supplements', to: '/shop?cat=vitamins' },
                 { name: 'All Products', to: '/shop' },
               ].map(({ name, to }) => (
                 <li key={name}>
-                  <Link href={to} style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = GREEN)}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+                  <Link
+                    href={to}
+                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
                   >
                     {name}
                   </Link>
@@ -81,21 +100,24 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Company */}
           <div>
-            <h4 style={{ fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: GREEN, marginBottom: 20, fontWeight: 700 }}>LEGAL</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>COMPANY</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
+                { name: 'About Us', to: '/about' },
+                { name: 'Blog', to: '/blog' },
                 { name: 'Privacy Policy', to: '/privacy-policy' },
                 { name: 'Terms & Conditions', to: '/terms-and-conditions' },
                 { name: 'Returns & Refunds', to: '/returns-and-refunds-policy' },
                 { name: 'Disclaimer', to: '/disclaimer' },
-                { name: 'About Us', to: '/about' },
               ].map(({ name, to }) => (
                 <li key={name}>
-                  <Link href={to} style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = GREEN)}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+                  <Link
+                    href={to}
+                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
                   >
                     {name}
                   </Link>
@@ -106,17 +128,17 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 style={{ fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: GREEN, marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { label: 'Email', val: 'info@sachdevamedline.com' },
-                { label: 'Phone', val: '+91 98915 21090' },
-                { label: 'WhatsApp', val: '+91 98915 21090' },
-                { label: 'Address', val: 'Sultanpuri, Delhi – 110041' },
+                { label: 'Phone', val: '011 4144 7223' },
+                { label: 'WhatsApp', val: '+91 11414 47223' },
+                { label: 'Email', val: 'care@atulyamedilink.com' },
+                { label: 'Hours', val: 'Mon–Sat, 10am–6pm' },
               ].map((item) => (
                 <li key={item.label}>
-                  <span style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(61,170,53,0.55)', display: 'block', marginBottom: 2 }}>{item.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{item.val}</span>
+                  <span style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: `rgba(${theme.primaryRgb},0.5)`, display: 'block', marginBottom: 3 }}>{item.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>{item.val}</span>
                 </li>
               ))}
             </ul>
@@ -125,25 +147,25 @@ export default function Footer() {
       </div>
 
       {/* ── Bottom bar ── */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '18px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-        <p style={{ fontSize: 11, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.2)' }}>
-          © {new Date().getFullYear()} Sachdeva Medline. All rights reserved.
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '18px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+        <p style={{ fontSize: 11, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.18)' }}>
+          © {new Date().getFullYear()} Atulya Medilink Pvt Ltd. All rights reserved.
         </p>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.04em' }}>
+        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.04em' }}>
           Developed by{' '}
           <Link
             href="https://proshala.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'rgba(61,170,53,0.7)', textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = GREEN)}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(61,170,53,0.7)')}
+            style={{ color: `rgba(${theme.primaryRgb},0.6)`, textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
+            onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
+            onMouseLeave={e => (e.currentTarget.style.color = `rgba(${theme.primaryRgb},0.6)`)}
           >
             Proshala
           </Link>
         </p>
-        <p style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: `rgba(61,170,53,0.35)` }}>
-          AUTHORISED DEALER · SINCE 1981 ◆
+        <p style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: `rgba(${theme.primaryRgb},0.3)` }}>
+          NATURAL · PURE · EFFECTIVE ◆
         </p>
       </div>
 
