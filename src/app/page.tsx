@@ -247,6 +247,69 @@ function HeroSection() {
   );
 }
 
+function OffersBanner() {
+  const { theme } = useBrand();
+
+  const offers = [
+    {
+      icon: '🎁',
+      title: 'UP TO 30% OFF',
+      sub: 'Limited-period offers on selected products',
+      tag: 'Limited Time',
+    },
+    {
+      icon: '🚚',
+      title: 'FREE DELIVERY',
+      sub: 'On all orders above ₹499 — pan-India',
+      tag: 'Always On',
+    },
+    {
+      icon: '🔒',
+      title: '100% AUTHENTIC',
+      sub: 'GMP certified, cruelty-free & lab-tested',
+      tag: 'Guaranteed',
+    },
+  ];
+
+  return (
+    <section style={{ background: '#fff', borderBottom: '1px solid #f0f0f0', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <div className="offers-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {offers.map((offer, i) => (
+            <div
+              key={i}
+              style={{
+                padding: '28px 32px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 16,
+                borderRight: i < 2 ? '1px solid #f0f0f0' : 'none',
+                position: 'relative',
+              }}
+            >
+              <div style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{offer.icon}</div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                  <p style={{ fontSize: 13, fontWeight: 800, color: '#111', letterSpacing: '-0.01em' }}>{offer.title}</p>
+                  <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', background: theme.bgLight, color: theme.primary, padding: '2px 8px', borderRadius: 3, border: `1px solid ${theme.border}` }}>{offer.tag}</span>
+                </div>
+                <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>{offer.sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .offers-grid { grid-template-columns: 1fr !important; }
+          .offers-grid > div { border-right: none !important; border-bottom: 1px solid #f0f0f0; padding: 20px 16px !important; }
+          .offers-grid > div:last-child { border-bottom: none; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 function MarqueeBelt() {
   const { theme, mode } = useBrand();
 
@@ -599,6 +662,7 @@ export default function Homepage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff', overflow: 'hidden' }}>
       <HeroSection />
+      <OffersBanner />
       <MarqueeBelt />
       <TrustBar />
       <ProductsSection />

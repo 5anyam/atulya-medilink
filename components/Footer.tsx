@@ -6,20 +6,19 @@ import { useBrand } from '../lib/brand-context';
 
 export default function Footer() {
   const { theme } = useBrand();
-  const DARK = '#0f0f0f';
 
   return (
-    <footer style={{ background: DARK, borderTop: `3px solid ${theme.primary}` }}>
+    <footer style={{ background: theme.primary }}>
 
       {/* ── Marquee belt ── */}
-      <div style={{ overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '11px 0' }}>
+      <div style={{ overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.15)', padding: '11px 0' }}>
         <div style={{ display: 'inline-flex', whiteSpace: 'nowrap', animation: 'mq-fwd 26s linear infinite' }}>
           {[...Array(2)].map((_, r) => (
             <span key={r} style={{ display: 'inline-flex' }}>
               {['ATULYA MEDILINK', 'NATURAL COSMETICS', 'CLINICAL NUTRACEUTICALS', 'CRUELTY FREE', 'GMP CERTIFIED', 'MADE IN INDIA'].map((t) => (
-                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 16, padding: '0 24px', fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
+                <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 16, padding: '0 24px', fontSize: 9, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)' }}>
                   {t}
-                  <span style={{ color: theme.primary, fontSize: 6 }}>◆</span>
+                  <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 6 }}>◆</span>
                 </span>
               ))}
             </span>
@@ -44,18 +43,18 @@ export default function Footer() {
                 />
               </div>
             </Link>
-            <p style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', lineHeight: 1.85, marginBottom: 10, maxWidth: 260 }}>
+            <p style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.85)', lineHeight: 1.85, marginBottom: 10, maxWidth: 260 }}>
               Natural cosmetics and clinical-grade nutraceuticals — formulated for your health and beauty.
             </p>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.7, maxWidth: 260, marginBottom: 24 }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, maxWidth: 260, marginBottom: 24 }}>
               Unit-604, Ring Road Mall Manglam Place Plot 21,<br />Sector-3 Rohini, Delhi — 110085
             </p>
             <div style={{ display: 'flex', gap: 8 }}>
               {[
-                { href: '#', icon: <FaFacebookF size={12} />, label: 'Facebook' },
-                { href: '#', icon: <FaInstagram size={12} />, label: 'Instagram' },
-                { href: '#', icon: <FaYoutube size={12} />, label: 'YouTube' },
-                { href: '#', icon: <FaLinkedinIn size={12} />, label: 'LinkedIn' },
+                { href: 'https://facebook.com/people/Atulyaofficial', icon: <FaFacebookF size={12} />, label: 'Facebook' },
+                { href: 'https://instagram.com/officialatulya', icon: <FaInstagram size={12} />, label: 'Instagram' },
+                { href: 'https://youtube.com/@atulyamedilink4119', icon: <FaYoutube size={12} />, label: 'YouTube' },
+                { href: 'https://linkedin.com/in/atulya-medilink-877408101', icon: <FaLinkedinIn size={12} />, label: 'LinkedIn' },
                 { href: 'https://wa.me/911141447223', icon: <FaWhatsapp size={12} />, label: 'WhatsApp' },
               ].map(({ href, icon, label }) => (
                 <Link
@@ -64,9 +63,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  style={{ width: 34, height: 34, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = theme.primary; e.currentTarget.style.color = theme.primary; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}
+                  style={{ width: 34, height: 34, border: '1px solid rgba(255,255,255,0.35)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s, background 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; e.currentTarget.style.background = 'transparent'; }}
                 >
                   {icon}
                 </Link>
@@ -76,7 +75,7 @@ export default function Footer() {
 
           {/* Products */}
           <div>
-            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>PRODUCTS</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>PRODUCTS</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
                 { name: 'Cosmetics', to: '/shop?type=cosmetics' },
@@ -89,9 +88,9 @@ export default function Footer() {
                 <li key={name}>
                   <Link
                     href={to}
-                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.75)')}
                   >
                     {name}
                   </Link>
@@ -102,11 +101,11 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>COMPANY</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>COMPANY</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
                 { name: 'About Us', to: '/about' },
-                { name: 'Blog', to: '/blog' },
+                { name: 'Contact Us', to: '/contact' },
                 { name: 'Privacy Policy', to: '/privacy-policy' },
                 { name: 'Terms & Conditions', to: '/terms-and-conditions' },
                 { name: 'Returns & Refunds', to: '/returns-and-refunds-policy' },
@@ -115,9 +114,9 @@ export default function Footer() {
                 <li key={name}>
                   <Link
                     href={to}
-                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+                    style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.75)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.75)')}
                   >
                     {name}
                   </Link>
@@ -128,17 +127,17 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
+            <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
                 { label: 'Phone', val: '011 4144 7223' },
                 { label: 'WhatsApp', val: '+91 11414 47223' },
-                { label: 'Email', val: 'care@atulyamedilink.com' },
-                { label: 'Hours', val: 'Mon–Sat, 10am–6pm' },
+                { label: 'Email', val: 'info@atulyamedilinkpvtltd.shop' },
+                { label: 'Address', val: 'Rohini, Delhi – 110085' },
               ].map((item) => (
                 <li key={item.label}>
-                  <span style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: `rgba(${theme.primaryRgb},0.5)`, display: 'block', marginBottom: 3 }}>{item.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>{item.val}</span>
+                  <span style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 3 }}>{item.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>{item.val}</span>
                 </li>
               ))}
             </ul>
@@ -147,25 +146,25 @@ export default function Footer() {
       </div>
 
       {/* ── Bottom bar ── */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '18px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-        <p style={{ fontSize: 11, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.18)' }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.2)', background: theme.primaryDark, padding: '18px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+        <p style={{ fontSize: 11, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.7)' }}>
           © {new Date().getFullYear()} Atulya Medilink Pvt Ltd. All rights reserved.
         </p>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.04em' }}>
+        <p style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>
+          NATURAL · PURE · EFFECTIVE ◆
+        </p>
+        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.04em' }}>
           Developed by{' '}
           <Link
             href="https://proshala.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: `rgba(${theme.primaryRgb},0.6)`, textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = theme.primary)}
-            onMouseLeave={e => (e.currentTarget.style.color = `rgba(${theme.primaryRgb},0.6)`)}
+            style={{ color: '#fff', textDecoration: 'none', fontWeight: 600, transition: 'opacity 0.2s' }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = '0.75')}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
           >
             Proshala
           </Link>
-        </p>
-        <p style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: `rgba(${theme.primaryRgb},0.3)` }}>
-          NATURAL · PURE · EFFECTIVE ◆
         </p>
       </div>
 

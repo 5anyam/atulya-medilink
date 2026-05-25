@@ -18,6 +18,7 @@ export interface StaticProduct {
   howToUse: string;
   category: string;
   type: 'cosmetics' | 'nutraceuticals';
+  sizes: string[];
   badge?: string;
   rating: number;
   reviewCount: number;
@@ -53,6 +54,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Clean and dry feet thoroughly. Apply a generous amount to heels and cracked areas. Massage in circular motions until absorbed. For best results, use twice daily — morning and before bedtime. Cover with socks at night for intensive repair.',
+    sizes: ['50g', '100g'],
     category: 'Foot Care',
     type: 'cosmetics',
     badge: 'Best Seller',
@@ -87,6 +89,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Apply to clean skin on face and body. Warm a small amount between palms and massage gently in upward circular motions. Use morning and night during winters. Safe for children above 3 years.',
+    sizes: ['50g', '100g', '200g'],
     category: 'Moisturizer',
     type: 'cosmetics',
     badge: 'New',
@@ -121,6 +124,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Apply 3-4 drops to clean, dry skin in the morning. Gently pat onto face and neck. Follow with moisturiser and SPF during the day. Avoid contact with eyes. Store in a cool, dark place.',
+    sizes: ['15ml', '30ml', '50ml'],
     category: 'Serum',
     type: 'cosmetics',
     badge: 'Trending',
@@ -155,6 +159,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Wet face with lukewarm water. Take a pea-sized amount and work into a lather. Massage gently on face in circular motions for 60 seconds. Rinse thoroughly. Use twice daily for best results.',
+    sizes: ['100ml', '200ml'],
     category: 'Face Wash',
     type: 'cosmetics',
     rating: 4.6,
@@ -188,6 +193,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Wet hair thoroughly. Apply shampoo to scalp and massage gently for 2-3 minutes. Work through lengths to ends. Rinse completely with water. Follow with conditioner for best results. Use 3 times a week.',
+    sizes: ['200ml', '400ml'],
     category: 'Hair Care',
     type: 'cosmetics',
     rating: 4.5,
@@ -221,6 +227,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Wet skin and work soap into a lather. Massage gently on skin. Rinse well. For best results, use daily. Pat skin dry after washing.',
+    sizes: ['75g', '150g'],
     category: 'Body Care',
     type: 'cosmetics',
     badge: 'Sale',
@@ -255,6 +262,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 1 softgel daily with a meal or as directed by your physician. Do not exceed recommended dose. Store in a cool, dry place away from direct sunlight.',
+    sizes: ['30 Softgels', '60 Softgels', '90 Softgels'],
     category: 'Vitamins',
     type: 'nutraceuticals',
     badge: 'Best Seller',
@@ -289,6 +297,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 1-2 capsules daily with food. For heart health benefits, take 2 capsules daily. Consult your physician if you are on blood-thinning medications. Store in a cool, dry place.',
+    sizes: ['30 Caps', '60 Caps', '90 Caps'],
     category: 'Fatty Acids',
     type: 'nutraceuticals',
     rating: 4.7,
@@ -322,6 +331,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 1 capsule daily with breakfast. Consistent daily use for a minimum of 90 days is recommended for visible results. Pair with a protein-rich diet for best outcome.',
+    sizes: ['30 Caps', '60 Caps', '90 Caps'],
     category: 'Hair Health',
     type: 'nutraceuticals',
     badge: 'Trending',
@@ -356,6 +366,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 2 capsules daily — 1 with breakfast and 1 with dinner. For severe joint conditions, consult your physician. Minimum 8-week course recommended for best results.',
+    sizes: ['30 Caps', '60 Caps', '90 Caps'],
     category: 'Joint Health',
     type: 'nutraceuticals',
     badge: 'Ayurvedic',
@@ -390,6 +401,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 1 tablet daily after a meal. Best taken in the morning with breakfast. Do not exceed the recommended dose. Not suitable as a substitute for a balanced diet.',
+    sizes: ['30 Tabs', '60 Tabs', '90 Tabs'],
     category: 'Vitamins',
     type: 'nutraceuticals',
     rating: 4.6,
@@ -423,6 +435,7 @@ export const PRODUCTS: StaticProduct[] = [
     ],
     howToUse:
       'Take 1 capsule twice daily with meals. During illness or high-stress periods, take 2 capsules twice daily for up to 7 days. Suitable for daily long-term use as a preventive supplement.',
+    sizes: ['30 Caps', '60 Caps', '90 Caps'],
     category: 'Immunity',
     type: 'nutraceuticals',
     rating: 4.7,

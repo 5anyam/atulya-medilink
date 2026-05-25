@@ -66,7 +66,7 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
   );
 }
 
-const TABS = ['Features', 'Specifications', 'How to Use', 'Delivery'];
+const TABS = ['Benefits', 'Ingredients', 'How to Use', 'FAQs'];
 
 function Tabs({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
@@ -134,22 +134,7 @@ function Tabs({ product }: { product: StaticProduct }) {
           </div>
         )}
         {active === 3 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { icon: Package, label: 'Dispatch', value: 'Within 24 hours of order confirmation' },
-              { icon: Truck, label: 'Delivery', value: '3–5 business days, pan-India' },
-              { icon: RotateCcw, label: 'Returns', value: '7-day return policy on manufacturing defects' },
-              { icon: ShieldCheck, label: 'Quality', value: 'GMP certified, third-party tested' },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '12px 16px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 8 }}>
-                <item.icon style={{ width: 16, height: 16, color: theme.primary, flexShrink: 0 }} />
-                <div>
-                  <p style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.14em', color: '#9ca3af', fontWeight: 600, marginBottom: 2 }}>{item.label}</p>
-                  <p style={{ fontSize: 12, color: '#111', fontWeight: 600 }}>{item.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProductFAQ productSlug={product.slug} productName={product.name} />
         )}
       </div>
     </div>
@@ -190,6 +175,7 @@ export default function ProductClient({ product }: { product: StaticProduct }) {
 
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [selectedSize, setSelectedSize] = useState(0);
 
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
@@ -272,6 +258,37 @@ export default function ProductClient({ product }: { product: StaticProduct }) {
 
             {/* Tagline */}
             <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.8, marginBottom: 20 }}>{product.tagline}</p>
+
+            {/* Size selector */}
+            {product.sizes && product.sizes.length > 0 && (
+              <div style={{ marginBottom: 22 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 10 }}>
+                  SIZE / QUANTITY
+                </p>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {product.sizes.map((size, i) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(i)}
+                      style={{
+                        padding: '8px 18px',
+                        border: `1.5px solid ${i === selectedSize ? theme.primary : '#e5e7eb'}`,
+                        borderRadius: 6,
+                        fontSize: 13,
+                        fontWeight: i === selectedSize ? 700 : 500,
+                        color: i === selectedSize ? theme.primary : '#6b7280',
+                        background: i === selectedSize ? theme.bgLight : '#fff',
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Key benefits */}
             <div style={{ marginBottom: 24, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -370,19 +387,6 @@ export default function ProductClient({ product }: { product: StaticProduct }) {
             </h2>
           </div>
           <ProductReviews productId={product.id} productName={product.name} />
-        </div>
-
-        {/* FAQ */}
-        <div style={{ marginTop: 80 }}>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span style={{ fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: theme.primary, fontWeight: 600, display: 'block', marginBottom: 12 }}>✦ Got Questions?</span>
-            <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 900, letterSpacing: '-0.02em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
-              FREQUENTLY ASKED<br /><span style={{ color: theme.primary }}>QUESTIONS.</span>
-            </h2>
-          </div>
-          <div style={{ maxWidth: 720, margin: '0 auto' }}>
-            <ProductFAQ productSlug={product.slug} productName={product.name} />
-          </div>
         </div>
 
         {/* Related Products */}
