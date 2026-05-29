@@ -1,84 +1,100 @@
 'use client';
 
 import React from 'react';
+import { useBrand } from '../../../lib/brand-context';
 
-const GREEN = '#3DAA35';
-const PINK = '#E8175D';
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, borderColor }: { title: string; children: React.ReactNode; borderColor: string }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1A1A1A', borderLeft: `4px solid ${GREEN}`, paddingLeft: 14, marginBottom: 14 }}>{title}</h2>
+    <div style={{ marginBottom: 36 }}>
+      <h2 style={{ fontSize: 17, fontWeight: 800, color: '#111', borderLeft: `4px solid ${borderColor}`, paddingLeft: 14, marginBottom: 14, lineHeight: 1.3 }}>{title}</h2>
       <div style={{ fontSize: 14, color: '#444', lineHeight: 1.85 }}>{children}</div>
     </div>
   );
 }
 
 export default function ReturnsRefundPolicyPage() {
+  const { theme } = useBrand();
+
   return (
-    <div style={{ background: '#F5FAF4', minHeight: '100vh', padding: '48px 16px' }}>
-      <div style={{ maxWidth: 820, margin: '0 auto', background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 4px 24px rgba(61,170,53,0.08)', border: '1.5px solid #e8f0e8' }}>
+    <div style={{ background: '#fafafa', minHeight: '100vh' }}>
 
-        <h1 style={{ fontSize: 36, fontWeight: 900, color: GREEN, marginBottom: 8, letterSpacing: '-0.02em' }}>Returns & Refunds Policy</h1>
-        <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Please read carefully · sachdevamedline.com</p>
-
-        <div style={{ background: `rgba(61,170,53,0.06)`, border: `1.5px solid rgba(61,170,53,0.2)`, borderRadius: 10, padding: '16px 20px', marginBottom: 36 }}>
-          <p style={{ fontSize: 14, color: '#2e7a28', fontWeight: 600 }}>All shipments are carefully inspected before dispatch. If you receive a defective or incorrect product, please contact us within 7 days of delivery.</p>
+      {/* Hero */}
+      <div style={{ background: '#0f0f0f', padding: '60px 32px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
+          <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Returns &amp; Refunds</h1>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Please read carefully · atulyamedilinkpvtltd.shop</p>
         </div>
+      </div>
 
-        <Section title="1. Acceptable Reasons for Returns">
-          <p style={{ marginBottom: 10 }}>We accept returns only under the following circumstances:</p>
-          <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <li><strong>Damaged / Broken Product:</strong> Visibly damaged unit or packaging upon delivery</li>
-            <li><strong>Wrong Product Delivered:</strong> You received a different model than what was ordered</li>
-            <li><strong>Manufacturing Defect:</strong> Device fails to function as described on first use</li>
-            <li><strong>Incomplete Order:</strong> Missing accessories or components as listed in the box contents</li>
-          </ul>
-        </Section>
+      {/* Content */}
+      <div style={{ maxWidth: 840, margin: '0 auto', padding: '56px 24px 80px' }}>
+        <div style={{ background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }}>
 
-        <Section title="2. Non-Returnable Conditions">
-          <div style={{ background: `rgba(232,23,93,0.04)`, border: `1.5px solid rgba(232,23,93,0.15)`, borderRadius: 8, padding: '14px 18px', marginBottom: 12 }}>
-            <p style={{ fontSize: 13, color: PINK, fontWeight: 600, marginBottom: 8 }}>The following situations are NOT eligible for return or refund:</p>
-            <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <li>Products that have been used, modified, or tampered with</li>
-              <li>Damage caused by improper use, voltage fluctuations, or accidents</li>
-              <li>Returns requested after 7 days of delivery</li>
-              <li>Change of mind after delivery</li>
-              <li>Products without original packaging, accessories, and documentation</li>
-            </ul>
+          {/* Info banner */}
+          <div style={{ background: theme.bgLight, border: `1.5px solid ${theme.border}`, borderRadius: 10, padding: '16px 20px', marginBottom: 36 }}>
+            <p style={{ fontSize: 14, color: theme.primaryDark, fontWeight: 600 }}>All shipments are carefully inspected before dispatch. If you receive a defective or incorrect product, please contact us within 7 days of delivery.</p>
           </div>
-        </Section>
 
-        <Section title="3. How to Initiate a Return">
-          <ol style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <li>Contact us within <strong>7 days</strong> of delivery at <strong>info@sachdevamedline.com</strong> or call <strong>+91 98915 21090</strong></li>
-            <li>Share your order number, a description of the issue, and clear photographs of the product and packaging</li>
-            <li>Our team will review and respond within 48 hours</li>
-            <li>If approved, we will arrange a pickup or guide you on returning the item</li>
-          </ol>
-        </Section>
+          <Section title="1. Acceptable Reasons for Returns" borderColor={theme.primary}>
+            <p style={{ marginBottom: 10 }}>We accept returns only under the following circumstances:</p>
+            <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <li><strong>Damaged / Broken Product:</strong> Visibly damaged unit or packaging upon delivery</li>
+              <li><strong>Wrong Product Delivered:</strong> You received a different product than what was ordered</li>
+              <li><strong>Manufacturing Defect:</strong> Product fails to function or appears to be defective upon first use</li>
+              <li><strong>Incomplete Order:</strong> Missing items or components as listed in the order</li>
+            </ul>
+          </Section>
 
-        <Section title="4. Refund Process">
-          <p>Once the returned product is received and inspected:</p>
-          <ul style={{ paddingLeft: 20, marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <li>Approved refunds are processed within <strong>7–10 business days</strong></li>
-            <li>Refunds are credited to the original payment method (bank account, UPI, or card)</li>
-            <li>Shipping charges are non-refundable unless the return is due to our error</li>
-          </ul>
-        </Section>
+          <Section title="2. Non-Returnable Conditions" borderColor={theme.primary}>
+            <div style={{ background: '#fff5f5', border: '1.5px solid #fecaca', borderRadius: 8, padding: '14px 18px', marginBottom: 12 }}>
+              <p style={{ fontSize: 13, color: '#dc2626', fontWeight: 600, marginBottom: 8 }}>The following situations are NOT eligible for return or refund:</p>
+              <ul style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <li>Opened, used, or partially consumed products (for hygiene reasons)</li>
+                <li>Products without original packaging, seals, or documentation</li>
+                <li>Returns requested after 7 days of delivery date</li>
+                <li>Change of mind or incorrect product selection by the customer</li>
+                <li>Products damaged due to improper storage or misuse</li>
+                <li>Cosmetics where packaging seal has been broken after delivery</li>
+              </ul>
+            </div>
+            <p style={{ fontSize: 13, color: '#6b7280', fontStyle: 'italic' }}>Note: Due to the nature of cosmetic and nutraceutical products, opened items cannot be accepted for return unless they are defective.</p>
+          </Section>
 
-        <Section title="5. Warranty Claims">
-          <p>Manufacturing defects within the warranty period are handled directly through the manufacturer&apos;s warranty process. We assist you with the paperwork and coordination at no additional cost. Please retain the warranty card included with your product.</p>
-        </Section>
+          <Section title="3. How to Initiate a Return" borderColor={theme.primary}>
+            <ol style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <li>Contact us within <strong>7 days</strong> of delivery at <strong>info@atulyamedilinkpvtltd.shop</strong> or call <strong>011 4144 7223</strong></li>
+              <li>Share your order number, a description of the issue, and clear photographs of the product and packaging</li>
+              <li>Our team will review and respond within 48 hours</li>
+              <li>If approved, we will arrange a pickup or guide you on returning the item</li>
+            </ol>
+          </Section>
 
-        <Section title="6. Contact for Returns">
-          <ul style={{ paddingLeft: 20, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <li><strong>Email:</strong> info@sachdevamedline.com</li>
-            <li><strong>Phone:</strong> +91 98915 21090</li>
-            <li><strong>Address:</strong> House No. 9B/4, Friends Enclave, Sultanpuri, Delhi – 110041</li>
-          </ul>
-        </Section>
+          <Section title="4. Refund Process" borderColor={theme.primary}>
+            <p>Once the returned product is received and inspected:</p>
+            <ul style={{ paddingLeft: 20, marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <li>Approved refunds are processed within <strong>7–10 business days</strong></li>
+              <li>Refunds are credited to the original payment method (bank account, UPI, or card)</li>
+              <li>Shipping charges are non-refundable unless the return is due to our error</li>
+              <li>All payments are prepaid; we do not offer Cash on Delivery (COD)</li>
+            </ul>
+          </Section>
 
+          <Section title="5. Exchanges" borderColor={theme.primary}>
+            <p>We currently do not offer direct product exchanges. If you need a different product, please initiate a return (if eligible) and place a new order for the desired item.</p>
+          </Section>
+
+          <Section title="6. Contact for Returns" borderColor={theme.primary}>
+            <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Phone:</strong> 011 4144 7223</li>
+              <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
+            </ul>
+          </Section>
+
+        </div>
       </div>
     </div>
   );

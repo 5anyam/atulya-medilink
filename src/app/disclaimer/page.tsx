@@ -1,60 +1,81 @@
 'use client';
 
 import React from 'react';
+import { useBrand } from '../../../lib/brand-context';
 
-const GREEN = '#3DAA35';
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, borderColor }: { title: string; children: React.ReactNode; borderColor: string }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1A1A1A', borderLeft: `4px solid ${GREEN}`, paddingLeft: 14, marginBottom: 14 }}>{title}</h2>
+    <div style={{ marginBottom: 36 }}>
+      <h2 style={{ fontSize: 17, fontWeight: 800, color: '#111', borderLeft: `4px solid ${borderColor}`, paddingLeft: 14, marginBottom: 14, lineHeight: 1.3 }}>{title}</h2>
       <div style={{ fontSize: 14, color: '#444', lineHeight: 1.85 }}>{children}</div>
     </div>
   );
 }
 
 export default function DisclaimerPage() {
+  const { theme } = useBrand();
+
   return (
-    <div style={{ background: '#F5FAF4', minHeight: '100vh', padding: '48px 16px' }}>
-      <div style={{ maxWidth: 820, margin: '0 auto', background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 4px 24px rgba(61,170,53,0.08)', border: '1.5px solid #e8f0e8' }}>
+    <div style={{ background: '#fafafa', minHeight: '100vh' }}>
 
-        <h1 style={{ fontSize: 36, fontWeight: 900, color: GREEN, marginBottom: 8, letterSpacing: '-0.02em' }}>Disclaimer</h1>
-        <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>sachdevamedline.com · Medical Equipment Dealer</p>
-
-        <div style={{ background: `rgba(232,23,93,0.04)`, border: `1.5px solid rgba(232,23,93,0.15)`, borderRadius: 10, padding: '16px 20px', marginBottom: 36 }}>
-          <p style={{ fontSize: 14, color: '#c01248', fontWeight: 600 }}>Important: All medical equipment sold by Sachdeva Medline is intended for use under the guidance of a qualified healthcare professional. Do not use medical equipment without a valid prescription or physician recommendation.</p>
+      {/* Hero */}
+      <div style={{ background: '#0f0f0f', padding: '60px 32px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
+          <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Disclaimer</h1>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>atulyamedilinkpvtltd.shop · Natural Cosmetics &amp; Nutraceuticals</p>
         </div>
+      </div>
 
-        <Section title="1. Medical Advice Disclaimer">
-          <p>The information provided on www.sachdevamedline.com is for general informational purposes only and does not constitute medical advice. Product descriptions, specifications, and use-case information are provided by manufacturers and should not replace consultation with a licensed physician or healthcare provider.</p>
-          <p style={{ marginTop: 12 }}>Always consult your doctor before purchasing or using oxygen therapy equipment, patient aids, or any other medical device listed on our platform.</p>
-        </Section>
+      {/* Content */}
+      <div style={{ maxWidth: 840, margin: '0 auto', padding: '56px 24px 80px' }}>
+        <div style={{ background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }}>
 
-        <Section title="2. Product Use Disclaimer">
-          <p>Sachdeva Medline is an authorised dealer and reseller of medical equipment. We are not the manufacturer. Product performance, safety certifications, and clinical claims are the responsibility of the respective manufacturers (e.g., Longfian Science Co. Ltd.).</p>
-          <p style={{ marginTop: 12 }}>Sachdeva Medline is not liable for any harm or adverse effects resulting from improper use, self-medication, or use without medical supervision.</p>
-        </Section>
+          {/* Alert banner */}
+          <div style={{ background: theme.bgLight, border: `1.5px solid ${theme.border}`, borderRadius: 10, padding: '16px 20px', marginBottom: 36 }}>
+            <p style={{ fontSize: 14, color: theme.primaryDark, fontWeight: 600 }}>
+              Important: Our nutraceutical supplements are not intended to diagnose, treat, cure, or prevent any disease. Consult a qualified healthcare professional before starting any supplement, especially if pregnant, nursing, or on medication.
+            </p>
+          </div>
 
-        <Section title="3. Accuracy of Information">
-          <p>While we strive to keep product information, pricing, and availability accurate, we do not warrant that all content on the website is error-free. Prices, specifications, and availability are subject to change without notice. Images on the website are for illustration purposes and may differ slightly from the actual product.</p>
-        </Section>
+          <Section title="1. Health &amp; Medical Disclaimer" borderColor={theme.primary}>
+            <p>The information provided on atulyamedilinkpvtltd.shop is for general informational and educational purposes only and does not constitute medical advice. Product descriptions, ingredient benefits, and use-case information are based on available research and should not replace consultation with a licensed physician or healthcare provider.</p>
+            <p style={{ marginTop: 12 }}>Results from cosmetic and nutraceutical products vary by individual. Atulya Medilink makes no guarantee of specific outcomes.</p>
+          </Section>
 
-        <Section title="4. Third-Party Links">
-          <p>Our website may contain links to third-party websites for reference purposes. Sachdeva Medline does not endorse or take responsibility for the content or practices of any linked external sites.</p>
-        </Section>
+          <Section title="2. Cosmetics Disclaimer" borderColor={theme.primary}>
+            <p>All cosmetic products are for external use only unless specifically directed otherwise. Perform a patch test before full application, especially if you have sensitive skin. Discontinue use immediately if irritation, redness, or adverse reaction occurs. Keep away from eyes unless the product is specifically formulated for eye use.</p>
+          </Section>
 
-        <Section title="5. Limitation of Liability">
-          <p>To the maximum extent permitted by law, Sachdeva Medline shall not be held liable for any direct, indirect, incidental, or consequential damages arising from the use of products purchased through our platform beyond the purchase value of the product.</p>
-        </Section>
+          <Section title="3. Nutraceuticals Disclaimer" borderColor={theme.primary}>
+            <p>Atulya Medilink nutraceuticals are dietary supplements. They are not medicines and are not regulated as drugs. Statements on this website have not been evaluated by the Food Safety and Standards Authority of India (FSSAI) as drug claims. These products are not intended to diagnose, treat, cure, or prevent any disease.</p>
+            <p style={{ marginTop: 12 }}>Always read the product label before use. Do not exceed the recommended daily dose. Store as directed on the packaging.</p>
+          </Section>
 
-        <Section title="6. Contact">
-          <p>If you have questions about this disclaimer, contact us:</p>
-          <ul style={{ paddingLeft: 20, marginTop: 10, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <li><strong>Email:</strong> info@sachdevamedline.com</li>
-            <li><strong>Phone:</strong> +91 98915 21090</li>
-          </ul>
-        </Section>
+          <Section title="4. Accuracy of Information" borderColor={theme.primary}>
+            <p>While we strive to keep product information, pricing, and availability accurate, we do not warrant that all content on the website is error-free. Prices, specifications, and availability are subject to change without notice. Product images are for illustration purposes and may differ slightly from the actual product.</p>
+          </Section>
 
+          <Section title="5. Third-Party Links" borderColor={theme.primary}>
+            <p>Our website may contain links to third-party websites for reference purposes. Atulya Medilink does not endorse or take responsibility for the content or practices of any linked external sites.</p>
+          </Section>
+
+          <Section title="6. Limitation of Liability" borderColor={theme.primary}>
+            <p>To the maximum extent permitted by law, Atulya Medilink Pvt. Ltd. shall not be held liable for any direct, indirect, incidental, or consequential damages arising from the use of products purchased through our platform beyond the purchase value of the product.</p>
+          </Section>
+
+          <Section title="7. Contact" borderColor={theme.primary}>
+            <p>If you have questions about this disclaimer, contact us:</p>
+            <ul style={{ paddingLeft: 0, marginTop: 10, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Phone:</strong> 011 4144 7223</li>
+              <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
+            </ul>
+          </Section>
+
+        </div>
       </div>
     </div>
   );

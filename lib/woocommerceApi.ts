@@ -1,6 +1,6 @@
-const API_BASE = "https://cms.sachdevamedline.com/wp-json/wc/v3";
-const CONSUMER_KEY = process.env.CONSUMER_KEY || "ck_7610f309972822bfa8e87304ea6c47e9e93b8ff6";
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET || "cs_0f117bc7ec4611ca378adde03010f619c0af59b2";
+const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://atulyamedilinkpvtltd.shop/wp-json/wc/v3");
+const CONSUMER_KEY = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || "";
+const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || "";
 
 export interface Product {
   id: number;

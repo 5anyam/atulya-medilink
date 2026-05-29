@@ -118,118 +118,144 @@ function HeroSection() {
   const heroData = {
     cosmetics: {
       eyebrow: '✦ Natural Skincare Collection',
-      heading: ['SKINCARE', 'THAT', 'WORKS.'],
-      sub: 'Dermatologist-tested cosmetics crafted with natural ingredients. No harmful chemicals — just skin that looks and feels its best.',
-      chips: ['Cruelty Free', 'No Parabens', 'Dermatologist Tested'],
+      heading: ['NATURAL', 'SKINCARE', 'THAT WORKS.'],
+      sub: 'Dermatologist-tested cosmetics crafted with pure natural ingredients. No harmful chemicals — just skin that looks, feels and glows its best.',
+      chips: ['Cruelty Free', 'No Parabens', 'Dermatologist Tested', 'Made in India'],
       cta: 'Shop Cosmetics',
+      ctaHref: '/shop?type=cosmetics',
     },
     nutraceuticals: {
       eyebrow: '✦ Clinical-Grade Supplements',
       heading: ['WELLNESS', 'STARTS', 'INSIDE.'],
-      sub: 'Science-backed nutraceuticals formulated for daily health. GMP-certified, third-party tested — for nutrition you can trust.',
-      chips: ['GMP Certified', 'Third-Party Tested', 'No Artificial Colours'],
+      sub: 'Science-backed nutraceuticals formulated for daily health. GMP-certified, third-party tested — for nutrition you can truly trust.',
+      chips: ['GMP Certified', 'Third-Party Tested', 'No Artificial Colours', 'Made in India'],
       cta: 'Shop Supplements',
+      ctaHref: '/shop?type=nutraceuticals',
     },
   }[mode];
 
   const featuredProduct = PRODUCTS.filter(p => p.type === mode).find(p => p.badge === 'Best Seller') || PRODUCTS.filter(p => p.type === mode)[0];
 
+  const STATS = [
+    { n: '5,000+', l: 'Happy Customers' },
+    { n: '50+', l: 'Products' },
+    { n: '4.7 ★', l: 'Avg Rating' },
+    { n: 'Since 2005', l: 'Est. Delhi' },
+    { n: 'Pan-India', l: 'Delivery' },
+  ];
+
   return (
-    <section
-      style={{
-        background: '#0f0f0f',
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: 580,
-      }}
-    >
-      {/* Glow blob */}
-      <div style={{ position: 'absolute', top: -120, right: -120, width: 560, height: 560, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.18) 0%, transparent 70%)`, pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -60, width: 360, height: 360, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+    <section style={{ position: 'relative', overflow: 'hidden', background: '#0f0f0f', display: 'flex', flexDirection: 'column' }}>
 
-      <div className="hero-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 40px 80px', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 60, alignItems: 'center', position: 'relative', zIndex: 2 }}>
+      {/* Diagonal colour panel — right half */}
+      <div style={{
+        position: 'absolute', top: 0, right: 0, width: '42%', bottom: 0,
+        background: theme.primary,
+        clipPath: 'polygon(13% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        zIndex: 0,
+      }} />
 
-        {/* Left */}
-        <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(${theme.primaryRgb},0.12)`, border: `1px solid rgba(${theme.primaryRgb},0.3)`, color: theme.primary, fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '6px 14px', borderRadius: 4, marginBottom: 28 }}>
+      {/* Glow orbs */}
+      <div style={{ position: 'absolute', top: -100, left: -80, width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.09) 0%, transparent 70%)`, pointerEvents: 'none', zIndex: 1 }} />
+      <div style={{ position: 'absolute', bottom: 40, right: '42%', width: 280, height: 280, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.06) 0%, transparent 70%)`, pointerEvents: 'none', zIndex: 1 }} />
+
+      {/* Background watermark */}
+      <div style={{ position: 'absolute', bottom: 48, left: 20, fontSize: 'clamp(70px, 11vw, 160px)', fontWeight: 900, color: 'rgba(255,255,255,0.025)', letterSpacing: '-0.04em', userSelect: 'none', pointerEvents: 'none', lineHeight: 1, zIndex: 1, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+        ATULYA
+      </div>
+
+      {/* Main grid */}
+      <div className="hero-grid" style={{ flex: 1, maxWidth: 1280, margin: '0 auto', width: '100%', padding: '96px 40px 72px', display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: 0, alignItems: 'center', position: 'relative', zIndex: 2 }}>
+
+        {/* LEFT — Text */}
+        <div style={{ paddingRight: 52 }}>
+
+          {/* Eyebrow */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(${theme.primaryRgb},0.12)`, border: `1px solid rgba(${theme.primaryRgb},0.3)`, color: theme.primary, fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '6px 14px', borderRadius: 4, marginBottom: 24 }}>
             {heroData.eyebrow}
           </div>
 
-          <h1 style={{ fontSize: 'clamp(56px, 8vw, 112px)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.03em', marginBottom: 28, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+          {/* Headline */}
+          <h1 style={{ fontSize: 'clamp(56px, 8.5vw, 116px)', fontWeight: 900, lineHeight: 0.88, letterSpacing: '-0.04em', marginBottom: 28, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
             {heroData.heading.map((line, i) => (
-              <span
-                key={i}
-                style={{
-                  display: 'block',
-                  color: i === 1 ? theme.primary : '#fff',
-                  WebkitTextStroke: i === 2 ? `2px rgba(255,255,255,0.2)` : undefined,
-                }}
-              >
+              <span key={i} style={{ display: 'block', color: i === 1 ? theme.primary : '#fff' }}>
                 {line}
               </span>
             ))}
           </h1>
 
-          <p style={{ fontSize: 15, fontWeight: 300, color: 'rgba(255,255,255,0.55)', lineHeight: 1.9, maxWidth: 440, marginBottom: 36 }}>
+          {/* Subtext */}
+          <p style={{ fontSize: 15, fontWeight: 300, color: 'rgba(255,255,255,0.5)', lineHeight: 1.9, maxWidth: 440, marginBottom: 36 }}>
             {heroData.sub}
           </p>
 
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
-            <Link href="/shop"
-              style={{ background: theme.primary, color: '#fff', padding: '14px 28px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: `0 4px 20px rgba(${theme.primaryRgb},0.4)` }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = `0 8px 28px rgba(${theme.primaryRgb},0.5)`; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = `0 4px 20px rgba(${theme.primaryRgb},0.4)`; }}
+          {/* CTAs */}
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 36 }}>
+            <Link
+              href={heroData.ctaHref}
+              style={{ background: '#fff', color: '#111', padding: '15px 32px', borderRadius: 8, fontSize: 12, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 4px 20px rgba(255,255,255,0.15)' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-2px)'; el.style.boxShadow = '0 10px 32px rgba(255,255,255,0.22)'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 4px 20px rgba(255,255,255,0.15)'; }}
             >
               {heroData.cta} <ChevronRight size={14} />
             </Link>
-            <Link href="/about"
-              style={{ color: 'rgba(255,255,255,0.8)', padding: '14px 28px', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.5)`)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)')}
+            <Link
+              href="/about"
+              style={{ color: 'rgba(255,255,255,0.75)', padding: '15px 28px', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.45)'; el.style.color = '#fff'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.18)'; el.style.color = 'rgba(255,255,255,0.75)'; }}
             >
               Our Story
             </Link>
           </div>
 
+          {/* Trust chips */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {heroData.chips.map((chip) => (
-              <span key={chip} style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)', padding: '5px 12px', borderRadius: 20, letterSpacing: '0.06em' }}>
+              <span key={chip} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)', padding: '5px 12px', borderRadius: 20, letterSpacing: '0.06em' }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: theme.primary, display: 'inline-block', flexShrink: 0 }} />
                 {chip}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Right — Featured Product Card */}
-        <div className="hero-right" style={{ display: 'flex', justifyContent: 'center' }}>
+        {/* RIGHT — Product card on coloured bg */}
+        <div className="hero-right" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 20px', position: 'relative', zIndex: 2 }}>
           {featuredProduct && (
-            <Link
-              href={`/product/${featuredProduct.slug}`}
-              style={{ textDecoration: 'none', width: '100%', maxWidth: 320 }}
-            >
-              <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(${theme.primaryRgb},0.2)`, borderRadius: 20, padding: 24, backdropFilter: 'blur(10px)', transition: 'border-color 0.3s', cursor: 'pointer' }}
-                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.5)`)}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.2)`)}
+            <Link href={`/product/${featuredProduct.slug}`} style={{ textDecoration: 'none', width: '100%', maxWidth: 296 }}>
+              <div
+                style={{ background: '#fff', borderRadius: 22, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.2)', transition: 'transform 0.3s, box-shadow 0.3s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 36px 100px rgba(0,0,0,0.5), 0 16px 40px rgba(0,0,0,0.25)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 24px 80px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.2)'; }}
               >
-                <div style={{ background: theme.bgLight, borderRadius: 14, padding: 28, marginBottom: 18, aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                  <Image src={featuredProduct.images[0]} alt={featuredProduct.name} width={240} height={240} style={{ objectFit: 'contain', width: '100%', height: 'auto' }} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary }}>{featuredProduct.category}</span>
+                {/* Image area */}
+                <div style={{ position: 'relative', background: theme.bgLight, aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image src={featuredProduct.images[0]} alt={featuredProduct.name} width={240} height={240} style={{ objectFit: 'contain', padding: 24, width: '100%', height: 'auto' }} />
                   {featuredProduct.badge && (
-                    <span style={{ background: theme.primary, color: '#fff', fontSize: 8, fontWeight: 700, padding: '3px 8px', borderRadius: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{featuredProduct.badge}</span>
+                    <span style={{ position: 'absolute', top: 14, left: 14, background: theme.primary, color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                      {featuredProduct.badge}
+                    </span>
                   )}
                 </div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.2 }}>{featuredProduct.name}</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                  <StarRating rating={featuredProduct.rating} size={11} />
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>({featuredProduct.reviewCount})</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                  <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>₹{featuredProduct.price}</span>
-                  {featuredProduct.regularPrice > featuredProduct.price && (
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textDecoration: 'line-through' }}>₹{featuredProduct.regularPrice}</span>
-                  )}
+
+                {/* Info */}
+                <div style={{ padding: '16px 18px 18px' }}>
+                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: theme.primary, marginBottom: 4 }}>{featuredProduct.category}</p>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, color: '#111', marginBottom: 10, lineHeight: 1.2 }}>{featuredProduct.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
+                    <StarRating rating={featuredProduct.rating} size={11} />
+                    <span style={{ fontSize: 11, color: '#9ca3af' }}>({featuredProduct.reviewCount})</span>
+                  </div>
+                  <div style={{ background: theme.primary, borderRadius: 8, padding: '11px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                      <span style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>₹{featuredProduct.price}</span>
+                      {featuredProduct.regularPrice > featuredProduct.price && (
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', textDecoration: 'line-through' }}>₹{featuredProduct.regularPrice}</span>
+                      )}
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.08em' }}>VIEW →</span>
+                  </div>
                 </div>
               </div>
             </Link>
@@ -237,9 +263,26 @@ function HeroSection() {
         </div>
       </div>
 
+      {/* Stats bar integrated at bottom of hero */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', background: 'rgba(0,0,0,0.28)', padding: '22px 40px', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap', gap: 20 }}>
+          {STATS.map(({ n, l }, i) => (
+            <React.Fragment key={l}>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ fontSize: 20, fontWeight: 900, color: theme.primary, lineHeight: 1, marginBottom: 3 }}>{n}</p>
+                <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>{l}</p>
+              </div>
+              {i < STATS.length - 1 && (
+                <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.08)' }} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
       <style>{`
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; padding: 48px 20px 56px !important; gap: 36px !important; }
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr !important; padding: 56px 20px 48px !important; }
           .hero-right { display: none !important; }
         }
       `}</style>
