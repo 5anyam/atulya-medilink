@@ -1,15 +1,26 @@
-const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://atulyamedilinkpvtltd.shop/wp-json/wc/v3");
-const CONSUMER_KEY = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || "";
-const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || "";
+const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://yellow-chamois-808194.hostingersite.com/wp-json/wc/v3");
+const CONSUMER_KEY = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || "ck_d4aff65e142f21beeb0ad648b90728553c99ee96";
+const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || "cs_d469c205bb3d56085ed79bbadaf344c243626277";
 
 export interface Product {
   id: number;
+  slug: string;
   name: string;
   price: string;
+  regular_price: string;
+  sale_price: string;
+  on_sale: boolean;
+  status: string;
   description?: string;
   short_description?: string;
-  images?: { src: string }[];
-  attributes?: { option: string }[];
+  images?: { id: number; src: string; alt: string }[];
+  attributes?: { name: string; options: string[] }[];
+  categories?: { id: number; name: string; slug: string }[];
+  tags?: { id: number; name: string; slug: string }[];
+  average_rating?: string;
+  rating_count?: number;
+  stock_status?: string;
+  sku?: string;
 }
 
 export interface Category {
@@ -106,20 +117,29 @@ export interface OrderPayload {
 }
 
 // ✅ FETCH ALL PRODUCTS
-export async function fetchProducts(page = 1, perPage = 12, search?: string): Promise<Product[]> {
-  let url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${perPage}&page=${page}`;
+export async function fetchProducts(page = 1, perPage = 100, search?: string): Promise<Product[]> {
+  let url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${perPage}&page=${page}&status=publish`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
-  const res = await fetch(url);
+  const res = await fetch(url, { next: { revalidate: 300 } });
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
 
-// ✅ FETCH A SINGLE PRODUCT
+// ✅ FETCH A SINGLE PRODUCT BY ID
 export async function fetchProduct(id: string): Promise<Product> {
   const url = `${API_BASE}/products/${id}?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
-  const res = await fetch(url);
+  const res = await fetch(url, { next: { revalidate: 300 } });
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
+}
+
+// ✅ FETCH A SINGLE PRODUCT BY SLUG
+export async function fetchProductBySlug(slug: string): Promise<Product | null> {
+  const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&slug=${encodeURIComponent(slug)}&status=publish`;
+  const res = await fetch(url, { next: { revalidate: 300 } });
+  if (!res.ok) return null;
+  const products: Product[] = await res.json();
+  return products[0] ?? null;
 }
 
 // ✅ FETCH REVIEWS FOR A PRODUCT

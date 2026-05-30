@@ -1,6 +1,17 @@
 import ShopPageClient from './shopPageClient';
+import { fetchProducts } from '../../../lib/woocommerceApi';
+import { wcProductsToStatic } from '../../../lib/wc-mapper';
 import { PRODUCTS } from '../../../lib/products-data';
 
-export default function ShopPage() {
-  return <ShopPageClient products={PRODUCTS} />;
+export const revalidate = 300;
+
+export default async function ShopPage() {
+  let products;
+  try {
+    const wcProducts = await fetchProducts(1, 100);
+    products = wcProducts.length > 0 ? wcProductsToStatic(wcProducts) : PRODUCTS;
+  } catch {
+    products = PRODUCTS;
+  }
+  return <ShopPageClient products={products} />;
 }

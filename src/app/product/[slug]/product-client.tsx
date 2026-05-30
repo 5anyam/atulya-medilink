@@ -9,7 +9,7 @@ import {
   Star, ShieldCheck, Truck, Check, RotateCcw,
   ChevronRight, Package, Zap
 } from 'lucide-react';
-import { StaticProduct, PRODUCTS } from '../../../../lib/products-data';
+import { StaticProduct } from '../../../../lib/products-data';
 import { useCart } from '../../../../lib/cart';
 import { toast } from '../../../../hooks/use-toast';
 import { useBrand } from '../../../../lib/brand-context';
@@ -167,7 +167,7 @@ function RelatedCard({ product }: { product: StaticProduct }) {
   );
 }
 
-export default function ProductClient({ product }: { product: StaticProduct }) {
+export default function ProductClient({ product, relatedProducts = [] }: { product: StaticProduct; relatedProducts?: StaticProduct[] }) {
   const { theme } = useBrand();
   const router = useRouter();
   const { addToCart } = useCart();
@@ -181,7 +181,6 @@ export default function ProductClient({ product }: { product: StaticProduct }) {
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;
 
-  const relatedProducts = PRODUCTS.filter(p => p.slug !== product.slug && p.type === product.type).slice(0, 3);
 
   const handleAddToCart = () => {
     setIsAddingToCart(true);

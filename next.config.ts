@@ -4,11 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: 'sachdevamedline.com' },
-      { protocol: 'https', hostname: 'cms.sachdevamedline.com' },
-      { protocol: 'https', hostname: 'cms.amraj.in' },
       { protocol: 'https', hostname: 'placehold.co' },
       { protocol: 'https', hostname: 'atulyamedilinkpvtltd.shop' },
+      { protocol: 'https', hostname: 'yellow-chamois-808194.hostingersite.com' },
     ],
   },
   reactStrictMode: true,
