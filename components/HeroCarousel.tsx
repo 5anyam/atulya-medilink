@@ -47,9 +47,10 @@ export default function HeroCarousel() {
   };
 
   return (
+    <>
     <div className="w-full relative bg-gray-50 rounded-lg overflow-hidden shadow-lg">
       {/* Main carousel container - Using banner-like aspect ratio */}
-      <div className="w-full relative overflow-hidden" style={{ aspectRatio: '16/6' }}>
+      <div className="hero-carousel-inner w-full relative overflow-hidden">
         
         {/* Images container */}
         <div 
@@ -125,5 +126,12 @@ export default function HeroCarousel() {
         </p>
       </div>
     </div>
+
+    <style>{`
+      .hero-carousel-inner { aspect-ratio: 16/6; }
+      @media (max-width: 768px) { .hero-carousel-inner { aspect-ratio: 16/9; } }
+      @media (max-width: 480px) { .hero-carousel-inner { aspect-ratio: 4/3; } }
+    `}</style>
+    </>
   );
 }

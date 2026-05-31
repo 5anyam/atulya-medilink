@@ -255,7 +255,7 @@ function HeroSection({ products }: { products: StaticProduct[] }) {
       </div>
 
       {/* Stats strip at bottom */}
-      <div style={{ borderTop: '1px solid #f0f0f0', background: `rgba(${theme.primaryRgb},0.03)`, padding: '18px 48px' }}>
+      <div className="hero-stats-strip" style={{ borderTop: '1px solid #f0f0f0', background: `rgba(${theme.primaryRgb},0.03)`, padding: '18px 48px' }}>
         <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16 }}>
           {STATS.map(({ n, l }, i) => (
             <React.Fragment key={l}>
@@ -275,9 +275,11 @@ function HeroSection({ products }: { products: StaticProduct[] }) {
           .hero-img-col { max-width: 360px; margin: 0 auto; }
           .hero-text-col { text-align: center; }
           .hero-text-col div[style*="display: flex"] { justify-content: center; }
+          .hero-stats-strip { padding: 14px 20px !important; }
         }
         @media (max-width: 560px) {
           .stat-div { display: none !important; }
+          .hero-stats-strip { padding: 12px 16px !important; }
         }
       `}</style>
     </section>
@@ -432,8 +434,8 @@ function ProductsSection({ products }: { products: StaticProduct[] }) {
   const products4 = products.filter(p => p.type === mode).slice(0, 4);
 
   return (
-    <section style={{ padding: '80px 0', background: '#fafafa' }} id="products">
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+    <section className="home-section" style={{ padding: '80px 0', background: '#fafafa' }} id="products">
+      <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
 
         <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
           <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 600, display: 'block', marginBottom: 10 }}>
@@ -473,6 +475,7 @@ function CategoryBanner() {
         {/* Cosmetics block */}
         <div
           onClick={() => setMode('cosmetics')}
+          className="cat-panel"
           style={{
             padding: '64px 48px',
             background: mode === 'cosmetics' ? '#ff5f1f' : '#fff',
@@ -511,6 +514,7 @@ function CategoryBanner() {
         {/* Nutraceuticals block */}
         <div
           onClick={() => setMode('nutraceuticals')}
+          className="cat-panel"
           style={{
             padding: '64px 48px',
             background: mode === 'nutraceuticals' ? '#0d9488' : '#fff',
@@ -556,8 +560,8 @@ function AllProductsPreview({ products }: { products: StaticProduct[] }) {
   const otherProducts = products.filter(p => p.type === otherMode).slice(0, 4);
 
   return (
-    <section style={{ padding: '80px 0', background: '#fff' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+    <section className="home-section" style={{ padding: '80px 0', background: '#fff' }}>
+      <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
         <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
           <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: 10 }}>✦ Also Available</span>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
@@ -600,7 +604,7 @@ function WhySection() {
 
   return (
     <section style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 32px' }}>
+      <div className="why-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 32px' }}>
         <div ref={ref} className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
           <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 600, display: 'block', marginBottom: 12 }}>✦ The Atulya Difference</span>
           <h2 style={{ fontSize: 'clamp(32px,4.5vw,56px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
@@ -644,7 +648,7 @@ function StatsBar() {
       <div ref={ref} className="reveal" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap', gap: 24 }}>
         {stats.map((s, i) => (
           <React.Fragment key={s.label}>
-            {i > 0 && <div style={{ width: 1, height: 48, background: 'rgba(255,255,255,0.25)', flexShrink: 0 }} />}
+            {i > 0 && <div className="stats-bar-divider" style={{ width: 1, height: 48, background: 'rgba(255,255,255,0.25)', flexShrink: 0 }} />}
             <div style={{ textAlign: 'center' }}>
               <span style={{ fontSize: 'clamp(40px,5vw,68px)', fontWeight: 900, color: '#fff', display: 'block', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.num}</span>
               <p style={{ fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', marginTop: 6, fontWeight: 500 }}>{s.label}</p>
@@ -659,7 +663,7 @@ function StatsBar() {
 function CTASection() {
   const { theme, mode } = useBrand();
   return (
-    <section style={{ background: '#0f0f0f', padding: '80px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+    <section className="cta-section" style={{ background: '#0f0f0f', padding: '80px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '40px 40px', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', top: -80, right: -80, width: 400, height: 400, background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 2 }}>
@@ -720,13 +724,24 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
           .products-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; }
           .cat-grid { grid-template-columns: 1fr !important; }
+          .cat-panel { padding: 40px 28px !important; }
+          .home-section { padding: 56px 0 !important; }
+          .section-inner { padding: 0 20px !important; }
+          .why-inner { padding: 56px 20px !important; }
         }
         @media (max-width: 560px) {
           .products-grid { grid-template-columns: 1fr 1fr !important; }
           .why-grid { grid-template-columns: 1fr !important; }
+          .cat-panel { padding: 32px 20px !important; }
+          .stats-bar-divider { display: none !important; }
+          .cta-section { padding: 52px 20px !important; }
+          .home-section { padding: 44px 0 !important; }
+          .section-inner { padding: 0 16px !important; }
+          .why-inner { padding: 44px 16px !important; }
         }
         @media (max-width: 420px) {
           .products-grid { grid-template-columns: 1fr !important; }
+          .cat-panel { padding: 28px 16px !important; }
         }
       `}</style>
     </div>

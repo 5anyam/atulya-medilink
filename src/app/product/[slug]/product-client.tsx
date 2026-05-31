@@ -200,7 +200,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
 
       {/* Breadcrumb */}
       <div style={{ borderBottom: '1px solid #f0f0f0', background: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '10px 32px' }}>
+        <div className="breadcrumb-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '10px 32px' }}>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9ca3af' }}>
             <Link href="/" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.15s' }} onMouseEnter={e => (e.currentTarget.style.color = theme.primary)} onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>Home</Link>
             <ChevronRight style={{ width: 12, height: 12 }} />
@@ -434,11 +434,13 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
           .product-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
           .product-image-sticky { position: relative !important; top: auto !important; }
           .related-grid { grid-template-columns: 1fr 1fr !important; }
+          .breadcrumb-inner { padding: 10px 16px !important; }
         }
         @media (max-width: 480px) {
           .related-grid { grid-template-columns: 1fr !important; }
           .product-container { padding: 12px 12px 100px !important; }
           .trust-grid { grid-template-columns: 1fr !important; }
+          .breadcrumb-inner { padding: 8px 12px !important; }
         }
       `}</style>
     </div>

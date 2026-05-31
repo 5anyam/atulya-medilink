@@ -99,7 +99,7 @@ export default function ShopPageClient({ products }: Props) {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
       {/* Hero */}
-      <section style={{ background: '#0f0f0f', padding: '64px 32px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
+      <section className="shop-hero" style={{ background: '#0f0f0f', padding: '64px 32px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: -80, right: -80, width: 360, height: 360, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.15) 0%, transparent 70%)`, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
@@ -132,7 +132,7 @@ export default function ShopPageClient({ products }: Props) {
         </div>
       </section>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px' }}>
+      <div className="shop-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px' }}>
 
         {/* Search + Filter */}
         <div style={{ display: 'flex', gap: 12, marginBottom: 32, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -182,8 +182,19 @@ export default function ShopPageClient({ products }: Props) {
       </div>
 
       <style>{`
-        @media (max-width: 900px) { .shop-grid { grid-template-columns: 1fr 1fr !important; } }
-        @media (max-width: 480px) { .shop-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 900px) {
+          .shop-grid { grid-template-columns: 1fr 1fr !important; }
+          .shop-hero { padding: 48px 20px !important; }
+          .shop-inner { padding: 28px 20px !important; }
+        }
+        @media (max-width: 480px) {
+          .shop-grid { grid-template-columns: 1fr 1fr !important; }
+          .shop-hero { padding: 36px 16px !important; }
+          .shop-inner { padding: 20px 16px !important; }
+        }
+        @media (max-width: 360px) {
+          .shop-grid { grid-template-columns: 1fr !important; }
+        }
       `}</style>
     </div>
   );
