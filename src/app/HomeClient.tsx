@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
+import HeroCarousel from '../../components/HeroCarousel';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award, Sparkles, Pill,
   FlaskConical, Heart, Package, BadgeCheck
@@ -697,7 +698,7 @@ function CTASection() {
 export default function Homepage({ products }: { products: StaticProduct[] }) {
   return (
     <div style={{ minHeight: '100vh', background: '#fff', overflow: 'hidden' }}>
-      <HeroSection products={products} />
+      <HeroCarousel />
       <OffersBanner />
       <MarqueeBelt />
       <TrustBar />

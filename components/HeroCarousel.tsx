@@ -1,19 +1,21 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useBrand } from '../lib/brand-context';
 
 const IMAGES = [
   {
-    src: 'https://cms.amraj.in/wp-content/uploads/2025/10/amraj-banner-1-scaled.jpg',
+    src: 'https://yellow-chamois-808194.hostingersite.com/wp-content/uploads/2025/12/CHRISTMAS-scaled.jpghttps://yellow-chamois-808194.hostingersite.com/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
     alt: 'Healthy skin with bottle',
   },
   {
-    src: 'https://cms.amraj.in/wp-content/uploads/2025/06/Amraj-Bg-Photo_20250623_113828_0000-scaled.jpg',
+    src: 'https://yellow-chamois-808194.hostingersite.com/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
     alt: 'Model smiling with serum',
   }
 ];
 
 export default function HeroCarousel() {
+  const { theme } = useBrand();
   const [current, setCurrent] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -101,14 +103,14 @@ export default function HeroCarousel() {
           {IMAGES.map((_, index) => (
             <button
               key={index}
-              className={`rounded-full cursor-pointer transition-all duration-300 
-                hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500/50 
-                ${index === current
-                  ? 'bg-teal-500 w-6 sm:w-8 h-2 sm:h-2.5' 
-                  : 'bg-gray-300 hover:bg-gray-400 w-2 sm:w-2.5 h-2 sm:h-2.5'
-                }`}
               onClick={() => goToSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
+              className="rounded-full cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none"
+              style={{
+                width: index === current ? 28 : 10,
+                height: 10,
+                background: index === current ? theme.primary : '#d1d5db',
+              }}
             />
           ))}
         </div>
