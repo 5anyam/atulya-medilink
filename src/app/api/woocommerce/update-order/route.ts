@@ -3,9 +3,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const WOOCOMMERCE_CONFIG = {
-  BASE_URL: process.env.API_BASE || 'https://cms.amraj.in',
-  CONSUMER_KEY: process.env.CONSUMER_KEY || 'ck_7610f309972822bfa8e87304ea6c47e9e93b8ff6',
-  CONSUMER_SECRET: process.env.CONSUMER_SECRET || 'cs_0f117bc7ec4611ca378adde03010f619c0af59b2',
+  BASE_URL: (process.env.WC_API_BASE || process.env.API_BASE || 'https://cms.atulyamedilinkpvtltd.com/wp-json/wc/v3').replace('/wp-json/wc/v3', ''),
+  CONSUMER_KEY: process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || 'ck_d4aff65e142f21beeb0ad648b90728553c99ee96',
+  CONSUMER_SECRET: process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || 'cs_d469c205bb3d56085ed79bbadaf344c243626277',
 };
 
 export async function PUT(request: NextRequest) {

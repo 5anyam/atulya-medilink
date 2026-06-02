@@ -24,7 +24,7 @@ export default function DisclaimerPage() {
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
           <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Disclaimer</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>atulyamedilinkpvtltd.shop · Natural Cosmetics &amp; Nutraceuticals</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>atulyamedilinkpvtltd.com · Natural Cosmetics &amp; Nutraceuticals</p>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ export default function DisclaimerPage() {
           </div>
 
           <Section title="1. Health &amp; Medical Disclaimer" borderColor={theme.primary}>
-            <p>The information provided on atulyamedilinkpvtltd.shop is for general informational and educational purposes only and does not constitute medical advice. Product descriptions, ingredient benefits, and use-case information are based on available research and should not replace consultation with a licensed physician or healthcare provider.</p>
+            <p>The information provided on atulyamedilinkpvtltd.com is for general informational and educational purposes only and does not constitute medical advice. Product descriptions, ingredient benefits, and use-case information are based on available research and should not replace consultation with a licensed physician or healthcare provider.</p>
             <p style={{ marginTop: 12 }}>Results from cosmetic and nutraceutical products vary by individual. Atulya Medilink makes no guarantee of specific outcomes.</p>
           </Section>
 
@@ -69,7 +69,7 @@ export default function DisclaimerPage() {
             <p>If you have questions about this disclaimer, contact us:</p>
             <ul style={{ paddingLeft: 0, marginTop: 10, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
               <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
-              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.com</li>
               <li><strong>Phone:</strong> 011 4144 7223</li>
               <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
             </ul>

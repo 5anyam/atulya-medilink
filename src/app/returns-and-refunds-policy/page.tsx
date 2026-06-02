@@ -24,7 +24,7 @@ export default function ReturnsRefundPolicyPage() {
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
           <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Returns &amp; Refunds</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Please read carefully · atulyamedilinkpvtltd.shop</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Please read carefully · atulyamedilinkpvtltd.com</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export default function ReturnsRefundPolicyPage() {
 
           <Section title="3. How to Initiate a Return" borderColor={theme.primary}>
             <ol style={{ paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <li>Contact us within <strong>7 days</strong> of delivery at <strong>info@atulyamedilinkpvtltd.shop</strong> or call <strong>011 4144 7223</strong></li>
+              <li>Contact us within <strong>7 days</strong> of delivery at <strong>info@atulyamedilinkpvtltd.com</strong> or call <strong>011 4144 7223</strong></li>
               <li>Share your order number, a description of the issue, and clear photographs of the product and packaging</li>
               <li>Our team will review and respond within 48 hours</li>
               <li>If approved, we will arrange a pickup or guide you on returning the item</li>
@@ -88,7 +88,7 @@ export default function ReturnsRefundPolicyPage() {
           <Section title="6. Contact for Returns" borderColor={theme.primary}>
             <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
               <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
-              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.com</li>
               <li><strong>Phone:</strong> 011 4144 7223</li>
               <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
             </ul>

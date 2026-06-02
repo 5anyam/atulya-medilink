@@ -24,7 +24,7 @@ export default function MyAccountPage() {
   const { user, token, logout } = useAuth();
   const router = useRouter();
 
-  const API_URL = 'https://cms.amraj.in/wp-json/amraj/v1'; // Change to your CMS URL
+  const API_URL = 'https://cms.atulyamedilinkpvtltd.com/wp-json/wc/v1'; // Change to your CMS URL
 
   useEffect(() => {
     if (!token) {

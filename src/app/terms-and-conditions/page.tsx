@@ -24,7 +24,7 @@ export default function TermsAndConditionsPage() {
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
           <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Terms &amp; Conditions</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Last Updated: 1 January 2024 · atulyamedilinkpvtltd.shop</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Last Updated: 1 January 2024 · atulyamedilinkpvtltd.com</p>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export default function TermsAndConditionsPage() {
         <div style={{ background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }}>
 
           <Section title="1. Agreement to Terms" borderColor={theme.primary}>
-            <p>This website is owned and managed by <strong>Atulya Medilink Pvt. Ltd.</strong> (CIN: U52390DL2019PTC352625). By accessing or using <strong>atulyamedilinkpvtltd.shop</strong>, you agree to be legally bound by these Terms &amp; Conditions. These terms may be updated at any time without prior notice. Continued use of the site constitutes acceptance of the updated terms.</p>
+            <p>This website is owned and managed by <strong>Atulya Medilink Pvt. Ltd.</strong> (CIN: U52390DL2019PTC352625). By accessing or using <strong>atulyamedilinkpvtltd.com</strong>, you agree to be legally bound by these Terms &amp; Conditions. These terms may be updated at any time without prior notice. Continued use of the site constitutes acceptance of the updated terms.</p>
           </Section>
 
           <Section title="2. Products &amp; Pricing" borderColor={theme.primary}>
@@ -57,7 +57,7 @@ export default function TermsAndConditionsPage() {
           </Section>
 
           <Section title="7. Intellectual Property" borderColor={theme.primary}>
-            <p>All content on atulyamedilinkpvtltd.shop — including text, images, logos, formulations, and design — is the intellectual property of Atulya Medilink Pvt. Ltd. and may not be reproduced without written permission.</p>
+            <p>All content on atulyamedilinkpvtltd.com — including text, images, logos, formulations, and design — is the intellectual property of Atulya Medilink Pvt. Ltd. and may not be reproduced without written permission.</p>
           </Section>
 
           <Section title="8. Governing Law" borderColor={theme.primary}>
@@ -67,7 +67,7 @@ export default function TermsAndConditionsPage() {
           <Section title="9. Contact" borderColor={theme.primary}>
             <ul style={{ paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
               <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
-              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.com</li>
               <li><strong>Phone:</strong> 011 4144 7223</li>
               <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
             </ul>

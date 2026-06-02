@@ -8,7 +8,6 @@ import Script from 'next/script';
 import AnnouncementBar from '../../components/anouncement';
 import SecurityBar from '../../components/SecurityBar';
 import { Suspense } from 'react';
-import Whatsapp from '../../components/Whatsapp';
 import LeadCapture from '../../components/LeadCapture';
 import Loading from './loading';
 import { AuthProvider } from '../../lib/auth-context';
@@ -84,7 +83,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </main>
                   <Footer />
                 </div>
-                <Whatsapp />
                 <Suspense fallback={null}>
                   <LeadCapture />
                 </Suspense>

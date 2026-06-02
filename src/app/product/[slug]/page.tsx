@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${product.name} | Atulya Medilink`;
   const description = product.tagline || `Buy ${product.name} online. Free delivery across India.`;
   const imageUrl = product.images[0];
-  const canonical = `https://atulyamedilinkpvtltd.shop/product/${product.slug}`;
+  const canonical = `https://atulyamedilinkpvtltd.com/product/${product.slug}`;
 
   return {
     title,
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [imageUrl],
     },
     robots: { index: true, follow: true },
-    metadataBase: new URL('https://atulyamedilinkpvtltd.shop'),
+    metadataBase: new URL('https://atulyamedilinkpvtltd.com'),
   };
 }
 
@@ -70,7 +70,7 @@ export default async function Page({ params }: Props) {
 
   if (!product) notFound();
 
-  const canonical = `https://atulyamedilinkpvtltd.shop/product/${product.slug}`;
+  const canonical = `https://atulyamedilinkpvtltd.com/product/${product.slug}`;
 
   const jsonLd = {
     '@context': 'https://schema.org/',

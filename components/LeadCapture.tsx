@@ -6,12 +6,16 @@ import { X, MessageCircle, Send, Phone, Mail, User } from 'lucide-react';
 /* ─────────────────────────────────────────────
    Helpers
 ───────────────────────────────────────────── */
-function saveLead(data: { name?: string; email?: string; phone?: string; source: string; message?: string }) {
+async function saveLead(data: { name?: string; email?: string; phone?: string; source: string; message?: string }) {
   try {
-    const leads: object[] = JSON.parse(localStorage.getItem('atulya_leads') || '[]');
-    leads.push({ ...data, createdAt: new Date().toISOString() });
-    localStorage.setItem('atulya_leads', JSON.stringify(leads));
-  } catch {}
+    await fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.error('Lead save failed', e);
+  }
 }
 
 function alreadySeen(key: string) {
@@ -45,10 +49,10 @@ function ExitIntentPopup() {
     return () => document.removeEventListener('mouseleave', handle);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email && !phone) return;
-    saveLead({ email, phone, source: 'exit_intent' });
+    await saveLead({ email, phone, source: 'exit_intent' });
     setSubmitted(true);
   };
 
@@ -145,8 +149,7 @@ export function EnquiryPopup({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     if (!form.name || !form.phone) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-    saveLead({ ...form, source: 'enquiry_form' });
+    await saveLead({ ...form, source: 'enquiry_form' });
     setSubmitted(true);
     setLoading(false);
   };
@@ -226,7 +229,7 @@ export function EnquiryPopup({ onClose }: { onClose: () => void }) {
 function WhatsAppWidget() {
   const [open, setOpen] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
-  const WA_NUMBER = '919999999999'; // replace with actual WhatsApp number
+  const WA_NUMBER = '919891521090';
   const WA_MESSAGE = encodeURIComponent('Hi Atulya Medilink! I have a query about your products.');
 
   useEffect(() => {

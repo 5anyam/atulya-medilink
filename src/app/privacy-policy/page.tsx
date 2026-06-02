@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Legal</span>
           <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', marginBottom: 12, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1 }}>Privacy Policy</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Effective Date: 1 January 2024 · atulyamedilinkpvtltd.shop</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>Effective Date: 1 January 2024 · atulyamedilinkpvtltd.com</p>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
         <div style={{ background: '#fff', borderRadius: 16, padding: '48px 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }}>
 
           <Section title="1. Introduction" borderColor={theme.primary}>
-            <p>Atulya Medilink Pvt. Ltd. (&ldquo;Company&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information through our platform <strong>atulyamedilinkpvtltd.shop</strong> when you browse, access, or purchase from us.</p>
+            <p>Atulya Medilink Pvt. Ltd. (&ldquo;Company&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information through our platform <strong>atulyamedilinkpvtltd.com</strong> when you browse, access, or purchase from us.</p>
             <p style={{ marginTop: 12 }}>We do not publish, sell, or rent client details to third parties for marketing purposes without explicit consent. By accessing or using our Platform, you agree to the terms of this Privacy Policy.</p>
           </Section>
 
@@ -80,7 +80,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           <Section title="8. Your Rights" borderColor={theme.primary}>
-            <p>You may request access to, correction of, or deletion of your personal data by contacting us at <strong>info@atulyamedilinkpvtltd.shop</strong>. We will respond within 30 days.</p>
+            <p>You may request access to, correction of, or deletion of your personal data by contacting us at <strong>info@atulyamedilinkpvtltd.com</strong>. We will respond within 30 days.</p>
           </Section>
 
           <Section title="9. Changes to This Policy" borderColor={theme.primary}>
@@ -91,7 +91,7 @@ export default function PrivacyPolicyPage() {
             <p>For privacy-related queries, contact us at:</p>
             <ul style={{ paddingLeft: 0, marginTop: 10, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
               <li><strong>Company:</strong> Atulya Medilink Pvt. Ltd. (CIN: U52390DL2019PTC352625)</li>
-              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.shop</li>
+              <li><strong>Email:</strong> info@atulyamedilinkpvtltd.com</li>
               <li><strong>Phone:</strong> 011 4144 7223</li>
               <li><strong>Address:</strong> Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085</li>
             </ul>
