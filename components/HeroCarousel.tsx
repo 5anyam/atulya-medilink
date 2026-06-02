@@ -5,11 +5,11 @@ import { useBrand } from '../lib/brand-context';
 
 const IMAGES = [
   {
-    src: 'https://yellow-chamois-808194.hostingersite.com/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
     alt: 'Healthy skin with bottle',
   },
   {
-    src: 'https://yellow-chamois-808194.hostingersite.com/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
     alt: 'Model smiling with serum',
   }
 ];

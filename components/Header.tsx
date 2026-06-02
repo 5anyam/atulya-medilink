@@ -11,7 +11,9 @@ import { FiSearch, FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { BiChevronDown } from 'react-icons/bi';
 import { Sparkles, Pill } from 'lucide-react';
 
-const navItems = [
+type NavItem = { name: string; to: string; submenu?: { name: string; to: string }[]; highlight?: boolean };
+
+const navItems: NavItem[] = [
   { name: 'Home', to: '/' },
   {
     name: 'Products',
@@ -25,6 +27,7 @@ const navItems = [
       { name: 'Vitamins & Supplements', to: '/shop?cat=vitamins' },
     ],
   },
+  { name: 'Offers', to: '/offers', highlight: true },
   { name: 'About', to: '/about' },
   { name: 'Contact', to: '/contact' },
 ];
@@ -203,15 +206,29 @@ export default function Header() {
                       <Link
                         href={item.to}
                         style={{
-                          display: 'block', padding: '6px 16px', fontSize: 13, fontWeight: 500,
+                          display: 'inline-flex', alignItems: 'center', gap: 5,
+                          padding: item.highlight ? '5px 14px' : '6px 16px',
+                          fontSize: 13, fontWeight: item.highlight ? 700 : 500,
                           textDecoration: 'none',
-                          color: location === item.to ? theme.primary : '#374151',
-                          borderBottom: location === item.to ? `2px solid ${theme.primary}` : '2px solid transparent',
-                          transition: 'color 0.2s, border-color 0.2s',
+                          color: item.highlight ? '#fff' : (location === item.to ? theme.primary : '#374151'),
+                          background: item.highlight ? theme.primary : 'transparent',
+                          borderBottom: !item.highlight && location === item.to ? `2px solid ${theme.primary}` : '2px solid transparent',
+                          borderRadius: item.highlight ? 6 : 0,
+                          transition: 'color 0.2s, border-color 0.2s, background 0.2s',
+                          letterSpacing: item.highlight ? '0.04em' : 'normal',
                         }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = theme.primary; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = location === item.to ? theme.primary : '#374151'; }}
+                        onMouseEnter={e => {
+                          const el = e.currentTarget as HTMLElement;
+                          if (item.highlight) { el.style.background = theme.primaryDark; }
+                          else { el.style.color = theme.primary; }
+                        }}
+                        onMouseLeave={e => {
+                          const el = e.currentTarget as HTMLElement;
+                          if (item.highlight) { el.style.background = theme.primary; }
+                          else { el.style.color = location === item.to ? theme.primary : '#374151'; }
+                        }}
                       >
+                        {item.highlight && <span>🏷️</span>}
                         {item.name}
                       </Link>
                     )}
@@ -411,9 +428,18 @@ export default function Header() {
                     </div>
                   ) : (
                     <Link href={item.to} onClick={() => setMobileMenuOpen(false)}
-                      style={{ display: 'block', padding: '14px 20px', fontSize: 15, fontWeight: 500, color: location === item.to ? theme.primary : '#111', textDecoration: 'none', borderBottom: '1px solid #f0f0f0', borderLeft: location === item.to ? `3px solid ${theme.primary}` : '3px solid transparent' }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        padding: '14px 20px', fontSize: 15, fontWeight: item.highlight ? 700 : 500,
+                        color: item.highlight ? theme.primary : (location === item.to ? theme.primary : '#111'),
+                        textDecoration: 'none', borderBottom: '1px solid #f0f0f0',
+                        borderLeft: location === item.to ? `3px solid ${theme.primary}` : '3px solid transparent',
+                        background: item.highlight ? theme.bgLight : 'transparent',
+                      }}
                     >
+                      {item.highlight && <span>🏷️</span>}
                       {item.name}
+                      {item.highlight && <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', background: theme.primary, padding: '2px 8px', borderRadius: 10, letterSpacing: '0.08em' }}>SALE</span>}
                     </Link>
                   )}
                 </div>

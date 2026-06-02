@@ -1,4 +1,4 @@
-const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://yellow-chamois-808194.hostingersite.com/wp-json/wc/v3");
+const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://cms.atulyamedilinkpvtltd.shop/wp-json/wc/v3");
 const CONSUMER_KEY = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || "ck_d4aff65e142f21beeb0ad648b90728553c99ee96";
 const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || "cs_d469c205bb3d56085ed79bbadaf344c243626277";
 
