@@ -328,7 +328,7 @@ export default function Checkout() {
       />
 
       <div style={{ minHeight: '100vh', background: '#faf7f2' }}>
-        <div className="checkout-container" style={{ maxWidth: 1024, margin: '0 auto', padding: '40px 32px' }}>
+        <div className="max-w-[1024px] mx-auto px-4 py-6 lg:px-8 lg:py-10">
 
           {/* Header */}
           <div style={{ marginBottom: 36 }}>
@@ -338,12 +338,12 @@ export default function Checkout() {
             >
               <ChevronRight style={{ width: 14, height: 14, transform: 'rotate(180deg)' }} /> BACK TO CART
             </Link>
-            <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(36px,7vw,88px)', letterSpacing: '0.02em', color: '#0f1117', lineHeight: 0.9 }}>
+            <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px,7vw,88px)', letterSpacing: '0.02em', color: '#0f1117', lineHeight: 0.9 }}>
               CHECKOUT.<br /><span style={{ color: '#0D9488', fontSize: '0.7em' }}>COMPLETE YOUR ORDER.</span>
             </h1>
           </div>
 
-          <div className="checkout-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 32, alignItems: 'start' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 lg:gap-8 items-start">
 
             {/* LEFT: Form */}
             <div>
@@ -439,7 +439,7 @@ export default function Checkout() {
             </div>
 
             {/* RIGHT: Summary */}
-            <div className="checkout-summary" style={{ position: 'sticky', top: 24 }}>
+            <div className="lg:sticky lg:top-6">
               <OrderSummary items={items} total={subtotal} delivery={delivery} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12 }}>
                 {[{ icon: ShieldCheck, text: 'Secure' }, { icon: Truck, text: 'Fast' }, { icon: RotateCcw, text: 'Returns' }].map(({ icon: Icon, text }) => (
@@ -454,14 +454,7 @@ export default function Checkout() {
         </div>
       </div>
 
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) {
-          .checkout-container { padding: 24px 16px !important; }
-          .checkout-grid { grid-template-columns: 1fr !important; }
-          .checkout-summary { position: relative !important; top: auto !important; }
-        }
-      `}</style>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </>
   );
 }
