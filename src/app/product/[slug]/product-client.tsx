@@ -43,12 +43,20 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div className="flex flex-col gap-3 min-w-0 w-full">
       {/* Main image with zoom */}
       <div
         ref={imgRef}
-        className="product-main-img"
-        style={{ position: 'relative', aspectRatio: '1', background: bgLight, overflow: 'hidden', border: `1px solid ${border}`, borderRadius: 16, boxShadow: `0 4px 24px rgba(${primaryRgb},0.1)`, cursor: zoomed ? 'zoom-out' : 'zoom-in' }}
+        className="relative w-full overflow-hidden"
+        style={{
+          aspectRatio: '1',
+          maxHeight: 'min(80vw, 420px)',
+          background: bgLight,
+          border: `1px solid ${border}`,
+          borderRadius: 16,
+          boxShadow: `0 4px 24px rgba(${primaryRgb},0.1)`,
+          cursor: zoomed ? 'zoom-out' : 'zoom-in',
+        }}
         onMouseEnter={() => setZoomed(true)}
         onMouseLeave={() => setZoomed(false)}
         onMouseMove={handleMouseMove}
@@ -59,7 +67,7 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
           fill
           style={{
             objectFit: 'contain',
-            padding: zoomed ? 0 : 24,
+            padding: zoomed ? 0 : 20,
             transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
             transform: zoomed ? 'scale(2.2)' : 'scale(1)',
             transition: zoomed ? 'none' : 'transform 0.35s ease, padding 0.2s',
@@ -67,9 +75,9 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
         />
-        {/* Zoom hint overlay - desktop only */}
+        {/* Zoom hint - desktop only */}
         {!zoomed && (
-          <div className="zoom-hint" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '5px 10px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 5, backdropFilter: 'blur(4px)' }}>
+          <div className="hidden lg:flex absolute bottom-3 right-3 items-center gap-1 text-white text-xs font-semibold px-2 py-1 rounded-md" style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}>
             <ZoomIn size={12} /> Hover to zoom
           </div>
         )}
@@ -77,21 +85,22 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
 
       {/* Thumbnails */}
       {images.length > 1 && (
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+        <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 w-full" style={{ scrollbarWidth: 'none' }}>
           {images.map((src, i) => (
             <button
               key={i}
               onClick={() => setMain(i)}
+              className="flex-shrink-0 relative overflow-hidden"
               style={{
-                position: 'relative', flexShrink: 0, width: 80, height: 80,
+                width: 68, height: 68,
                 border: `2px solid ${i === main ? `rgba(${primaryRgb},0.8)` : '#e5e7eb'}`,
-                borderRadius: 10, overflow: 'hidden',
+                borderRadius: 10,
                 opacity: i === main ? 1 : 0.6,
                 cursor: 'pointer', background: bgLight, padding: 0,
                 transition: 'opacity 0.2s, border-color 0.2s',
               }}
             >
-              <Image src={src} alt="" fill style={{ objectFit: 'contain', padding: 8 }} sizes="80px" />
+              <Image src={src} alt="" fill style={{ objectFit: 'contain', padding: 6 }} sizes="68px" />
             </button>
           ))}
         </div>
@@ -184,7 +193,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
 
       {/* Breadcrumb */}
       <div style={{ borderBottom: '1px solid #f0f0f0', background: '#fff' }}>
-        <div className="breadcrumb-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '12px 32px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '10px 14px' }} className="lg:!px-8">
           <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9ca3af' }}>
             <Link href="/" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.15s' }} onMouseEnter={e => (e.currentTarget.style.color = theme.primary)} onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>Home</Link>
             <ChevronRight style={{ width: 12, height: 12 }} />
@@ -196,11 +205,11 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
       </div>
 
       {/* Main layout */}
-      <div className="product-container" style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px' }}>
-        <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px 64px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 14px 100px' }} className="lg:!p-[40px_32px_120px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16">
 
-          {/* LEFT: Images (sticky on desktop) */}
-          <div className="product-image-sticky" style={{ position: 'sticky', top: 24, alignSelf: 'start' }}>
+          {/* LEFT: Images */}
+          <div className="w-full min-w-0 lg:sticky lg:top-6 lg:self-start">
             <ImageGallery images={product.images} bgLight={theme.bgLight} border={theme.border} primaryRgb={theme.primaryRgb} />
           </div>
 
@@ -466,25 +475,15 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
       </div>
 
       <style>{`
+        .mobile-cta-outer { display: none; }
         @media (max-width: 1023px) {
-          .zoom-hint { display: none !important; }
-          .mobile-cta-outer { display: block !important; }
-          .product-container { padding: 16px 14px 100px !important; }
-          .product-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .product-image-sticky { position: relative !important; top: auto !important; max-width: 420px !important; margin: 0 auto !important; }
-          .product-main-img { aspect-ratio: 4/3 !important; }
+          .mobile-cta-outer { display: block; }
           .related-grid { grid-template-columns: 1fr 1fr !important; }
-          .breadcrumb-inner { padding: 10px 16px !important; }
-          .breadcrumb-product-name { max-width: 160px !important; }
           .trust-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 480px) {
           .related-grid { grid-template-columns: 1fr 1fr !important; }
-          .product-container { padding: 12px 12px 100px !important; }
           .trust-grid { grid-template-columns: 1fr 1fr !important; }
-          .breadcrumb-inner { padding: 8px 12px !important; }
-          .product-image-sticky { max-width: 100% !important; }
-          .product-main-img { aspect-ratio: 4/3 !important; }
         }
       `}</style>
     </div>
