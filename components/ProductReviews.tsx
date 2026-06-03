@@ -80,7 +80,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
     rating: 0,
   });
 
-  const API_BASE = 'https://cms.atulyamedilinkpvtltd.com/wp-json/wc/v3';
+  const API_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-json/wc/v3';
   const CONSUMER_KEY = 'ck_d4aff65e142f21beeb0ad648b90728553c99ee96';
   const CONSUMER_SECRET = 'cs_d469c205bb3d56085ed79bbadaf344c243626277';
 

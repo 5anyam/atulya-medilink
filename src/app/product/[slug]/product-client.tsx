@@ -47,6 +47,7 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
       {/* Main image with zoom */}
       <div
         ref={imgRef}
+        className="product-main-img"
         style={{ position: 'relative', aspectRatio: '1', background: bgLight, overflow: 'hidden', border: `1px solid ${border}`, borderRadius: 16, boxShadow: `0 4px 24px rgba(${primaryRgb},0.1)`, cursor: zoomed ? 'zoom-out' : 'zoom-in' }}
         onMouseEnter={() => setZoomed(true)}
         onMouseLeave={() => setZoomed(false)}
@@ -470,7 +471,8 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
           .mobile-cta-outer { display: block !important; }
           .product-container { padding: 16px 14px 100px !important; }
           .product-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .product-image-sticky { position: relative !important; top: auto !important; max-width: 480px !important; margin: 0 auto !important; }
+          .product-image-sticky { position: relative !important; top: auto !important; max-width: 420px !important; margin: 0 auto !important; }
+          .product-main-img { aspect-ratio: 4/3 !important; }
           .related-grid { grid-template-columns: 1fr 1fr !important; }
           .breadcrumb-inner { padding: 10px 16px !important; }
           .breadcrumb-product-name { max-width: 160px !important; }
@@ -482,6 +484,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
           .trust-grid { grid-template-columns: 1fr 1fr !important; }
           .breadcrumb-inner { padding: 8px 12px !important; }
           .product-image-sticky { max-width: 100% !important; }
+          .product-main-img { aspect-ratio: 4/3 !important; }
         }
       `}</style>
     </div>
