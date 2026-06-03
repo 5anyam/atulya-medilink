@@ -5,11 +5,11 @@ import { useBrand } from '../lib/brand-context';
 
 const IMAGES = [
   {
-    src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
     alt: 'Healthy skin with bottle',
   },
   {
-    src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
     alt: 'Model smiling with serum',
   }
 ];
@@ -48,7 +48,7 @@ export default function HeroCarousel() {
 
   return (
     <>
-    <div className="w-full relative bg-gray-50 rounded-lg overflow-hidden shadow-lg">
+    <div className="w-full relative bg-gray-50 overflow-hidden md:rounded-lg md:shadow-lg">
       {/* Main carousel container - Using banner-like aspect ratio */}
       <div className="hero-carousel-inner w-full relative overflow-hidden">
         
@@ -63,7 +63,7 @@ export default function HeroCarousel() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="w-full h-full object-contain bg-gray-50 transition-transform duration-300 hover:scale-105"
+                  className="w-full h-full object-cover md:object-contain bg-gray-50 transition-transform duration-300 hover:scale-105"
                   loading={index === 0 ? 'eager' : 'lazy'}
                 />
               
@@ -129,8 +129,8 @@ export default function HeroCarousel() {
 
     <style>{`
       .hero-carousel-inner { aspect-ratio: 16/6; }
-      @media (max-width: 768px) { .hero-carousel-inner { aspect-ratio: 16/9; } }
-      @media (max-width: 480px) { .hero-carousel-inner { aspect-ratio: 4/3; } }
+      @media (max-width: 767px) { .hero-carousel-inner { aspect-ratio: 16/7; } }
+      @media (max-width: 480px) { .hero-carousel-inner { aspect-ratio: 16/7; min-height: 160px; } }
     `}</style>
     </>
   );

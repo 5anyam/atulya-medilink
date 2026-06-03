@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
-  const API_URL = 'https://yellow-chamois-808194.hostingersite.com/wp-json/sachdeva/v1'; // Change to your CMS URL
+  const API_URL = 'https://cms.atulyamedilinkpvtltd.com/wp-json/atulya/v1'; // Change to your CMS URL
 
   useEffect(() => {
     const savedToken = localStorage.getItem('sachdeva_auth_token');
