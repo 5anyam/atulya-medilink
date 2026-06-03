@@ -66,9 +66,9 @@ function ImageGallery({ images, bgLight, border, primaryRgb }: { images: string[
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
         />
-        {/* Zoom hint overlay */}
+        {/* Zoom hint overlay - desktop only */}
         {!zoomed && (
-          <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '5px 10px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 5, backdropFilter: 'blur(4px)' }}>
+          <div className="zoom-hint" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '5px 10px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 5, backdropFilter: 'blur(4px)' }}>
             <ZoomIn size={12} /> Hover to zoom
           </div>
         )}
@@ -189,7 +189,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
             <ChevronRight style={{ width: 12, height: 12 }} />
             <Link href="/shop" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.15s' }} onMouseEnter={e => (e.currentTarget.style.color = theme.primary)} onMouseLeave={e => (e.currentTarget.style.color = '#9ca3af')}>Products</Link>
             <ChevronRight style={{ width: 12, height: 12 }} />
-            <span style={{ color: '#374151' }}>{product.shortName}</span>
+            <span className="breadcrumb-product-name" style={{ color: '#374151', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 200 }}>{product.shortName}</span>
           </nav>
         </div>
       </div>
@@ -465,20 +465,23 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1023px) {
+          .zoom-hint { display: none !important; }
           .mobile-cta-outer { display: block !important; }
           .product-container { padding: 16px 14px 100px !important; }
           .product-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .product-image-sticky { position: relative !important; top: auto !important; }
+          .product-image-sticky { position: relative !important; top: auto !important; max-width: 480px !important; margin: 0 auto !important; }
           .related-grid { grid-template-columns: 1fr 1fr !important; }
           .breadcrumb-inner { padding: 10px 16px !important; }
+          .breadcrumb-product-name { max-width: 160px !important; }
           .trust-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 480px) {
-          .related-grid { grid-template-columns: 1fr !important; }
+          .related-grid { grid-template-columns: 1fr 1fr !important; }
           .product-container { padding: 12px 12px 100px !important; }
-          .trust-grid { grid-template-columns: 1fr !important; }
+          .trust-grid { grid-template-columns: 1fr 1fr !important; }
           .breadcrumb-inner { padding: 8px 12px !important; }
+          .product-image-sticky { max-width: 100% !important; }
         }
       `}</style>
     </div>
