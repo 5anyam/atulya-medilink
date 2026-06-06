@@ -3,7 +3,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import CartIcon from './CartIcon';
-import { useIsMobile } from '../hooks/use-mobile';
 import { useAuth } from '../lib/auth-context';
 import { useBrand, BrandMode } from '../lib/brand-context';
 import React, { useState, useRef, useEffect } from 'react';
@@ -84,7 +83,6 @@ function BrandSwitcher() {
 
 export default function Header() {
   const location = usePathname();
-  const isMobile = useIsMobile();
   const [search, setSearch] = useState('');
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -153,8 +151,7 @@ export default function Header() {
             </Link>
 
             {/* Desktop Nav */}
-            {!isMobile && (
-              <nav style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+            <nav className="header-desktop" style={{ alignItems: 'center', gap: 0 }}>
                 {navItems.map((item) => (
                   <div key={item.name} style={{ position: 'relative' }} ref={item.name === 'Products' ? shopMenuRef : undefined}>
                     {item.submenu ? (
@@ -235,33 +232,29 @@ export default function Header() {
                   </div>
                 ))}
               </nav>
-            )}
 
             {/* Right Actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
 
               {/* Brand Switcher (Desktop) */}
-              {!isMobile && <BrandSwitcher />}
+              <div className="header-desktop"><BrandSwitcher /></div>
 
               {/* Desktop Search */}
-              {!isMobile && (
-                <form onSubmit={handleSearch} style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e5e7eb', background: '#f9fafb', padding: '7px 12px', gap: 8, width: 200, borderRadius: 8 }}>
-                    <FiSearch style={{ color: '#9ca3af', flexShrink: 0 }} size={14} />
-                    <input
-                      type="text"
-                      placeholder="Search products..."
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 13, color: '#374151', width: '100%' }}
-                    />
-                  </div>
-                </form>
-              )}
+              <form className="header-desktop" onSubmit={handleSearch} style={{ position: 'relative' }}>
+                <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e5e7eb', background: '#f9fafb', padding: '7px 12px', gap: 8, width: 200, borderRadius: 8 }}>
+                  <FiSearch style={{ color: '#9ca3af', flexShrink: 0 }} size={14} />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: 13, color: '#374151', width: '100%' }}
+                  />
+                </div>
+              </form>
 
               {/* User (Desktop) */}
-              {!isMobile && (
-                <div style={{ position: 'relative' }} ref={userMenuRef}>
+              <div className="header-desktop" style={{ position: 'relative' }} ref={userMenuRef}>
                   {user ? (
                     <>
                       <button
@@ -308,7 +301,6 @@ export default function Header() {
                     </Link>
                   )}
                 </div>
-              )}
 
               {/* Cart */}
               <div style={{ borderLeft: '1px solid #f0f0f0', paddingLeft: 10 }}>
@@ -316,25 +308,24 @@ export default function Header() {
               </div>
 
               {/* Mobile Search toggle */}
-              {isMobile && !showMobileSearch && (
-                <button onClick={() => setShowMobileSearch(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#374151', padding: 6 }}>
+              {!showMobileSearch && (
+                <button className="header-mobile" onClick={() => setShowMobileSearch(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#374151', padding: 6 }}>
                   <FiSearch size={20} />
                 </button>
               )}
 
               {/* Mobile Menu Toggle */}
-              {isMobile && (
-                <button
-                  onClick={() => setMobileMenuOpen(true)}
-                  style={{ background: theme.primary, color: '#fff', border: 'none', borderRadius: 8, padding: '7px 9px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  <FiMenu size={20} />
-                </button>
-              )}
+              <button
+                className="header-mobile"
+                onClick={() => setMobileMenuOpen(true)}
+                style={{ background: theme.primary, color: '#fff', border: 'none', borderRadius: 8, padding: '7px 9px', cursor: 'pointer', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <FiMenu size={20} />
+              </button>
             </div>
 
             {/* Mobile Search Overlay */}
-            {isMobile && showMobileSearch && (
+            {showMobileSearch && (
               <div style={{ position: 'absolute', inset: 0, background: '#fff', zIndex: 50, display: 'flex', alignItems: 'center', padding: '0 16px', borderBottom: '1px solid #f0f0f0' }}>
                 <form style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%' }} onSubmit={handleSearch}>
                   <FiSearch style={{ color: '#9ca3af' }} size={16} />
@@ -351,9 +342,8 @@ export default function Header() {
       </header>
 
       {/* ── MOBILE DRAWER ── */}
-      {isMobile && (
-        <>
-          <div onClick={() => setMobileMenuOpen(false)}
+      <>
+        <div onClick={() => setMobileMenuOpen(false)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 600, opacity: mobileMenuOpen ? 1 : 0, visibility: mobileMenuOpen ? 'visible' : 'hidden', transition: 'opacity 0.3s' }}
           />
           <div style={{
@@ -474,8 +464,7 @@ export default function Header() {
               )}
             </div>
           </div>
-        </>
-      )}
+      </>
     </>
   );
 }

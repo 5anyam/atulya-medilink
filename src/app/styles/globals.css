@@ -102,3 +102,11 @@ button { transition-property: color, background-color, border-color, box-shadow,
 .animate-marquee { animation: marquee 35s linear infinite; }
 .animate-mq { animation: mq-fwd 22s linear infinite; }
 .animate-mq-rev { animation: mq-rev 18s linear infinite; }
+
+/* ━━ HEADER RESPONSIVE (CSS-based, no JS flash) ━━ */
+.header-desktop { display: none !important; }
+.header-mobile  { display: flex !important; }
+@media (min-width: 1024px) {
+  .header-desktop { display: flex !important; }
+  .header-mobile  { display: none !important; }
+}
