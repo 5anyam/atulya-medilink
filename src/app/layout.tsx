@@ -12,6 +12,13 @@ import LeadCapture from '../../components/LeadCapture';
 import Loading from './loading';
 import { AuthProvider } from '../../lib/auth-context';
 import { BrandProvider } from '../../lib/brand-context';
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata = {
   title: 'Atulya Medilink — Natural Cosmetics & Nutraceuticals',
