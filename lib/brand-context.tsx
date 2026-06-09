@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type BrandMode = 'cosmetics' | 'nutraceuticals';
+export type BrandMode = 'cosmetics' | 'nutraceuticals' | 'ayurveda';
 
 export interface BrandTheme {
   primary: string;
@@ -38,6 +38,17 @@ export const BRAND_THEMES: Record<BrandMode, BrandTheme> = {
     label: 'Nutraceuticals',
     heroGrad: 'linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #5eead4 100%)',
   },
+  ayurveda: {
+    primary: '#7c5c2e',
+    primaryDark: '#5e4321',
+    primaryRgb: '124,92,46',
+    bgLight: '#fdf8f0',
+    bgAlt: '#f5edd8',
+    border: '#e6d4b0',
+    mode: 'ayurveda',
+    label: 'Ayurveda',
+    heroGrad: 'linear-gradient(135deg, #7c5c2e 0%, #a67c52 60%, #c8a97a 100%)',
+  },
 };
 
 interface BrandCtx {
@@ -58,7 +69,7 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const s = localStorage.getItem('atulya-brand') as BrandMode;
-      if (s === 'cosmetics' || s === 'nutraceuticals') setModeState(s);
+      if (s === 'cosmetics' || s === 'nutraceuticals' || s === 'ayurveda') setModeState(s);
     } catch {}
   }, []);
 

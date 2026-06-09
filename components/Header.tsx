@@ -8,7 +8,7 @@ import { useBrand, BrandMode } from '../lib/brand-context';
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSearch, FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { BiChevronDown } from 'react-icons/bi';
-import { Sparkles, Pill } from 'lucide-react';
+import { Sparkles, Pill, Leaf } from 'lucide-react';
 
 type NavItem = { name: string; to: string; submenu?: { name: string; to: string }[]; highlight?: boolean };
 
@@ -20,6 +20,7 @@ const navItems: NavItem[] = [
     submenu: [
       { name: 'Cosmetics', to: '/shop?type=cosmetics' },
       { name: 'Nutraceuticals', to: '/shop?type=nutraceuticals' },
+      { name: 'Ayurveda', to: '/shop?type=ayurveda' },
       { name: 'Face Care', to: '/shop?cat=face' },
       { name: 'Hair Care', to: '/shop?cat=hair' },
       { name: 'Body Care', to: '/shop?cat=body' },
@@ -45,11 +46,22 @@ function BrandSwitcher() {
         gap: 2,
       }}
     >
-      {(['cosmetics', 'nutraceuticals'] as BrandMode[]).map((m) => {
+      {(['cosmetics', 'nutraceuticals', 'ayurveda'] as BrandMode[]).map((m) => {
         const active = mode === m;
-        const colors = {
-          cosmetics: { bg: '#ff5f1f', text: '#fff' },
-          nutraceuticals: { bg: '#0d9488', text: '#fff' },
+        const colors: Record<BrandMode, string> = {
+          cosmetics: '#ff5f1f',
+          nutraceuticals: '#0d9488',
+          ayurveda: '#7c5c2e',
+        };
+        const icons: Record<BrandMode, React.ReactNode> = {
+          cosmetics: <Sparkles size={11} />,
+          nutraceuticals: <Pill size={11} />,
+          ayurveda: <Leaf size={11} />,
+        };
+        const labels: Record<BrandMode, string> = {
+          cosmetics: 'Cosmetics',
+          nutraceuticals: 'Nutraceuticals',
+          ayurveda: 'Ayurveda',
         };
         return (
           <button
@@ -66,14 +78,14 @@ function BrandSwitcher() {
               borderRadius: 6,
               border: 'none',
               cursor: 'pointer',
-              background: active ? colors[m].bg : 'transparent',
-              color: active ? colors[m].text : '#6b7280',
+              background: active ? colors[m] : 'transparent',
+              color: active ? '#fff' : '#6b7280',
               transition: 'all 0.2s ease',
               whiteSpace: 'nowrap',
             }}
           >
-            {m === 'cosmetics' ? <Sparkles size={11} /> : <Pill size={11} />}
-            {m === 'cosmetics' ? 'Cosmetics' : 'Nutraceuticals'}
+            {icons[m]}
+            {labels[m]}
           </button>
         );
       })}
@@ -366,24 +378,26 @@ export default function Header() {
             <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', background: '#fafafa' }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>SWITCH CATEGORY</p>
               <div style={{ display: 'flex', gap: 8 }}>
-                {(['cosmetics', 'nutraceuticals'] as BrandMode[]).map((m) => {
+                {(['cosmetics', 'nutraceuticals', 'ayurveda'] as BrandMode[]).map((m) => {
                   const active = mode === m;
-                  const colors: Record<BrandMode, string> = { cosmetics: '#ff5f1f', nutraceuticals: '#0d9488' };
+                  const colors: Record<BrandMode, string> = { cosmetics: '#ff5f1f', nutraceuticals: '#0d9488', ayurveda: '#7c5c2e' };
+                  const icons: Record<BrandMode, React.ReactNode> = { cosmetics: <Sparkles size={12} />, nutraceuticals: <Pill size={12} />, ayurveda: <Leaf size={12} /> };
+                  const labels: Record<BrandMode, string> = { cosmetics: 'Cosmetics', nutraceuticals: 'Nutra', ayurveda: 'Ayurveda' };
                   return (
                     <button
                       key={m}
                       onClick={() => setMode(m)}
                       style={{
-                        flex: 1, padding: '10px 12px', fontSize: 12, fontWeight: 600,
+                        flex: 1, padding: '10px 8px', fontSize: 11, fontWeight: 600,
                         borderRadius: 8, border: `1.5px solid ${active ? colors[m] : '#e5e7eb'}`,
                         background: active ? colors[m] : '#fff',
                         color: active ? '#fff' : '#6b7280',
                         cursor: 'pointer', transition: 'all 0.2s',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                       }}
                     >
-                      {m === 'cosmetics' ? <Sparkles size={12} /> : <Pill size={12} />}
-                      {m === 'cosmetics' ? 'Cosmetics' : 'Nutraceuticals'}
+                      {icons[m]}
+                      {labels[m]}
                     </button>
                   );
                 })}

@@ -229,7 +229,7 @@ export function EnquiryPopup({ onClose }: { onClose: () => void }) {
 function WhatsAppWidget() {
   const [open, setOpen] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
-  const WA_NUMBER = '919891521090';
+  const WA_NUMBER = '918851180015';
   const WA_MESSAGE = encodeURIComponent('Hi Atulya Medilink! I have a query about your products.');
 
   useEffect(() => {
