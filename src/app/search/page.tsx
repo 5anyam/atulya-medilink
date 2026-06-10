@@ -1,97 +1,101 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { PRODUCTS } from '../../../lib/products-data';
+import { Star } from 'lucide-react';
+import { useBrand } from '../../../lib/brand-context';
+import { Suspense } from 'react';
 
-type Product = {
-  id: number;
-  name: string;
-  slug: string;
-  url: string;
-  image?: string;
-  price?: string;
-};
-
-const CATALOG: Product[] = [
-  {
-    id: 85,
-    name: 'Advanced Liver Detox',
-    slug: 'advanced-liver-detox',
-    url: 'https://www.amraj.in/product/advanced-liver-detox',
-    image: 'https://cms.amraj.in/wp-content/uploads/2025/07/IMG_6762-scaled.jpg',
-    price: '₹1,499'
-  },
-  {
-    id: 86,
-    name: 'Advanced Prostate Care',
-    slug: 'advanced-prostate-care',
-    url: 'https://www.amraj.in/product/advanced-prostate-care',
-    image: 'https://cms.amraj.in/wp-content/uploads/2025/06/IMG_6765-1-scaled.jpg',
-    price: '₹1,799'
-  },
-  {
-    id: 87,
-    name: 'Weight Management Pro',
-    slug: 'weight-management-pro',
-    url: 'https://www.amraj.in/product/weight-management-pro',
-    image: 'https://cms.amraj.in/wp-content/uploads/2025/06/IMG_6768-1-scaled.jpg',
-    price: '₹1,599'
-  }
-];
-
-function getQuery(): string {
-  if (typeof window === 'undefined') return '';
-  const p = new URLSearchParams(window.location.search);
-  return p.get('q')?.trim() || '';
-}
-
-export default function SearchPage() {
-  const [query, setQuery] = useState<string>('');
-
-  useEffect(() => {
-    setQuery(getQuery());
-    const onPop = () => setQuery(getQuery());
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
-  }, []);
+function SearchResults() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q')?.trim() || '';
+  const { theme } = useBrand();
 
   const results = useMemo(() => {
-    if (!query) return CATALOG;
+    if (!query) return PRODUCTS;
     const q = query.toLowerCase();
-    return CATALOG.filter(p =>
+    return PRODUCTS.filter(p =>
       p.name.toLowerCase().includes(q) ||
-      p.slug.toLowerCase().includes(q)
+      p.shortName.toLowerCase().includes(q) ||
+      p.tagline.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.type.toLowerCase().includes(q)
     );
   }, [query]);
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-8">
-      <h1 className="text-2xl font-bold mb-4">Search Results</h1>
-      <p className="text-gray-600 mb-6">
-        Showing results for: <span className="font-semibold">{query || 'All products'}</span>
+      <h1 className="text-2xl font-bold mb-2">Search Results</h1>
+      <p className="text-gray-500 mb-6 text-sm">
+        {query ? (
+          <>Showing <strong>{results.length}</strong> result{results.length !== 1 ? 's' : ''} for &quot;<strong>{query}</strong>&quot;</>
+        ) : (
+          <>Showing all products</>
+        )}
       </p>
 
       {results.length === 0 ? (
-        <p className="text-gray-500">No products found.</p>
+        <div className="text-center py-20">
+          <p className="text-gray-500 mb-4">No products found for &quot;{query}&quot;.</p>
+          <Link href="/shop" className="text-sm font-semibold underline" style={{ color: theme.primary }}>
+            Browse all products
+          </Link>
+        </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {results.map(p => (
-            <article key={p.id} className="border rounded-xl overflow-hidden hover:shadow-lg transition">
-              <Link href={p.url} target="_blank" className="block">
-                <div className="aspect-[4/3] bg-gray-100">
-                  {p.image ? (
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                  ) : null}
+          {results.map(p => {
+            const discount = p.regularPrice > p.price
+              ? Math.round(((p.regularPrice - p.price) / p.regularPrice) * 100)
+              : 0;
+            return (
+              <Link
+                key={p.id}
+                href={`/product/${p.slug}`}
+                style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+              >
+                <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight }}>
+                  <Image src={p.images[0]} alt={p.name} fill style={{ objectFit: 'contain', padding: 16 }} sizes="(max-width: 640px) 50vw, 25vw" />
+                  {discount > 0 && (
+                    <span style={{ position: 'absolute', top: 8, right: 8, background: '#111', color: '#fff', fontSize: 9, fontWeight: 700, padding: '3px 7px', borderRadius: 4 }}>{discount}% OFF</span>
+                  )}
+                  {p.badge && (
+                    <span style={{ position: 'absolute', top: 8, left: 8, background: theme.primary, color: '#fff', fontSize: 9, fontWeight: 700, padding: '3px 7px', borderRadius: 4, textTransform: 'uppercase' }}>{p.badge}</span>
+                  )}
                 </div>
-                <div className="p-3">
-                  <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">{p.name}</h3>
-                  {p.price && <div className="text-teal-600 font-semibold text-sm mt-1">{p.price}</div>}
+                <div style={{ padding: '12px 14px 14px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <p style={{ fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: theme.primary, marginBottom: 4, fontWeight: 600 }}>{p.category}</p>
+                  <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
+                    {[1,2,3,4,5].map(i => (
+                      <Star key={i} style={{ width: 10, height: 10, fill: i <= Math.round(p.rating) ? theme.primary : '#e5e7eb', color: i <= Math.round(p.rating) ? theme.primary : '#e5e7eb' }} />
+                    ))}
+                    <span style={{ fontSize: 10, color: '#9ca3af' }}>({p.reviewCount})</span>
+                  </div>
+                  <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: '#111' }}>₹{p.price.toLocaleString('en-IN')}</span>
+                    {p.regularPrice > p.price && (
+                      <span style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'line-through' }}>₹{p.regularPrice.toLocaleString('en-IN')}</span>
+                    )}
+                  </div>
                 </div>
               </Link>
-            </article>
-          ))}
+            );
+          })}
         </div>
       )}
     </main>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="max-w-6xl mx-auto px-6 py-8 text-gray-500 text-sm">Loading results…</div>}>
+      <SearchResults />
+    </Suspense>
   );
 }
