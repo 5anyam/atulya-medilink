@@ -5,19 +5,22 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
 }
 
+const AYURVEDA_SLUGS = ['ayurveda', 'ayurvedic', 'herbal', 'herb', 'churna', 'kadha', 'rasayana', 'triphala', 'ashwagandha', 'shatavari', 'brahmi'];
 const COSMETICS_SLUGS = ['cosmetics', 'skin-care', 'skincare', 'face-care', 'hair-care', 'body-care', 'soap', 'shampoo', 'serum', 'face-wash', 'moisturizer', 'foot-care', 'beauty'];
 const NUTRA_SLUGS = ['nutraceuticals', 'vitamins', 'supplements', 'capsules', 'tablets', 'softgels', 'health', 'immunity', 'joint-health', 'fatty-acids', 'hair-health'];
 
-function detectType(product: Product): 'cosmetics' | 'nutraceuticals' {
+function detectType(product: Product): 'cosmetics' | 'nutraceuticals' | 'ayurveda' {
   const cats = (product.categories ?? []).map(c => c.slug.toLowerCase());
   const tags = (product.tags ?? []).map(t => t.slug.toLowerCase());
   const all = [...cats, ...tags];
 
+  if (all.some(s => AYURVEDA_SLUGS.some(a => s.includes(a)))) return 'ayurveda';
   if (all.some(s => COSMETICS_SLUGS.some(c => s.includes(c)))) return 'cosmetics';
   if (all.some(s => NUTRA_SLUGS.some(n => s.includes(n)))) return 'nutraceuticals';
 
   // fallback: check name/description for keywords
   const text = (product.name + ' ' + (product.description ?? '')).toLowerCase();
+  if (text.match(/ayurved|herbal|churna|kadha/)) return 'ayurveda';
   if (text.match(/cream|serum|shampoo|soap|face|skin|hair|wash|lotion|oil/)) return 'cosmetics';
   return 'nutraceuticals';
 }

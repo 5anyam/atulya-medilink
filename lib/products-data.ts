@@ -17,7 +17,7 @@ export interface StaticProduct {
   ingredients: ProductIngredient[];
   howToUse: string;
   category: string;
-  type: 'cosmetics' | 'nutraceuticals';
+  type: 'cosmetics' | 'nutraceuticals' | 'ayurveda';
   sizes: string[];
   badge?: string;
   rating: number;

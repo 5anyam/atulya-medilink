@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { StaticProduct } from '../../../lib/products-data';
-import { Star, ChevronRight, Sparkles, Pill } from 'lucide-react';
+import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand, BrandMode } from '../../../lib/brand-context';
 
 interface Props {
@@ -71,12 +71,12 @@ export default function ShopPageClient({ products }: Props) {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals'>('all');
+  const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
 
   // Sync type filter with URL query param
   useEffect(() => {
     const typeParam = searchParams.get('type');
-    if (typeParam === 'cosmetics' || typeParam === 'nutraceuticals') {
+    if (typeParam === 'cosmetics' || typeParam === 'nutraceuticals' || typeParam === 'ayurveda') {
       setActiveType(typeParam);
     }
   }, [searchParams]);
@@ -112,11 +112,11 @@ export default function ShopPageClient({ products }: Props) {
           </p>
 
           {/* Type toggle in hero */}
-          <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: 4, gap: 4 }}>
-            {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
+          <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
               const isActive = activeType === val;
-              const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : '#fff';
-              const textColor = isActive ? (val === 'all' ? '#111' : '#fff') : 'rgba(255,255,255,0.5)';
+              const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#00ff00' : '#fff';
+              const textColor = isActive ? (val === 'all' ? '#111' : val === 'ayurveda' ? '#000' : '#fff') : 'rgba(255,255,255,0.5)';
               return (
                 <button
                   key={val}
