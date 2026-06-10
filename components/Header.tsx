@@ -51,7 +51,7 @@ function BrandSwitcher() {
         const colors: Record<BrandMode, string> = {
           cosmetics: '#ff5f1f',
           nutraceuticals: '#0d9488',
-          ayurveda: '#7c5c2e',
+          ayurveda: '#00ff00',
         };
         const icons: Record<BrandMode, React.ReactNode> = {
           cosmetics: <Sparkles size={11} />,
@@ -380,7 +380,7 @@ export default function Header() {
               <div style={{ display: 'flex', gap: 8 }}>
                 {(['cosmetics', 'nutraceuticals', 'ayurveda'] as BrandMode[]).map((m) => {
                   const active = mode === m;
-                  const colors: Record<BrandMode, string> = { cosmetics: '#ff5f1f', nutraceuticals: '#0d9488', ayurveda: '#7c5c2e' };
+                  const colors: Record<BrandMode, string> = { cosmetics: '#ff5f1f', nutraceuticals: '#0d9488', ayurveda: '#00ff00' };
                   const icons: Record<BrandMode, React.ReactNode> = { cosmetics: <Sparkles size={12} />, nutraceuticals: <Pill size={12} />, ayurveda: <Leaf size={12} /> };
                   const labels: Record<BrandMode, string> = { cosmetics: 'Cosmetics', nutraceuticals: 'Nutra', ayurveda: 'Ayurveda' };
                   return (

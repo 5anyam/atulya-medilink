@@ -39,15 +39,15 @@ export const BRAND_THEMES: Record<BrandMode, BrandTheme> = {
     heroGrad: 'linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #5eead4 100%)',
   },
   ayurveda: {
-    primary: '#7c5c2e',
-    primaryDark: '#5e4321',
-    primaryRgb: '124,92,46',
-    bgLight: '#fdf8f0',
-    bgAlt: '#f5edd8',
-    border: '#e6d4b0',
+    primary: '#00ff00',
+    primaryDark: '#00cc00',
+    primaryRgb: '0,255,0',
+    bgLight: '#f0fff0',
+    bgAlt: '#ccffcc',
+    border: '#99ff99',
     mode: 'ayurveda',
     label: 'Ayurveda',
-    heroGrad: 'linear-gradient(135deg, #7c5c2e 0%, #a67c52 60%, #c8a97a 100%)',
+    heroGrad: 'linear-gradient(135deg, #00ff00 0%, #33ff33 60%, #99ff99 100%)',
   },
 };
 
