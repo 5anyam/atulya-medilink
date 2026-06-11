@@ -160,7 +160,7 @@ function SuccessContent() {
           </Link>
           
           <a
-            href="mailto:care@amraj.in?subject=Order%20Inquiry%20-%20%23${orderId}"
+            href={`mailto:care@amraj.in?subject=Order%20Inquiry%20-%20%23${orderId}`}
             className="block w-full bg-white border-2 border-gray-300 hover:border-emerald-500 text-gray-700 hover:text-emerald-600 font-semibold py-4 rounded-xl transition-all text-center"
           >
             📧 Contact Support

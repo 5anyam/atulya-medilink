@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
@@ -9,7 +9,7 @@ import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
 import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
 
-const RAZORPAY_KEY = 'rzp_live_RJVNEePx4007GD';
+const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_RJVNEePx4007GD';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -167,10 +167,7 @@ export default function Checkout() {
   const [errors, setErrors] = useState<Partial<typeof form>>({});
   const [loading, setLoading] = useState(false);
   const [rzpLoaded, setRzpLoaded] = useState(false);
-
-  useEffect(() => {
-    if (items.length === 0) return;
-  }, [items]);
+  const paymentHandledRef = useRef(false);
 
   if (items.length === 0) {
     return (
@@ -207,6 +204,7 @@ export default function Checkout() {
     }
 
     setLoading(true);
+    paymentHandledRef.current = false;
     let wooOrder: WooOrder | null = null;
 
     try {
@@ -269,6 +267,9 @@ export default function Checkout() {
         retry: { enabled: true, max_count: 3 },
         modal: {
           ondismiss: async () => {
+            // payment.failed fires before ondismiss on failure — skip if already handled
+            if (paymentHandledRef.current) return;
+            paymentHandledRef.current = true;
             if (wooOrder) {
               await updateWooOrder(wooOrder.id, 'cancelled').catch(() => {});
             }
@@ -277,6 +278,7 @@ export default function Checkout() {
           },
         },
         handler: async (response: RazorpayResponse) => {
+          paymentHandledRef.current = true;
           try {
             await updateWooOrder(wooOrder!.id, 'processing', response);
             clear();
@@ -296,6 +298,7 @@ export default function Checkout() {
 
       const rzp = new window.Razorpay(rzpOptions);
       rzp.on('payment.failed', async (response: RazorpayFailure) => {
+        paymentHandledRef.current = true;
         if (wooOrder) await updateWooOrder(wooOrder.id, 'failed').catch(() => {});
         const msg = response?.error?.description || 'Payment failed';
         router.push(

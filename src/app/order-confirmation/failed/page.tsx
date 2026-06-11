@@ -108,8 +108,8 @@ function FailedContent() {
               Our support team is ready to help you complete your purchase
             </p>
             <div className="space-y-3">
-              <a 
-                href="mailto:care@amraj.in?subject=Payment%20Failed%20-%20Order%20%23${orderId || 'N/A'}"
+              <a
+                href={`mailto:care@amraj.in?subject=Payment%20Failed%20-%20Order%20%23${orderId || 'N/A'}`}
                 className="flex items-center gap-3 bg-white p-4 rounded-lg hover:shadow-md transition-all"
               >
                 <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -142,7 +142,7 @@ function FailedContent() {
         {/* Action Buttons */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/checkout')}
             className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             🔄 Retry Payment
