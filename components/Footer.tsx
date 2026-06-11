@@ -131,7 +131,7 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
                 { label: 'Phone', val: '+91 88511 80015' },
-                { label: 'WhatsApp', val: '+91 11414 47223' },
+                { label: 'WhatsApp', val: '+91 88511 80015' },
                 { label: 'Email', val: 'info@atulyamedilinkpvtltd.com' },
                 { label: 'Address', val: 'Rohini, Delhi – 110085' },
               ].map((item) => (
