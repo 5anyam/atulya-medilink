@@ -80,9 +80,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
     rating: 0,
   });
 
-  const API_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-json/wc/v3';
-  const CONSUMER_KEY = 'ck_d4aff65e142f21beeb0ad648b90728553c99ee96';
-  const CONSUMER_SECRET = 'cs_d469c205bb3d56085ed79bbadaf344c243626277';
+  const REVIEWS_API = '/api/woocommerce/reviews';
 
   // ✅ Responsive Slides Per View
   useEffect(() => {
@@ -132,11 +130,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
   const loadReviews = async (): Promise<void> => {
     try {
       setLoading(true);
-      const url =
-        `${API_BASE}/products/reviews?product=${productId}` +
-        `&consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}` +
-        `&per_page=100&status=approved`;
-
+      const url = `${REVIEWS_API}?product=${productId}&per_page=100&status=approved`;
       const res = await fetch(url);
       if (!res.ok) {
         setReviews([]);
@@ -179,8 +173,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
     }
     setSubmitting(true);
     try {
-      const url =
-        `${API_BASE}/products/reviews?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
+      const url = REVIEWS_API;
 
       const payload = {
         product_id: productId,
