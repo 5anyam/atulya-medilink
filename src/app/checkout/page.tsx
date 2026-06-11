@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useRef, FormEvent } from 'react';
+import React, { useState, useEffect, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Script from 'next/script';
 import Image from 'next/image';
 import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
@@ -169,6 +168,18 @@ export default function Checkout() {
   const [rzpLoaded, setRzpLoaded] = useState(false);
   const paymentHandledRef = useRef(false);
 
+  useEffect(() => {
+    // If Razorpay is already in the window (cached from previous navigation), mark it ready
+    if (window.Razorpay) { setRzpLoaded(true); return; }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => setRzpLoaded(true);
+    script.onerror = () =>
+      toast({ title: 'Payment error', description: 'Could not load payment system. Please refresh.', variant: 'destructive' });
+    document.head.appendChild(script);
+  }, []);
+
   if (items.length === 0) {
     return (
       <div style={{ minHeight: '100vh', background: '#faf7f2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
@@ -322,14 +333,6 @@ export default function Checkout() {
 
   return (
     <>
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        onLoad={() => setRzpLoaded(true)}
-        onError={() =>
-          toast({ title: 'Payment error', description: 'Could not load payment system. Please refresh.', variant: 'destructive' })
-        }
-      />
-
       <div style={{ minHeight: '100vh', background: '#faf7f2' }}>
         <div className="max-w-[1024px] mx-auto px-4 py-6 lg:px-8 lg:py-10">
 
