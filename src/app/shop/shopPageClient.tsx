@@ -115,8 +115,8 @@ export default function ShopPageClient({ products }: Props) {
           <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
             {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
               const isActive = activeType === val;
-              const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#00ff00' : '#fff';
-              const textColor = isActive ? (val === 'all' ? '#111' : val === 'ayurveda' ? '#000' : '#fff') : 'rgba(255,255,255,0.5)';
+              const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#008000' : '#fff';
+              const textColor = isActive ? (val === 'all' ? '#111' : val === 'ayurveda' ? '#fff' : '#fff') : 'rgba(255,255,255,0.5)';
               return (
                 <button
                   key={val}

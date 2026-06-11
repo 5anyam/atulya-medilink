@@ -51,7 +51,7 @@ export default function Footer() {
             </p>
             <div style={{ display: 'flex', gap: 8 }}>
               {[
-                { href: 'https://facebook.com/people/Atulyaofficial', icon: <FaFacebookF size={12} />, label: 'Facebook' },
+                { href: 'https://www.facebook.com/profile.php?id=100082480930383&sk=reels_tab', icon: <FaFacebookF size={12} />, label: 'Facebook' },
                 { href: 'https://instagram.com/officialatulya', icon: <FaInstagram size={12} />, label: 'Instagram' },
                 { href: 'https://youtube.com/@atulyamedilink4119', icon: <FaYoutube size={12} />, label: 'YouTube' },
                 { href: 'https://linkedin.com/in/atulya-medilink-877408101', icon: <FaLinkedinIn size={12} />, label: 'LinkedIn' },
@@ -130,7 +130,7 @@ export default function Footer() {
             <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { label: 'Phone', val: '011 4144 7223' },
+                { label: 'Phone', val: '+91 88511 80015' },
                 { label: 'WhatsApp', val: '+91 11414 47223' },
                 { label: 'Email', val: 'info@atulyamedilinkpvtltd.com' },
                 { label: 'Address', val: 'Rohini, Delhi – 110085' },
