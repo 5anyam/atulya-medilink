@@ -5,7 +5,7 @@ import { fetchProductBySlug } from '../../../../lib/woocommerceApi';
 import { wcProductToStatic } from '../../../../lib/wc-mapper';
 import { getProductBySlug } from '../../../../lib/products-data';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;

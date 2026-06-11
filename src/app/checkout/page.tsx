@@ -218,57 +218,60 @@ export default function Checkout() {
     paymentHandledRef.current = false;
     let wooOrder: WooOrder | null = null;
 
+    const orderData = {
+      payment_method: 'razorpay',
+      payment_method_title: 'Razorpay',
+      status: 'pending',
+      billing: {
+        first_name: form.name.trim(),
+        last_name: '',
+        address_1: form.address.trim(),
+        city: '',
+        state: '',
+        postcode: '',
+        country: 'IN',
+        email: `${form.phone.trim()}@orders.amraj.in`,
+        phone: form.phone.trim(),
+      },
+      shipping: {
+        first_name: form.name.trim(),
+        last_name: '',
+        address_1: form.address.trim(),
+        city: '',
+        state: '',
+        postcode: '',
+        country: 'IN',
+      },
+      line_items: items.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+      })),
+      shipping_lines:
+        delivery > 0
+          ? [{ method_id: 'flat_rate', method_title: 'Standard Delivery', total: delivery.toString() }]
+          : [],
+      customer_note: `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}`,
+      meta_data: [
+        { key: 'customer_name', value: form.name.trim() },
+        { key: 'customer_phone', value: form.phone.trim() },
+        { key: 'delivery_address', value: form.address.trim() },
+      ],
+    };
+
+    // Try creating WooCommerce order — non-fatal so Razorpay always opens
     try {
-      // Build WooCommerce order data
-      const orderData = {
-        payment_method: 'razorpay',
-        payment_method_title: 'Razorpay',
-        status: 'pending',
-        billing: {
-          first_name: form.name.trim(),
-          last_name: '',
-          address_1: form.address.trim(),
-          city: '',
-          state: '',
-          postcode: '',
-          country: 'IN',
-          email: `${form.phone.trim()}@orders.amraj.in`,
-          phone: form.phone.trim(),
-        },
-        shipping: {
-          first_name: form.name.trim(),
-          last_name: '',
-          address_1: form.address.trim(),
-          city: '',
-          state: '',
-          postcode: '',
-          country: 'IN',
-        },
-        line_items: items.map((item) => ({
-          product_id: item.id,
-          quantity: item.quantity,
-        })),
-        shipping_lines:
-          delivery > 0
-            ? [{ method_id: 'flat_rate', method_title: 'Standard Delivery', total: delivery.toString() }]
-            : [],
-        customer_note: `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}`,
-        meta_data: [
-          { key: 'customer_name', value: form.name.trim() },
-          { key: 'customer_phone', value: form.phone.trim() },
-          { key: 'delivery_address', value: form.address.trim() },
-        ],
-      };
-
       wooOrder = await createWooOrder(orderData);
+    } catch (orderErr) {
+      console.error('[Checkout] WC order creation failed, opening Razorpay anyway:', orderErr);
+    }
 
-      // Open Razorpay Magic Checkout
+    try {
       const rzpOptions: RazorpayOptions = {
         key: RAZORPAY_KEY,
         amount: Math.round(finalTotal * 100),
         currency: 'INR',
         name: 'Amraj Wellness',
-        description: `Order #${wooOrder.id}`,
+        description: wooOrder ? `Order #${wooOrder.id}` : 'Atulya Medilink',
         image: '/amraj-logo.jpg',
         prefill: {
           name: form.name.trim(),
@@ -278,12 +281,9 @@ export default function Checkout() {
         retry: { enabled: true, max_count: 3 },
         modal: {
           ondismiss: async () => {
-            // payment.failed fires before ondismiss on failure — skip if already handled
             if (paymentHandledRef.current) return;
             paymentHandledRef.current = true;
-            if (wooOrder) {
-              await updateWooOrder(wooOrder.id, 'cancelled').catch(() => {});
-            }
+            if (wooOrder) await updateWooOrder(wooOrder.id, 'cancelled').catch(() => {});
             toast({ title: 'Payment cancelled', description: 'Your order was not completed.' });
             setLoading(false);
           },
@@ -291,19 +291,26 @@ export default function Checkout() {
         handler: async (response: RazorpayResponse) => {
           paymentHandledRef.current = true;
           try {
-            await updateWooOrder(wooOrder!.id, 'processing', response);
-            clear();
-            router.push(
-              `/order-confirmation/success?orderId=${wooOrder!.id}&paymentId=${response.razorpay_payment_id}&total=${finalTotal.toFixed(2)}`
-            );
-          } catch {
-            clear();
-            router.push(
-              `/order-confirmation/success?orderId=${wooOrder!.id}&paymentId=${response.razorpay_payment_id}&total=${finalTotal.toFixed(2)}`
-            );
-          } finally {
-            setLoading(false);
-          }
+            if (wooOrder) {
+              await updateWooOrder(wooOrder.id, 'processing', response);
+            } else {
+              // Order wasn't created before payment — create it now with payment ID
+              const created = await createWooOrder({
+                ...orderData,
+                status: 'processing',
+                meta_data: [
+                  ...orderData.meta_data,
+                  { key: 'razorpay_payment_id', value: response.razorpay_payment_id },
+                ],
+              }).catch(() => null);
+              if (created) wooOrder = created;
+            }
+          } catch { /* best effort — payment succeeded, don't block user */ }
+          clear();
+          router.push(
+            `/order-confirmation/success?orderId=${wooOrder?.id ?? 'N/A'}&paymentId=${response.razorpay_payment_id}&total=${finalTotal.toFixed(2)}`
+          );
+          setLoading(false);
         },
       };
 
@@ -313,18 +320,18 @@ export default function Checkout() {
         if (wooOrder) await updateWooOrder(wooOrder.id, 'failed').catch(() => {});
         const msg = response?.error?.description || 'Payment failed';
         router.push(
-          `/order-confirmation/failed?orderId=${wooOrder?.id || ''}&error=${encodeURIComponent(msg)}`
+          `/order-confirmation/failed?orderId=${wooOrder?.id ?? ''}&error=${encodeURIComponent(msg)}`
         );
         setLoading(false);
       });
 
       rzp.open();
-      // loading stays true while Razorpay modal is open; reset in handler/ondismiss/failed
+      // loading stays true while modal is open — reset in handler / ondismiss / payment.failed
     } catch (err) {
       if (wooOrder?.id) await updateWooOrder(wooOrder.id, 'cancelled').catch(() => {});
       toast({
-        title: 'Checkout failed',
-        description: err instanceof Error ? err.message : 'Please try again',
+        title: 'Could not open payment',
+        description: err instanceof Error ? err.message : 'Please refresh and try again',
         variant: 'destructive',
       });
       setLoading(false);

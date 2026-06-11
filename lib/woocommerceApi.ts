@@ -2,6 +2,11 @@ const API_BASE = (process.env.WC_API_BASE || process.env.API_BASE || "https://cm
 const CONSUMER_KEY = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || "ck_d4aff65e142f21beeb0ad648b90728553c99ee96";
 const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || "cs_d469c205bb3d56085ed79bbadaf344c243626277";
 
+function wcAuthHeader() {
+  const token = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
+  return { Authorization: `Basic ${token}` };
+}
+
 export interface Product {
   id: number;
   slug: string;
@@ -118,25 +123,28 @@ export interface OrderPayload {
 
 // ✅ FETCH ALL PRODUCTS
 export async function fetchProducts(page = 1, perPage = 100, search?: string): Promise<Product[]> {
-  let url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${perPage}&page=${page}&status=publish`;
+  let url = `${API_BASE}/products?per_page=${perPage}&page=${page}&status=publish`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
-  const res = await fetch(url, { next: { revalidate: 300 } });
-  if (!res.ok) throw new Error("Failed to fetch products");
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`WooCommerce products fetch failed (${res.status}): ${text.slice(0, 200)}`);
+  }
   return res.json();
 }
 
 // ✅ FETCH A SINGLE PRODUCT BY ID
 export async function fetchProduct(id: string): Promise<Product> {
-  const url = `${API_BASE}/products/${id}?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
-  const res = await fetch(url, { next: { revalidate: 300 } });
-  if (!res.ok) throw new Error("Failed to fetch product");
+  const url = `${API_BASE}/products/${id}`;
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
+  if (!res.ok) throw new Error(`Failed to fetch product ${id} (${res.status})`);
   return res.json();
 }
 
 // ✅ FETCH A SINGLE PRODUCT BY SLUG
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  const url = `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&slug=${encodeURIComponent(slug)}&status=publish`;
-  const res = await fetch(url, { next: { revalidate: 300 } });
+  const url = `${API_BASE}/products?slug=${encodeURIComponent(slug)}&status=publish`;
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
   if (!res.ok) return null;
   const products: Product[] = await res.json();
   return products[0] ?? null;
@@ -375,27 +383,25 @@ export async function updateOrderStatus(
 
 // ✅ FETCH ALL PRODUCT CATEGORIES
 export async function fetchProductCategories(perPage = 12, hideEmpty = true): Promise<Category[]> {
-  let url = `${API_BASE}/products/categories?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=${perPage}`;
+  let url = `${API_BASE}/products/categories?per_page=${perPage}`;
   if (hideEmpty) url += `&hide_empty=true`;
-  const res = await fetch(url);
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
   if (!res.ok) throw new Error("Failed to fetch categories");
   return res.json();
 }
 
 // ✅ FETCH SINGLE CATEGORY
 export async function fetchSingleCategory(categoryId: number): Promise<Category> {
-  const url = `${API_BASE}/products/categories/${categoryId}?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
-  const res = await fetch(url);
+  const url = `${API_BASE}/products/categories/${categoryId}`;
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
   if (!res.ok) throw new Error("Failed to fetch category");
   return res.json();
 }
 
 // ✅ FETCH PRODUCTS BY CATEGORY
 export async function fetchProductsByCategory(categoryId: number, page = 1, perPage = 12): Promise<Product[]> {
-  const url =
-    `${API_BASE}/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}` +
-    `&category=${categoryId}&per_page=${perPage}&page=${page}`;
-  const res = await fetch(url);
+  const url = `${API_BASE}/products?category=${categoryId}&per_page=${perPage}&page=${page}`;
+  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
   if (!res.ok) throw new Error("Failed to fetch products by category");
   return res.json();
 }
