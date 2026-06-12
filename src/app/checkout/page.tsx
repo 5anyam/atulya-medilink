@@ -8,7 +8,7 @@ import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
 import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
 
-const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_RJVNEePx4007GD';
+const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_BuTLIdi7g6nzab';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
