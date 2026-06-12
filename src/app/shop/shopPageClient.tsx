@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { StaticProduct } from '../../../lib/products-data';
 import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand, BrandMode } from '../../../lib/brand-context';
+import Categories from '../../../components/Categories';
 
 interface Props {
   products: StaticProduct[];
@@ -73,6 +74,12 @@ export default function ShopPageClient({ products }: Props) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
 
+  const productCounts = {
+    cosmetics: products.filter(p => p.type === 'cosmetics').length,
+    nutraceuticals: products.filter(p => p.type === 'nutraceuticals').length,
+    ayurveda: products.filter(p => p.type === 'ayurveda').length,
+  };
+
   // Sync type filter with URL query param
   useEffect(() => {
     const typeParam = searchParams.get('type');
@@ -131,6 +138,8 @@ export default function ShopPageClient({ products }: Props) {
           </div>
         </div>
       </section>
+
+      <Categories productCounts={productCounts} title="BROWSE BY CATEGORY" />
 
       <div className="shop-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px' }}>
 

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
 import HeroCarousel from '../../components/HeroCarousel';
+import Categories from '../../components/Categories';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
   FlaskConical, Heart, Package, BadgeCheck, Play
@@ -593,12 +594,21 @@ function CTASection() {
 
 /* ─── HOME PAGE ─── */
 export default function Homepage({ products }: { products: StaticProduct[] }) {
+  const productCounts = {
+    cosmetics: products.filter(p => p.type === 'cosmetics').length,
+    nutraceuticals: products.filter(p => p.type === 'nutraceuticals').length,
+    ayurveda: products.filter(p => p.type === 'ayurveda').length,
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#fff', overflowX: 'hidden' }}>
       {/* 1. Hero Carousel */}
       <HeroCarousel />
 
-      {/* 2. Best Sellers */}
+      {/* 2. Categories */}
+      <Categories productCounts={productCounts} />
+
+      {/* 3. Best Sellers */}
       <BestSellersSection products={products} />
 
       {/* 3. Offers Banner */}
