@@ -230,7 +230,7 @@ export default function Checkout() {
         state: '',
         postcode: '',
         country: 'IN',
-        email: `${form.phone.trim()}@orders.amraj.in`,
+        email: `${form.phone.trim()}@orders.atulyamedilink.in`,
         phone: form.phone.trim(),
       },
       shipping: {
@@ -270,9 +270,9 @@ export default function Checkout() {
         key: RAZORPAY_KEY,
         amount: Math.round(finalTotal * 100),
         currency: 'INR',
-        name: 'Amraj Wellness',
+        name: 'Atulya Medilink',
         description: wooOrder ? `Order #${wooOrder.id}` : 'Atulya Medilink',
-        image: '/amraj-logo.jpg',
+        image: '/logo.png',
         prefill: {
           name: form.name.trim(),
           contact: form.phone.trim(),
