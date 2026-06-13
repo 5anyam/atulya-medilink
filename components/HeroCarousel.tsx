@@ -5,11 +5,11 @@ import { useBrand } from '../lib/brand-context';
 
 const IMAGES = [
   {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/01/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
     alt: 'Healthy skin with bottle',
   },
   {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2025/07/Hello-Summer-1-1-scaled.jpg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
     alt: 'Model smiling with serum',
   }
 ];
