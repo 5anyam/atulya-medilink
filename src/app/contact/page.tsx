@@ -35,15 +35,16 @@ export default function ContactPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
       {/* ─── Hero ─── */}
-      <section style={{ background: '#0f0f0f', padding: '72px 32px 64px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: -60, left: -60, width: 320, height: 320, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+      <section style={{ background: theme.primary, padding: '72px 32px 64px', borderBottom: `3px solid rgba(0,0,0,0.15)`, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -60, left: -60, width: 320, height: 320, borderRadius: '50%', background: `radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -80, right: -80, width: 380, height: 380, borderRadius: '50%', background: `radial-gradient(circle, rgba(0,0,0,0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)', display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
           <h1 style={{ fontSize: 'clamp(48px,8vw,96px)', fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 20, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
-            GET IN<br /><span style={{ color: theme.primary }}>TOUCH.</span>
+            GET IN<br /><span style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 2px 12px rgba(0,0,0,0.15)' }}>TOUCH.</span>
           </h1>
-          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.5)', maxWidth: 420, margin: '0 auto', lineHeight: 1.85 }}>
+          <p style={{ fontSize: 14, fontWeight: 400, color: 'rgba(255,255,255,0.82)', maxWidth: 420, margin: '0 auto', lineHeight: 1.85 }}>
             Have a question, bulk inquiry, or need guidance on the right product? We&apos;d love to hear from you.
           </p>
         </div>

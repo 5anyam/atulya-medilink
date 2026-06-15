@@ -38,15 +38,27 @@ function ExitIntentPopup() {
   useEffect(() => {
     if (alreadySeen('exit_popup')) return;
 
-    const handle = (e: MouseEvent) => {
+    // Desktop: mouse leaves viewport from top
+    const handleMouseLeave = (e: MouseEvent) => {
       if (triggered.current || e.clientY > 10) return;
       triggered.current = true;
       markSeen('exit_popup');
       setTimeout(() => setOpen(true), 200);
     };
 
-    document.addEventListener('mouseleave', handle);
-    return () => document.removeEventListener('mouseleave', handle);
+    // Mobile / all devices: show after 30 seconds
+    const timer = setTimeout(() => {
+      if (triggered.current) return;
+      triggered.current = true;
+      markSeen('exit_popup');
+      setOpen(true);
+    }, 30000);
+
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

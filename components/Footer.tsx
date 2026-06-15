@@ -55,7 +55,7 @@ export default function Footer() {
                 { href: 'https://instagram.com/officialatulya', icon: <FaInstagram size={12} />, label: 'Instagram' },
                 { href: 'https://youtube.com/@atulyamedilink4119', icon: <FaYoutube size={12} />, label: 'YouTube' },
                 { href: 'https://linkedin.com/in/atulya-medilink-877408101', icon: <FaLinkedinIn size={12} />, label: 'LinkedIn' },
-                { href: 'https://wa.me/911141447223', icon: <FaWhatsapp size={12} />, label: 'WhatsApp' },
+                { href: 'https://wa.me/918851180015', icon: <FaWhatsapp size={12} />, label: 'WhatsApp' },
               ].map(({ href, icon, label }) => (
                 <Link
                   key={label}
@@ -130,7 +130,7 @@ export default function Footer() {
             <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>CONTACT</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { label: 'Phone', val: '+91 88511 80015' },
+                { label: 'Phone', val: '+91 011 4144 7223' },
                 { label: 'WhatsApp', val: '+91 88511 80015' },
                 { label: 'Email', val: 'info@atulyamedilinkpvtltd.com' },
                 { label: 'Address', val: 'Rohini, Delhi – 110085' },

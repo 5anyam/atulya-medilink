@@ -9,7 +9,7 @@ import HeroCarousel from '../../components/HeroCarousel';
 import Categories from '../../components/Categories';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
-  FlaskConical, Heart, Package, BadgeCheck, Play
+  FlaskConical, Heart, Package, BadgeCheck
 } from 'lucide-react';
 
 function useReveal() {
@@ -385,30 +385,10 @@ function ProductsSection({ products }: { products: StaticProduct[] }) {
 
 /* ─── SOCIAL MEDIA VIDEOS ─── */
 const SOCIAL_VIDEOS = [
-  {
-    platform: 'Instagram',
-    label: 'Vitamin C Serum Results',
-    thumb: 'https://placehold.co/400x700/fff8f5/ff5f1f?text=Reel+1',
-    url: 'https://www.instagram.com/atulya_medilink/',
-  },
-  {
-    platform: 'Instagram',
-    label: 'Crack Heel Cream Before/After',
-    thumb: 'https://placehold.co/400x700/fff8f5/ff5f1f?text=Reel+2',
-    url: 'https://www.instagram.com/atulya_medilink/',
-  },
-  {
-    platform: 'Instagram',
-    label: 'Daily Skincare Routine',
-    thumb: 'https://placehold.co/400x700/fff8f5/ff5f1f?text=Reel+3',
-    url: 'https://www.instagram.com/atulya_medilink/',
-  },
-  {
-    platform: 'Instagram',
-    label: 'Customer Testimonial',
-    thumb: 'https://placehold.co/400x700/fff8f5/ff5f1f?text=Reel+4',
-    url: 'https://www.instagram.com/atulya_medilink/',
-  },
+  { src: '/video-1.mp4', label: 'Vitamin C Serum Results' },
+  { src: '/video-2.mp4', label: 'Crack Heel Cream Before/After' },
+  { src: '/video-3.mp4', label: 'Daily Skincare Routine' },
+  { src: '/video-4.mp4', label: 'Customer Testimonial' },
 ];
 
 function SocialVideosSection() {
@@ -430,23 +410,26 @@ function SocialVideosSection() {
 
         <div className="videos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
           {SOCIAL_VIDEOS.map((v, i) => (
-            <a key={i} href={v.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
-              <div
-                style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', aspectRatio: '9/16', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', transition: 'transform 0.25s, box-shadow 0.25s', cursor: 'pointer' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = `0 20px 48px rgba(${theme.primaryRgb},0.25)`; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none'; }}
-              >
-                <Image src={v.thumb} alt={v.label} fill style={{ objectFit: 'cover' }} sizes="(max-width: 600px) 50vw, 25vw" />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%)', zIndex: 1 }} />
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 2, width: 48, height: 48, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(255,255,255,0.3)' }}>
-                  <Play style={{ width: 18, height: 18, fill: '#fff', color: '#fff', marginLeft: 2 }} />
-                </div>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px 14px', zIndex: 2 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: theme.primary, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>@atulya_medilink</p>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>{v.label}</p>
-                </div>
+            <div
+              key={i}
+              style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', aspectRatio: '9/16', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', transition: 'transform 0.25s, box-shadow 0.25s' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = `0 20px 48px rgba(${theme.primaryRgb},0.25)`; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none'; }}
+            >
+              <video
+                src={v.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)', zIndex: 1 }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px 14px', zIndex: 2 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: theme.primary, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>@atulya_medilink</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>{v.label}</p>
               </div>
-            </a>
+            </div>
           ))}
         </div>
 
