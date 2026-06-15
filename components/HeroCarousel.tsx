@@ -17,10 +17,6 @@ const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string }[]> = {
   nutraceuticals: [
     {
       src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
-      alt: 'Atulya Nutraceuticals — Clinical Grade Supplements',
-    },
-    {
-      src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
       alt: 'Atulya Nutraceuticals — Health & Wellness',
     },
   ],
@@ -28,10 +24,6 @@ const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string }[]> = {
     {
       src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
       alt: 'Atulya Ayurveda — Herbal Formulations',
-    },
-    {
-      src: 'https://cms.atulyamedilinkpvtltd.com/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
-      alt: 'Atulya Ayurveda — Natural Oils',
     },
   ],
 };
