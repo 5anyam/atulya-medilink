@@ -90,7 +90,7 @@ export default function ContactPage() {
               {
                 icon: Mail,
                 title: 'Email',
-                lines: ['info@atulyamedilinkpvtltd.com', 'careatulyamedilinkpvtltdshop@gmail.com'],
+                lines: ['info@atulyamedilinkpvtltd.com'],
                 href: 'mailto:info@atulyamedilinkpvtltd.com',
               },
               {

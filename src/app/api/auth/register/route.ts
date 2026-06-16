@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CMS_BASE = process.env.CMS_API_BASE || 'https://cms.atulyamedilinkpvtltd.com/wp-json/atulya/v1';
+const CMS_BASE = process.env.CMS_API_BASE || 'https://cms.atulyamedilinkpvtltd.shop/wp-json/atulya/v1';
 
 export async function POST(req: NextRequest) {
   try {

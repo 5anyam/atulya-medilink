@@ -9,6 +9,13 @@ import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand, BrandMode } from '../../../lib/brand-context';
 import Categories from '../../../components/Categories';
 
+const HERO_BANNERS: Record<string, string> = {
+  all: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
+  cosmetics: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg.jpeg',
+  nutraceuticals: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
+  ayurveda: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
+};
+
 interface Props {
   products: StaticProduct[];
 }
@@ -73,6 +80,7 @@ export default function ShopPageClient({ products }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
+  const [bannerKey, setBannerKey] = useState(0);
 
   const productCounts = {
     cosmetics: products.filter(p => p.type === 'cosmetics').length,
@@ -105,30 +113,45 @@ export default function ShopPageClient({ products }: Props) {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-      {/* Hero */}
-      <section className="shop-hero" style={{ background: '#0f0f0f', padding: '64px 32px', borderBottom: `3px solid ${theme.primary}`, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: -80, right: -80, width: 360, height: 360, borderRadius: '50%', background: `radial-gradient(circle, rgba(${theme.primaryRgb},0.15) 0%, transparent 70%)`, pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+      {/* Hero with banner background */}
+      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', borderBottom: `3px solid ${theme.primary}` }}>
+        {/* Banner image — fades in on category change */}
+        <div
+          key={bannerKey}
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `url('${HERO_BANNERS[activeType]}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            animation: 'bannerFadeIn 0.55s ease forwards',
+          }}
+        />
+        {/* Dark overlay so text stays readable */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.68) 100%)' }} />
+        {/* Grid texture */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+
+        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2, padding: '64px 32px' }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
           <h1 style={{ fontSize: 'clamp(48px,8vw,96px)', fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 16, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
-            ALL<br /><span style={{ color: theme.primary }}>PRODUCTS.</span>
+            {activeType === 'all' ? 'ALL' : activeType === 'cosmetics' ? 'COSMETICS' : activeType === 'nutraceuticals' ? 'SUPPLEMENTS' : 'AYURVEDA'}<br />
+            <span style={{ color: theme.primary }}>PRODUCTS.</span>
           </h1>
-          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.5)', maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.85 }}>
+          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.75)', maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.85 }}>
             Natural cosmetics and clinical-grade nutraceuticals — crafted for your health and beauty.
           </p>
 
-          {/* Type toggle in hero */}
-          <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {/* Type toggle */}
+          <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
             {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
               const isActive = activeType === val;
               const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#008000' : '#fff';
-              const textColor = isActive ? (val === 'all' ? '#111' : val === 'ayurveda' ? '#fff' : '#fff') : 'rgba(255,255,255,0.5)';
+              const textColor = isActive ? (val === 'all' ? '#111' : '#fff') : 'rgba(255,255,255,0.7)';
               return (
                 <button
                   key={val}
-                  onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); }}
-                  style={{ padding: '8px 18px', fontSize: 12, fontWeight: 600, borderRadius: 7, border: 'none', cursor: 'pointer', background: isActive ? bg : 'transparent', color: textColor, transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6 }}
+                  onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); setBannerKey(k => k + 1); }}
+                  style={{ padding: '8px 18px', fontSize: 12, fontWeight: 600, borderRadius: 7, border: 'none', cursor: 'pointer', background: isActive ? bg : 'transparent', color: textColor, transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: 6, transform: isActive ? 'scale(1.04)' : 'scale(1)' }}
                 >
                   {Icon && <Icon size={12} />}
                   {label}
@@ -191,14 +214,16 @@ export default function ShopPageClient({ products }: Props) {
       </div>
 
       <style>{`
+        @keyframes bannerFadeIn {
+          from { opacity: 0; transform: scale(1.03); }
+          to   { opacity: 1; transform: scale(1); }
+        }
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
-          .shop-hero { padding: 48px 20px !important; }
           .shop-inner { padding: 28px 20px !important; }
         }
         @media (max-width: 480px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
-          .shop-hero { padding: 36px 16px !important; }
           .shop-inner { padding: 20px 16px !important; }
         }
         @media (max-width: 360px) {
