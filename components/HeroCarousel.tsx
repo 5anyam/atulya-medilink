@@ -77,7 +77,7 @@ export default function HeroCarousel() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
                   loading={index === 0 ? 'eager' : 'lazy'}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
@@ -145,16 +145,9 @@ export default function HeroCarousel() {
           aspect-ratio: 16/5;
           min-height: 200px;
         }
-        @media (max-width: 767px) {
+        @media (max-width: 639px) {
           .hero-carousel-inner {
-            aspect-ratio: 4/3;
-            min-height: 220px;
-          }
-        }
-        @media (max-width: 480px) {
-          .hero-carousel-inner {
-            aspect-ratio: unset;
-            height: 240px;
+            aspect-ratio: 1920/700;
             min-height: unset;
           }
         }
