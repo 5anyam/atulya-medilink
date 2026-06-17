@@ -114,22 +114,20 @@ export default function ShopPageClient({ products }: Props) {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
       {/* Hero with banner background */}
-      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', borderBottom: `3px solid ${theme.primary}` }}>
+      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', borderBottom: `3px solid ${theme.primary}`, background: '#111' }}>
         {/* Banner image — fades in on category change */}
-        <div
+        <img
           key={bannerKey}
-          style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: `url('${HERO_BANNERS[activeType]}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            animation: 'bannerFadeIn 0.55s ease forwards',
-          }}
+          src={HERO_BANNERS[activeType]}
+          alt=""
+          aria-hidden="true"
+          className="shop-hero-banner"
+          style={{ animation: 'bannerFadeIn 0.55s ease forwards' }}
         />
-        {/* Dark overlay so text stays readable */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.68) 100%)' }} />
-        {/* Grid texture */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        {/* Dark overlay so text stays readable — desktop only */}
+        <div className="shop-hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.68) 100%)' }} />
+        {/* Grid texture — desktop only */}
+        <div className="shop-hero-grid" style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
 
         <div className="shop-hero-content" style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
@@ -218,40 +216,64 @@ export default function ShopPageClient({ products }: Props) {
           from { opacity: 0; transform: scale(1.03); }
           to   { opacity: 1; transform: scale(1); }
         }
+
+        /* Desktop: banner fills section as background */
+        .shop-hero-banner {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
         .shop-hero-content {
           padding: 64px 32px;
         }
         .shop-hero-title {
           font-size: clamp(48px, 8vw, 96px);
         }
+
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 28px 20px !important; }
         }
-        @media (max-width: 640px) {
-          .shop-hero-content {
-            padding: 36px 20px;
+
+        /* Mobile: banner shown naturally above content, like homepage carousel */
+        @media (max-width: 639px) {
+          .shop-hero {
+            display: flex;
+            flex-direction: column;
           }
-          .shop-hero-title {
-            font-size: clamp(30px, 9vw, 48px);
+          .shop-hero-banner {
+            position: static;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
           }
-        }
-        @media (max-width: 480px) {
-          .shop-grid { grid-template-columns: 1fr 1fr !important; }
-          .shop-inner { padding: 20px 16px !important; }
+          .shop-hero-overlay,
+          .shop-hero-grid {
+            display: none;
+          }
           .shop-hero-content {
             padding: 28px 16px;
+            position: static !important;
+            z-index: auto !important;
           }
           .shop-hero-title {
             font-size: 26px;
             letter-spacing: -0.01em;
           }
         }
+
         @media (max-width: 360px) {
           .shop-grid { grid-template-columns: 1fr !important; }
-          .shop-hero-title {
-            font-size: 22px;
-          }
+          .shop-hero-title { font-size: 22px; }
+        }
+
+        @media (max-width: 480px) {
+          .shop-grid { grid-template-columns: 1fr 1fr !important; }
+          .shop-inner { padding: 20px 16px !important; }
         }
       `}</style>
     </div>
