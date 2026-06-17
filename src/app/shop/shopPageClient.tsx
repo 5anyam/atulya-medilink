@@ -113,9 +113,8 @@ export default function ShopPageClient({ products }: Props) {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-      {/* Hero with banner background */}
-      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', borderBottom: `3px solid ${theme.primary}`, background: '#111' }}>
-        {/* Banner image — fades in on category change */}
+      {/* Hero: banner + heading only */}
+      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
           key={bannerKey}
           src={HERO_BANNERS[activeType]}
@@ -124,41 +123,37 @@ export default function ShopPageClient({ products }: Props) {
           className="shop-hero-banner"
           style={{ animation: 'bannerFadeIn 0.55s ease forwards' }}
         />
-        {/* Dark overlay so text stays readable — desktop only */}
-        <div className="shop-hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.68) 100%)' }} />
-        {/* Grid texture — desktop only */}
-        <div className="shop-hero-grid" style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
+        <div className="shop-hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.58) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
 
         <div className="shop-hero-content" style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
-          <h1 className="shop-hero-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 16, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 12 }}>✦ Atulya Medilink</span>
+          <h1 className="shop-hero-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 0.92, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
             {activeType === 'all' ? 'ALL' : activeType === 'cosmetics' ? 'COSMETICS' : activeType === 'nutraceuticals' ? 'SUPPLEMENTS' : 'AYURVEDA'}<br />
             <span style={{ color: theme.primary }}>PRODUCTS.</span>
           </h1>
-          <p style={{ fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.75)', maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.85 }}>
-            Natural cosmetics and clinical-grade nutraceuticals — crafted for your health and beauty.
-          </p>
-
-          {/* Type toggle */}
-          <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
-            {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
-              const isActive = activeType === val;
-              const bg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#008000' : '#fff';
-              const textColor = isActive ? (val === 'all' ? '#111' : '#fff') : 'rgba(255,255,255,0.7)';
-              return (
-                <button
-                  key={val}
-                  onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); setBannerKey(k => k + 1); }}
-                  style={{ padding: '8px 18px', fontSize: 12, fontWeight: 600, borderRadius: 7, border: 'none', cursor: 'pointer', background: isActive ? bg : 'transparent', color: textColor, transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: 6, transform: isActive ? 'scale(1.04)' : 'scale(1)' }}
-                >
-                  {Icon && <Icon size={12} />}
-                  {label}
-                </button>
-              );
-            })}
-          </div>
         </div>
       </section>
+
+      {/* Type toggle — white bar below hero */}
+      <div style={{ background: '#fff', borderBottom: `3px solid ${theme.primary}`, padding: '14px 20px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'inline-flex', background: '#f4f4f5', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
+            const isActive = activeType === val;
+            const activeBg = val === 'cosmetics' ? '#ff5f1f' : val === 'nutraceuticals' ? '#0d9488' : val === 'ayurveda' ? '#008000' : theme.primary;
+            return (
+              <button
+                key={val}
+                onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); setBannerKey(k => k + 1); }}
+                style={{ padding: '8px 16px', fontSize: 12, fontWeight: 600, borderRadius: 7, border: 'none', cursor: 'pointer', background: isActive ? activeBg : 'transparent', color: isActive ? '#fff' : '#6b7280', transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: 6, transform: isActive ? 'scale(1.04)' : 'scale(1)' }}
+              >
+                {Icon && <Icon size={12} />}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       <Categories productCounts={productCounts} title="BROWSE BY CATEGORY" />
 
@@ -217,7 +212,6 @@ export default function ShopPageClient({ products }: Props) {
           to   { opacity: 1; transform: scale(1); }
         }
 
-        /* Desktop: banner fills section as background */
         .shop-hero-banner {
           position: absolute;
           inset: 0;
@@ -226,54 +220,32 @@ export default function ShopPageClient({ products }: Props) {
           object-fit: cover;
           object-position: center;
         }
-        .shop-hero-content {
-          padding: 64px 32px;
-        }
-        .shop-hero-title {
-          font-size: clamp(48px, 8vw, 96px);
-        }
+        .shop-hero-content { padding: 64px 32px; }
+        .shop-hero-title { font-size: clamp(48px, 8vw, 96px); }
 
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 28px 20px !important; }
         }
 
-        /* Mobile: banner shown naturally above content, like homepage carousel */
         @media (max-width: 639px) {
-          .shop-hero {
-            display: flex;
-            flex-direction: column;
-          }
-          .shop-hero-banner {
-            position: static;
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            display: block;
-          }
-          .shop-hero-overlay,
-          .shop-hero-grid {
-            display: none;
-          }
-          .shop-hero-content {
-            padding: 28px 16px;
-            position: static !important;
-            z-index: auto !important;
-          }
-          .shop-hero-title {
-            font-size: 26px;
-            letter-spacing: -0.01em;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .shop-grid { grid-template-columns: 1fr !important; }
-          .shop-hero-title { font-size: 22px; }
+          /* Give hero the banner's natural aspect ratio so it shows fully */
+          .shop-hero { aspect-ratio: 1920 / 700; min-height: 130px; }
+          /* Switch to contain so nothing is cropped */
+          .shop-hero-banner { object-fit: contain; }
+          /* Lighter overlay so banner is actually visible */
+          .shop-hero-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.48) 100%) !important; }
+          .shop-hero-content { padding: 0 16px; }
+          .shop-hero-title { font-size: 22px; letter-spacing: -0.01em; }
         }
 
         @media (max-width: 480px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 20px 16px !important; }
+        }
+        @media (max-width: 360px) {
+          .shop-grid { grid-template-columns: 1fr !important; }
+          .shop-hero-title { font-size: 18px; }
         }
       `}</style>
     </div>
