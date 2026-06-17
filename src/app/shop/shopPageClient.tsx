@@ -131,9 +131,9 @@ export default function ShopPageClient({ products }: Props) {
         {/* Grid texture */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2, padding: '64px 32px' }}>
+        <div className="shop-hero-content" style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
-          <h1 style={{ fontSize: 'clamp(48px,8vw,96px)', fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 16, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+          <h1 className="shop-hero-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 16, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
             {activeType === 'all' ? 'ALL' : activeType === 'cosmetics' ? 'COSMETICS' : activeType === 'nutraceuticals' ? 'SUPPLEMENTS' : 'AYURVEDA'}<br />
             <span style={{ color: theme.primary }}>PRODUCTS.</span>
           </h1>
@@ -218,16 +218,40 @@ export default function ShopPageClient({ products }: Props) {
           from { opacity: 0; transform: scale(1.03); }
           to   { opacity: 1; transform: scale(1); }
         }
+        .shop-hero-content {
+          padding: 64px 32px;
+        }
+        .shop-hero-title {
+          font-size: clamp(48px, 8vw, 96px);
+        }
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 28px 20px !important; }
         }
+        @media (max-width: 640px) {
+          .shop-hero-content {
+            padding: 36px 20px;
+          }
+          .shop-hero-title {
+            font-size: clamp(30px, 9vw, 48px);
+          }
+        }
         @media (max-width: 480px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 20px 16px !important; }
+          .shop-hero-content {
+            padding: 28px 16px;
+          }
+          .shop-hero-title {
+            font-size: 26px;
+            letter-spacing: -0.01em;
+          }
         }
         @media (max-width: 360px) {
           .shop-grid { grid-template-columns: 1fr !important; }
+          .shop-hero-title {
+            font-size: 22px;
+          }
         }
       `}</style>
     </div>
