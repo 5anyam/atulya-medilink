@@ -9,12 +9,6 @@ import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand, BrandMode } from '../../../lib/brand-context';
 import Categories from '../../../components/Categories';
 
-const HERO_BANNERS: Record<string, string> = {
-  all: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
-  cosmetics: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg.jpeg',
-  nutraceuticals: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
-  ayurveda: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
-};
 
 interface Props {
   products: StaticProduct[];
@@ -80,7 +74,6 @@ export default function ShopPageClient({ products }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
-  const [bannerKey, setBannerKey] = useState(0);
 
   const productCounts = {
     cosmetics: products.filter(p => p.type === 'cosmetics').length,
@@ -113,29 +106,7 @@ export default function ShopPageClient({ products }: Props) {
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-      {/* Hero: banner + heading only */}
-      <section className="shop-hero" style={{ position: 'relative', overflow: 'hidden', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <img
-          key={bannerKey}
-          src={HERO_BANNERS[activeType]}
-          alt=""
-          aria-hidden="true"
-          className="shop-hero-banner"
-          style={{ animation: 'bannerFadeIn 0.55s ease forwards' }}
-        />
-        <div className="shop-hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.58) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
-
-        <div className="shop-hero-content" style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 12 }}>✦ Atulya Medilink</span>
-          <h1 className="shop-hero-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 0.92, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
-            {activeType === 'all' ? 'ALL' : activeType === 'cosmetics' ? 'COSMETICS' : activeType === 'nutraceuticals' ? 'SUPPLEMENTS' : 'AYURVEDA'}<br />
-            <span style={{ color: theme.primary }}>PRODUCTS.</span>
-          </h1>
-        </div>
-      </section>
-
-      {/* Type toggle — white bar below hero */}
+      {/* Type toggle */}
       <div style={{ background: '#fff', borderBottom: `3px solid ${theme.primary}`, padding: '14px 20px', display: 'flex', justifyContent: 'center' }}>
         <div style={{ display: 'inline-flex', background: '#f4f4f5', borderRadius: 10, padding: 4, gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
           {([['all', 'All Products', null], ['cosmetics', 'Cosmetics', Sparkles], ['nutraceuticals', 'Nutraceuticals', Pill], ['ayurveda', 'Ayurveda', Leaf]] as [string, string, React.ElementType | null][]).map(([val, label, Icon]) => {
@@ -144,7 +115,7 @@ export default function ShopPageClient({ products }: Props) {
             return (
               <button
                 key={val}
-                onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); setBannerKey(k => k + 1); }}
+                onClick={() => { setActiveType(val as typeof activeType); setSelectedCategory(''); }}
                 style={{ padding: '8px 16px', fontSize: 12, fontWeight: 600, borderRadius: 7, border: 'none', cursor: 'pointer', background: isActive ? activeBg : 'transparent', color: isActive ? '#fff' : '#6b7280', transition: 'all 0.25s', display: 'flex', alignItems: 'center', gap: 6, transform: isActive ? 'scale(1.04)' : 'scale(1)' }}
               >
                 {Icon && <Icon size={12} />}
@@ -207,45 +178,16 @@ export default function ShopPageClient({ products }: Props) {
       </div>
 
       <style>{`
-        @keyframes bannerFadeIn {
-          from { opacity: 0; transform: scale(1.03); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-
-        .shop-hero-banner {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-        }
-        .shop-hero-content { padding: 64px 32px; }
-        .shop-hero-title { font-size: clamp(48px, 8vw, 96px); }
-
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 28px 20px !important; }
         }
-
-        @media (max-width: 639px) {
-          /* Give hero the banner's natural aspect ratio so it shows fully */
-          .shop-hero { aspect-ratio: 1920 / 700; min-height: 130px; }
-          /* Switch to contain so nothing is cropped */
-          .shop-hero-banner { object-fit: contain; }
-          /* Lighter overlay so banner is actually visible */
-          .shop-hero-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.48) 100%) !important; }
-          .shop-hero-content { padding: 0 16px; }
-          .shop-hero-title { font-size: 22px; letter-spacing: -0.01em; }
-        }
-
         @media (max-width: 480px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 20px 16px !important; }
         }
         @media (max-width: 360px) {
           .shop-grid { grid-template-columns: 1fr !important; }
-          .shop-hero-title { font-size: 18px; }
         }
       `}</style>
     </div>
