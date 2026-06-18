@@ -53,10 +53,10 @@ export default function Categories({ productCounts }: CategoriesProps) {
   const { mode, setMode } = useBrand();
 
   return (
-    <section style={{ padding: '28px 0', background: '#faf7f2', borderBottom: '1px solid #ece8e0' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+    <section style={{ background: '#faf7f2', borderBottom: '1px solid #ece8e0' }} className="categories-section">
+      <div style={{ maxWidth: 1280, margin: '0 auto' }} className="categories-wrapper">
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }} className="categories-row">
+        <div className="categories-row" style={{ display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9ca3af', flexShrink: 0, whiteSpace: 'nowrap' }}>
             Shop by:
           </span>
@@ -72,11 +72,11 @@ export default function Categories({ productCounts }: CategoriesProps) {
                 style={{ textDecoration: 'none', flexShrink: 0 }}
               >
                 <div
+                  className="cat-chip"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 10,
-                    padding: '10px 18px',
                     borderRadius: 50,
                     border: `2px solid ${active ? color : '#e5e7eb'}`,
                     background: active ? bg : '#fff',
@@ -102,7 +102,7 @@ export default function Categories({ productCounts }: CategoriesProps) {
                   </div>
                   <div>
                     <p style={{ fontSize: 13, fontWeight: 700, color: active ? color : '#111', lineHeight: 1.2, whiteSpace: 'nowrap' }}>{label}</p>
-                    <p style={{ fontSize: 11, color: '#9ca3af', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
+                    <p className="cat-chip-sub" style={{ fontSize: 11, color: '#9ca3af', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
                       {count !== undefined ? `${count} products` : description}
                     </p>
                   </div>
@@ -119,8 +119,19 @@ export default function Categories({ productCounts }: CategoriesProps) {
       <style>{`
         .categories-row::-webkit-scrollbar { display: none; }
         .categories-row { -ms-overflow-style: none; scrollbar-width: none; }
-        @media (max-width: 600px) {
-          .categories-row { padding-bottom: 4px; }
+
+        /* Desktop */
+        .categories-section { padding: 24px 0; }
+        .categories-wrapper { padding: 0 32px; }
+        .cat-chip { padding: 10px 18px; }
+
+        /* Mobile — bigger touch targets, tighter padding */
+        @media (max-width: 639px) {
+          .categories-section { padding: 0; }
+          .categories-wrapper { padding: 0; }
+          .categories-row { padding: 14px 16px; gap: 8px; }
+          .cat-chip { padding: 9px 14px; }
+          .cat-chip-sub { display: none; }
         }
       `}</style>
     </section>

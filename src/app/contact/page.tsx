@@ -35,79 +35,64 @@ export default function ContactPage() {
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
       {/* ─── Hero ─── */}
-      <section style={{ background: theme.primary, padding: '72px 32px 64px', borderBottom: `3px solid rgba(0,0,0,0.15)`, position: 'relative', overflow: 'hidden' }}>
+      <section className="contact-hero" style={{ background: theme.primary, borderBottom: `3px solid rgba(0,0,0,0.15)`, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -60, left: -60, width: 320, height: 320, borderRadius: '50%', background: `radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)`, pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: -80, right: -80, width: 380, height: 380, borderRadius: '50%', background: `radial-gradient(circle, rgba(0,0,0,0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)', display: 'block', marginBottom: 16 }}>✦ Atulya Medilink</span>
-          <h1 style={{ fontSize: 'clamp(48px,8vw,96px)', fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 20, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)', display: 'block', marginBottom: 14 }}>✦ Atulya Medilink</span>
+          <h1 className="contact-hero-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 0.92, marginBottom: 16, letterSpacing: '-0.025em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
             GET IN<br /><span style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 2px 12px rgba(0,0,0,0.15)' }}>TOUCH.</span>
           </h1>
-          <p style={{ fontSize: 14, fontWeight: 400, color: 'rgba(255,255,255,0.82)', maxWidth: 420, margin: '0 auto', lineHeight: 1.85 }}>
+          <p className="contact-hero-sub" style={{ fontWeight: 400, color: 'rgba(255,255,255,0.82)', maxWidth: 420, margin: '0 auto', lineHeight: 1.85 }}>
             Have a question, bulk inquiry, or need guidance on the right product? We&apos;d love to hear from you.
           </p>
         </div>
       </section>
 
       {/* ─── Quick-info strip ─── */}
-      <section style={{ background: theme.primary }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 32px', display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center' }}>
+      <section style={{ background: theme.primary, borderBottom: '2px solid rgba(0,0,0,0.12)' }}>
+        <div className="contact-info-strip" style={{ maxWidth: 1100, margin: '0 auto' }}>
           {([
             { icon: Phone,   text: '+91 011 4144 7223',                   href: 'tel:01141447223' },
             { icon: Mail,    text: 'info@atulyamedilinkpvtltd.com',       href: 'mailto:info@atulyamedilinkpvtltd.com' },
-            { icon: MapPin,  text: 'Unit-604, Ring Road Mall, Rohini, Delhi – 110085', href: undefined },
+            { icon: MapPin,  text: 'Ring Road Mall, Rohini, Delhi – 110085', href: undefined },
           ] as { icon: React.ElementType; text: string; href: string | undefined }[]).map(({ icon: Icon, text, href }) => (
             href
-              ? <a key={text} href={href} style={{ display: 'flex', alignItems: 'center', gap: 9, color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}><Icon size={15} strokeWidth={2.5} />{text}</a>
-              : <span key={text} style={{ display: 'flex', alignItems: 'center', gap: 9, color: '#fff', fontSize: 13, fontWeight: 600 }}><Icon size={15} strokeWidth={2.5} />{text}</span>
+              ? <a key={text} href={href} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 600, flexShrink: 0 }}><Icon size={15} strokeWidth={2.5} /><span>{text}</span></a>
+              : <span key={text} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 13, fontWeight: 600 }}><Icon size={15} strokeWidth={2.5} /><span>{text}</span></span>
           ))}
         </div>
       </section>
 
       {/* ─── Main grid: info + form ─── */}
-      <div className="contact-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+      <div className="contact-grid" style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         {/* Left — contact details */}
         <div>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: theme.primary, marginBottom: 12 }}>Contact Details</p>
-          <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111', marginBottom: 8, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1.1 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: theme.primary, marginBottom: 10 }}>Contact Details</p>
+          <h2 style={{ fontSize: 28, fontWeight: 900, color: '#111', marginBottom: 8, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", lineHeight: 1.1 }}>
             We&apos;re here<br />to help.
           </h2>
-          <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.8, marginBottom: 36 }}>
+          <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.8, marginBottom: 28 }}>
             Reach out for product questions, wholesale or distributor inquiries, or any feedback about Atulya Medilink products.
           </p>
 
           {/* Contact cards */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 40 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
             {([
-              {
-                icon: Phone,
-                title: 'Phone',
-                lines: ['+91 011 4144 7223'],
-                href: 'tel:01141447223',
-              },
-              {
-                icon: Mail,
-                title: 'Email',
-                lines: ['info@atulyamedilinkpvtltd.com'],
-                href: 'mailto:info@atulyamedilinkpvtltd.com',
-              },
-              {
-                icon: MapPin,
-                title: 'Office Address',
-                lines: ['Unit-604, Ring Road Mall', 'Manglam Place Plot 21, Sector-3', 'Rohini, Delhi – 110085'],
-                href: undefined,
-              },
+              { icon: Phone,  title: 'Phone',          lines: ['+91 011 4144 7223'],                                    href: 'tel:01141447223' },
+              { icon: Mail,   title: 'Email',           lines: ['info@atulyamedilinkpvtltd.com'],                       href: 'mailto:info@atulyamedilinkpvtltd.com' },
+              { icon: MapPin, title: 'Office Address',  lines: ['Unit-604, Ring Road Mall', 'Manglam Place Plot 21, Sector-3', 'Rohini, Delhi – 110085'], href: undefined },
             ] as { icon: React.ElementType; title: string; lines: string[]; href: string | undefined }[]).map(({ icon: Icon, title, lines, href }) => (
-              <div key={title} style={{ display: 'flex', gap: 16, padding: '18px 20px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: theme.bgLight, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={17} color={theme.primary} strokeWidth={2} />
+              <div key={title} style={{ display: 'flex', gap: 14, padding: '16px 18px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                <div style={{ width: 38, height: 38, borderRadius: 9, background: theme.bgLight, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={16} color={theme.primary} strokeWidth={2} />
                 </div>
                 <div>
-                  <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 4 }}>{title}</p>
+                  <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 3 }}>{title}</p>
                   {lines.map((line, i) => (
-                    <p key={i} style={{ fontSize: 13, color: '#374151', lineHeight: 1.65 }}>
+                    <p key={i} style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>
                       {i === 0 && href
                         ? <a href={href} style={{ color: theme.primary, fontWeight: 600, textDecoration: 'none' }}>{line}</a>
                         : line}
@@ -120,7 +105,7 @@ export default function ContactPage() {
 
           {/* Social links */}
           <div>
-            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 14 }}>Follow Us</p>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 12 }}>Follow Us</p>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {SOCIAL_LINKS.map(({ icon: Icon, label, url, color }) => (
                 <a
@@ -151,7 +136,7 @@ export default function ContactPage() {
         </div>
 
         {/* Right — form */}
-        <div style={{ background: '#fff', border: '1px solid #f0f0f0', borderRadius: 16, padding: '36px 32px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', alignSelf: 'start' }}>
+        <div style={{ background: '#fff', border: '1px solid #f0f0f0', borderRadius: 16, padding: '32px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', alignSelf: 'start' }}>
           {submitted ? (
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
               <CheckCircle size={52} color={theme.primary} strokeWidth={1.5} style={{ marginBottom: 20 }} />
@@ -168,31 +153,31 @@ export default function ContactPage() {
             </div>
           ) : (
             <>
-              <h3 style={{ fontSize: 22, fontWeight: 800, color: '#111', marginBottom: 4, letterSpacing: '-0.01em' }}>Send a Message</h3>
-              <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 28 }}>Fill in the form and we&apos;ll respond promptly.</p>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#111', marginBottom: 4, letterSpacing: '-0.01em' }}>Send a Message</h3>
+              <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>Fill in the form and we&apos;ll respond promptly.</p>
 
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 6 }}>Full Name *</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 5 }}>Full Name *</label>
                     <input type="text" name="name" required placeholder="Your name" value={form.name} onChange={handleChange}
                       onFocus={() => setFocused('name')} onBlur={() => setFocused(null)} style={inputStyle('name')} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 6 }}>Phone</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 5 }}>Phone</label>
                     <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" value={form.phone} onChange={handleChange}
                       onFocus={() => setFocused('phone')} onBlur={() => setFocused(null)} style={inputStyle('phone')} />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 6 }}>Email Address *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 5 }}>Email Address *</label>
                   <input type="email" name="email" required placeholder="you@example.com" value={form.email} onChange={handleChange}
                     onFocus={() => setFocused('email')} onBlur={() => setFocused(null)} style={inputStyle('email')} />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 6 }}>Message *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 5 }}>Message *</label>
                   <textarea name="message" required rows={5} placeholder="Tell us how we can help…" value={form.message} onChange={handleChange}
                     onFocus={() => setFocused('message')} onBlur={() => setFocused(null)}
                     style={{ ...inputStyle('message'), resize: 'vertical', minHeight: 120 }} />
@@ -217,26 +202,26 @@ export default function ContactPage() {
       </div>
 
       {/* ─── Bottom CTA bar ─── */}
-      <section style={{ background: '#0f0f0f', padding: '56px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section className="contact-cta" style={{ background: '#0f0f0f', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(${theme.primaryRgb},0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.primaryRgb},0.04) 1px, transparent 1px)`, backgroundSize: '44px 44px', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 600, margin: '0 auto' }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 14 }}>✦ Prefer to Call?</span>
-          <h2 style={{ fontSize: 'clamp(36px,5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.24em', textTransform: 'uppercase', color: theme.primary, display: 'block', marginBottom: 12 }}>✦ Prefer to Call?</span>
+          <h2 className="contact-cta-title" style={{ fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 14, letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
             CALL US<br /><span style={{ color: theme.primary }}>ANYTIME.</span>
           </h2>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 28, lineHeight: 1.7 }}>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 24, lineHeight: 1.7 }}>
             Our team is available to guide you through our products and answer any questions.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="tel:01141447223"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: theme.primary, color: '#fff', padding: '13px 28px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 0.2s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: theme.primary, color: '#fff', padding: '13px 24px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 0.2s' }}
               onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
             >
               <Phone size={13} /> +91 011 4144 7223
             </a>
             <a href="mailto:info@atulyamedilinkpvtltd.com"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', padding: '13px 28px', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', padding: '13px 24px', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
               onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.6)`)}
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)')}
             >
@@ -247,7 +232,7 @@ export default function ContactPage() {
       </section>
 
       {/* ─── Footer note ─── */}
-      <div style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '28px 32px', textAlign: 'center' }}>
+      <div style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '24px 20px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: '#9ca3af', maxWidth: 520, margin: '0 auto', lineHeight: 1.8 }}>
           <strong style={{ color: '#374151' }}>Atulya Medilink Pvt. Ltd.</strong><br />
           Unit-604, Ring Road Mall, Manglam Place Plot 21, Sector-3, Rohini, Delhi – 110085<br />
@@ -256,8 +241,32 @@ export default function ContactPage() {
       </div>
 
       <style>{`
+        /* ── Desktop ── */
+        .contact-hero { padding: 68px 32px 56px; }
+        .contact-hero-title { font-size: clamp(48px, 8vw, 96px); }
+        .contact-hero-sub { font-size: 14px; }
+        .contact-info-strip { padding: 20px 32px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .contact-grid { padding: 56px 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+        .contact-form-row { grid-template-columns: 1fr 1fr; }
+        .contact-cta { padding: 52px 32px; }
+        .contact-cta-title { font-size: clamp(36px, 5vw, 60px); }
+
+        /* ── Mobile ── */
         @media (max-width: 768px) {
-          .contact-grid { grid-template-columns: 1fr !important; gap: 32px !important; padding: 40px 20px !important; }
+          .contact-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+        }
+        @media (max-width: 639px) {
+          .contact-hero { padding: 40px 20px 32px; }
+          .contact-hero-title { font-size: 34px !important; }
+          .contact-hero-sub { font-size: 13px; }
+
+          .contact-info-strip { padding: 14px 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
+
+          .contact-grid { padding: 32px 16px; gap: 24px !important; }
+          .contact-form-row { grid-template-columns: 1fr !important; }
+
+          .contact-cta { padding: 40px 20px; }
+          .contact-cta-title { font-size: 28px !important; }
         }
       `}</style>
     </div>
