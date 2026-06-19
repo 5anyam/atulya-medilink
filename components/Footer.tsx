@@ -132,7 +132,7 @@ export default function Footer() {
               {[
                 { label: 'Phone', val: '+91 011 4144 7223' },
                 { label: 'WhatsApp', val: '+91 88511 80015' },
-                { label: 'Email', val: 'info@atulyamedilinkpvtltd.com' },
+                { label: 'Email', val: 'info.atulyamedilink@gmail.com' },
                 { label: 'Address', val: 'Rohini, Delhi – 110085' },
               ].map((item) => (
                 <li key={item.label}>
