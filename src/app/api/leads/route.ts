@@ -1,63 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 
 const WC_BASE = (process.env.WC_API_BASE || 'https://cms.atulyamedilinkpvtltd.shop/wp-json/wc/v3');
 const CK = process.env.WC_CONSUMER_KEY || process.env.CONSUMER_KEY || 'ck_d4aff65e142f21beeb0ad648b90728553c99ee96';
 const CS = process.env.WC_CONSUMER_SECRET || process.env.CONSUMER_SECRET || 'cs_d469c205bb3d56085ed79bbadaf344c243626277';
 const AUTH = Buffer.from(`${CK}:${CS}`).toString('base64');
 
-const NOTIFY_EMAIL = 'info.atulyamedilink@gmail.com';
+const SOURCE_LABEL: Record<string, string> = {
+  exit_intent: 'Offer Popup (20% OFF)',
+  enquiry_form: 'Enquiry Form',
+  website: 'Website',
+};
 
-function createTransporter() {
-  const user = process.env.SMTP_USER || NOTIFY_EMAIL;
-  const pass = process.env.SMTP_PASS;
-  if (!pass) return null;
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  });
-}
-
-async function sendLeadEmail(data: {
+async function appendToSheet(data: {
   name?: string;
   email?: string;
   phone?: string;
   source: string;
   message?: string;
 }) {
-  const transporter = createTransporter();
-  if (!transporter) return; // SMTP not configured — skip silently
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK;
+  if (!webhookUrl) return; // Not configured — skip silently
 
-  const sourceLabel: Record<string, string> = {
-    exit_intent: 'Exit Intent Popup (20% OFF Offer)',
-    enquiry_form: 'Enquiry Form',
-    website: 'Website',
-  };
-
-  const subject = `New Lead: ${sourceLabel[data.source] || data.source}`;
-  const html = `
-    <div style="font-family:sans-serif;max-width:520px;margin:auto;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
-      <div style="background:#168b3f;padding:20px 24px;">
-        <h2 style="margin:0;color:#fff;font-size:18px;">New Lead — Atulya Medilink</h2>
-        <p style="margin:4px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">${sourceLabel[data.source] || data.source}</p>
-      </div>
-      <div style="padding:24px;">
-        <table style="width:100%;border-collapse:collapse;font-size:14px;color:#374151;">
-          ${data.name ? `<tr><td style="padding:8px 0;font-weight:600;width:110px;">Name</td><td>${data.name}</td></tr>` : ''}
-          ${data.phone ? `<tr><td style="padding:8px 0;font-weight:600;">Phone</td><td>${data.phone}</td></tr>` : ''}
-          ${data.email ? `<tr><td style="padding:8px 0;font-weight:600;">Email</td><td>${data.email}</td></tr>` : ''}
-          ${data.message ? `<tr><td style="padding:8px 0;font-weight:600;vertical-align:top;">Message</td><td>${data.message}</td></tr>` : ''}
-          <tr><td style="padding:8px 0;font-weight:600;">Time</td><td>${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</td></tr>
-        </table>
-      </div>
-    </div>
-  `;
-
-  await transporter.sendMail({
-    from: `"Atulya Medilink Website" <${process.env.SMTP_USER || NOTIFY_EMAIL}>`,
-    to: NOTIFY_EMAIL,
-    subject,
-    html,
+  await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      name: data.name || '',
+      phone: data.phone || '',
+      email: data.email || '',
+      source: SOURCE_LABEL[data.source] || data.source,
+      message: data.message || '',
+    }),
   });
 }
 
@@ -101,7 +75,7 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify(customerPayload),
       }),
-      sendLeadEmail({ name, email, phone, source, message }),
+      appendToSheet({ name, email, phone, source, message }),
     ]);
 
     if (wcRes.status === 'fulfilled' && !wcRes.value.ok) {
