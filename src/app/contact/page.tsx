@@ -87,7 +87,7 @@ export default function ContactPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
             {([
               { icon: Phone,  title: 'Phone',          lines: ['+91 011 4144 7223'],                                    href: 'tel:01141447223' },
-              { icon: Mail,   title: 'Email',           lines: ['info@atulyamedilinkpvtltd.com'],                       href: 'mailto:info@atulyamedilinkpvtltd.com' },
+              { icon: Mail,   title: 'Email',           lines: ['info.atulyamedilink@gmail.com'],                       href: 'mailto:info.atulyamedilink@gmail.com' },
               { icon: MapPin, title: 'Office Address',  lines: ['Unit-604, Ring Road Mall', 'Manglam Place Plot 21, Sector-3', 'Rohini, Delhi – 110085'], href: undefined },
             ] as { icon: React.ElementType; title: string; lines: string[]; href: string | undefined }[]).map(({ icon: Icon, title, lines, href }) => (
               <div key={title} style={{ display: 'flex', gap: 14, padding: '16px 18px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
