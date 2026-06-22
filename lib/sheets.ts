@@ -1,4 +1,4 @@
-const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyLo46Rio6jMyToj12Rq8lUdqzjXb_GDsZP_I8we5czJ7OSbIYM5itu1DKi1b1LJ1P59g/exec';
+const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbxzxAcxeNJXzQ_E6HKFY4htnW3vva5W3jh8eqA3CO_xhKM7aSDnhCYMp2osGIBLW7DPJw/exec';
 
 const SOURCE_LABEL: Record<string, string> = {
   exit_intent: 'Offer Popup (20% OFF)',
@@ -15,17 +15,22 @@ export async function appendLeadToSheet(data: {
   message?: string;
 }) {
   try {
+    const payload = JSON.stringify({
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      name: data.name || '',
+      phone: data.phone || '',
+      email: data.email || '',
+      source: SOURCE_LABEL[data.source] || data.source,
+      message: data.message || '',
+    });
+
+    // Google Apps Script doesn't support CORS preflight.
+    // text/plain + no-cors skips the preflight and delivers the body as-is.
     await fetch(SHEET_WEBHOOK, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        name: data.name || '',
-        phone: data.phone || '',
-        email: data.email || '',
-        source: SOURCE_LABEL[data.source] || data.source,
-        message: data.message || '',
-      }),
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: payload,
     });
   } catch (e) {
     console.error('[Sheets] Failed to append lead:', e);
