@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBrand } from '../../../lib/brand-context';
+import { appendLeadToSheet } from '../../../lib/sheets';
 import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, Linkedin, Twitter, Send, CheckCircle } from 'lucide-react';
 
 const SOCIAL_LINKS = [
@@ -21,7 +22,11 @@ export default function ContactPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true); };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await appendLeadToSheet({ ...form, source: 'contact_form' });
+    setSubmitted(true);
+  };
 
   const inputStyle = (name: string): React.CSSProperties => ({
     width: '100%', padding: '13px 16px',

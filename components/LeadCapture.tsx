@@ -2,17 +2,21 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { X, MessageCircle, Send, Phone, Mail, User } from 'lucide-react';
+import { appendLeadToSheet } from '../lib/sheets';
 
 /* ─────────────────────────────────────────────
    Helpers
 ───────────────────────────────────────────── */
 async function saveLead(data: { name?: string; email?: string; phone?: string; source: string; message?: string }) {
   try {
-    await fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    await Promise.all([
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }),
+      appendLeadToSheet(data),
+    ]);
   } catch (e) {
     console.error('Lead save failed', e);
   }
