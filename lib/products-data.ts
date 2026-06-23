@@ -4,6 +4,16 @@ export interface ProductIngredient {
   benefit: string;
 }
 
+export interface ProductVariation {
+  id: number;
+  price: number;
+  regularPrice: number;
+  images: string[];
+  attributes: { name: string; option: string }[];
+  sku?: string;
+  inStock: boolean;
+}
+
 export interface StaticProduct {
   id: number;
   slug: string;
@@ -23,6 +33,7 @@ export interface StaticProduct {
   rating: number;
   reviewCount: number;
   capsules: number;
+  variations?: ProductVariation[];
 }
 
 export const PRODUCTS: StaticProduct[] = [

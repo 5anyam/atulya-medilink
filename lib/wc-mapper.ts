@@ -1,5 +1,5 @@
-import { Product } from './woocommerceApi';
-import { StaticProduct } from './products-data';
+import { Product, WCVariation } from './woocommerceApi';
+import { StaticProduct, ProductVariation } from './products-data';
 
 function stripHtml(html: string): string {
   return html
@@ -51,7 +51,20 @@ function detectType(product: Product): 'cosmetics' | 'nutraceuticals' | 'ayurved
   return 'nutraceuticals'; // final fallback
 }
 
-export function wcProductToStatic(p: Product): StaticProduct {
+function mapWCVariation(v: WCVariation, parentImages: string[]): ProductVariation {
+  const images = v.image?.src ? [v.image.src] : parentImages;
+  return {
+    id: v.id,
+    price: parseFloat(v.price) || 0,
+    regularPrice: parseFloat(v.regular_price) || parseFloat(v.price) || 0,
+    images,
+    attributes: v.attributes.map(a => ({ name: a.name, option: a.option })),
+    sku: v.sku,
+    inStock: v.stock_status !== 'outofstock',
+  };
+}
+
+export function wcProductToStatic(p: Product, wcVariations?: WCVariation[]): StaticProduct {
   const price = parseFloat(p.price) || 0;
   const regularPrice = parseFloat(p.regular_price) || price;
   const images = (p.images ?? []).map(img => img.src).filter(Boolean);
@@ -60,15 +73,27 @@ export function wcProductToStatic(p: Product): StaticProduct {
   const rawCategory = p.categories?.[0]?.name ?? 'General';
   const category = stripHtml(rawCategory);
 
+  const parentImages = images.length > 0 ? images : ['/placeholder.png'];
+  const variations: ProductVariation[] | undefined = wcVariations && wcVariations.length > 0
+    ? wcVariations.map(v => mapWCVariation(v, parentImages))
+    : undefined;
+
+  const basePrice = variations
+    ? Math.min(...variations.map(v => v.price).filter(Boolean))
+    : price;
+  const baseRegularPrice = variations
+    ? Math.min(...variations.map(v => v.regularPrice).filter(Boolean))
+    : regularPrice;
+
   return {
     id: p.id,
     slug: p.slug,
     name: p.name,
     shortName: p.name,
     tagline: stripHtml(p.short_description ?? p.description ?? '').slice(0, 200),
-    price,
-    regularPrice,
-    images: images.length > 0 ? images : ['/placeholder.png'],
+    price: basePrice || price,
+    regularPrice: baseRegularPrice || regularPrice,
+    images: parentImages,
     benefits: [],
     ingredients: [],
     howToUse: stripHtml(p.description ?? ''),
@@ -79,9 +104,10 @@ export function wcProductToStatic(p: Product): StaticProduct {
     rating: parseFloat(p.average_rating ?? '4.5') || 4.5,
     reviewCount: p.rating_count ?? 0,
     capsules: 0,
+    variations,
   };
 }
 
 export function wcProductsToStatic(products: Product[]): StaticProduct[] {
-  return products.map(wcProductToStatic);
+  return products.map(p => wcProductToStatic(p));
 }

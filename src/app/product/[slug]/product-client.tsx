@@ -9,7 +9,7 @@ import {
   Star, ShieldCheck, Truck, Check, RotateCcw,
   ChevronRight, Package, Zap, ZoomIn, ChevronDown
 } from 'lucide-react';
-import { StaticProduct } from '../../../../lib/products-data';
+import { StaticProduct, ProductVariation } from '../../../../lib/products-data';
 import { useCart } from '../../../../lib/cart';
 import { toast } from '../../../../hooks/use-toast';
 import { useBrand } from '../../../../lib/brand-context';
@@ -161,6 +161,23 @@ function RelatedCard({ product }: { product: StaticProduct }) {
   );
 }
 
+function getUniqueAttributes(variations: ProductVariation[]): { name: string; options: string[] }[] {
+  const map = new Map<string, Set<string>>();
+  for (const v of variations) {
+    for (const attr of v.attributes) {
+      if (!map.has(attr.name)) map.set(attr.name, new Set());
+      map.get(attr.name)!.add(attr.option);
+    }
+  }
+  return Array.from(map.entries()).map(([name, opts]) => ({ name, options: Array.from(opts) }));
+}
+
+function findVariation(variations: ProductVariation[], selected: Record<string, string>): ProductVariation | undefined {
+  return variations.find(v =>
+    v.attributes.every(attr => selected[attr.name] === attr.option)
+  );
+}
+
 export default function ProductClient({ product, relatedProducts = [] }: { product: StaticProduct; relatedProducts?: StaticProduct[] }) {
   const { theme } = useBrand();
   const router = useRouter();
@@ -171,20 +188,41 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [selectedSize, setSelectedSize] = useState(0);
 
-  const discount = product.regularPrice > product.price
-    ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(() => {
+    const first = product.variations?.[0];
+    if (!first) return {};
+    return Object.fromEntries(first.attributes.map(a => [a.name, a.option]));
+  });
+
+  const variationAttrs = product.variations ? getUniqueAttributes(product.variations) : [];
+  const selectedVariation = product.variations ? findVariation(product.variations, selectedAttributes) : undefined;
+
+  const activeImages = selectedVariation?.images?.length ? selectedVariation.images : product.images;
+  const activePrice = selectedVariation ? selectedVariation.price : product.price;
+  const activeRegularPrice = selectedVariation ? selectedVariation.regularPrice : product.regularPrice;
+
+  const discount = activeRegularPrice > activePrice
+    ? Math.round(((activeRegularPrice - activePrice) / activeRegularPrice) * 100)
     : 0;
 
   const handleAddToCart = () => {
     setIsAddingToCart(true);
-    addToCart({ id: product.id, name: product.name, price: product.price.toString(), regular_price: product.regularPrice.toString(), images: product.images.map((src) => ({ src })) });
+    const cartId = selectedVariation ? selectedVariation.id : product.id;
+    const cartName = selectedVariation
+      ? `${product.name} – ${selectedVariation.attributes.map(a => a.option).join(', ')}`
+      : product.name;
+    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })) });
     toast({ title: 'Added to Cart', description: `${product.shortName} added to your cart.` });
     setTimeout(() => setIsAddingToCart(false), 600);
   };
 
   const handleBuyNow = () => {
     setIsBuyingNow(true);
-    addToCart({ id: product.id, name: product.name, price: product.price.toString(), regular_price: product.regularPrice.toString(), images: product.images.map((src) => ({ src })) });
+    const cartId = selectedVariation ? selectedVariation.id : product.id;
+    const cartName = selectedVariation
+      ? `${product.name} – ${selectedVariation.attributes.map(a => a.option).join(', ')}`
+      : product.name;
+    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })) });
     router.push('/checkout');
   };
 
@@ -210,7 +248,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
 
           {/* LEFT: Images */}
           <div className="w-full min-w-0 lg:sticky lg:top-6 lg:self-start">
-            <ImageGallery images={product.images} bgLight={theme.bgLight} border={theme.border} primaryRgb={theme.primaryRgb} />
+            <ImageGallery key={selectedVariation?.id ?? 'base'} images={activeImages} bgLight={theme.bgLight} border={theme.border} primaryRgb={theme.primaryRgb} />
           </div>
 
           {/* RIGHT: Info */}
@@ -257,10 +295,10 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                 <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: theme.primary, marginBottom: 4 }}>PRICE</p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
                   <span style={{ fontSize: 44, fontWeight: 900, color: '#111', lineHeight: 1, letterSpacing: '-0.03em' }}>
-                    ₹{product.price.toLocaleString('en-IN')}
+                    ₹{activePrice.toLocaleString('en-IN')}
                   </span>
-                  {product.regularPrice > product.price && (
-                    <span style={{ fontSize: 18, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
+                  {activeRegularPrice > activePrice && (
+                    <span style={{ fontSize: 18, color: '#9ca3af', textDecoration: 'line-through' }}>₹{activeRegularPrice.toLocaleString('en-IN')}</span>
                   )}
                 </div>
               </div>
@@ -271,8 +309,73 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
               )}
             </div>
 
-            {/* Size selector */}
-            {product.sizes && product.sizes.length > 0 && (
+            {/* Variation selectors (WooCommerce variable products) */}
+            {variationAttrs.length > 0 && (
+              <div style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {variationAttrs.map(attr => (
+                  <div key={attr.name}>
+                    <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 10 }}>
+                      {attr.name}
+                      {selectedAttributes[attr.name] && (
+                        <span style={{ color: theme.primary, marginLeft: 8, textTransform: 'none', letterSpacing: 0, fontWeight: 600 }}>
+                          — {selectedAttributes[attr.name]}
+                        </span>
+                      )}
+                    </p>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      {attr.options.map(option => {
+                        const isSelected = selectedAttributes[attr.name] === option;
+                        const testAttrs = { ...selectedAttributes, [attr.name]: option };
+                        const matchingVar = product.variations ? findVariation(product.variations, testAttrs) : undefined;
+                        const hasImage = !!matchingVar?.images?.length;
+                        return (
+                          <button
+                            key={option}
+                            onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: option }))}
+                            title={!matchingVar ? 'Not available' : undefined}
+                            style={{
+                              position: 'relative',
+                              padding: hasImage ? '4px' : '9px 20px',
+                              width: hasImage ? 80 : undefined,
+                              height: hasImage ? 80 : undefined,
+                              border: `2px solid ${isSelected ? theme.primary : '#e5e7eb'}`,
+                              borderRadius: 10,
+                              fontSize: 14, fontWeight: isSelected ? 700 : 500,
+                              color: isSelected ? theme.primary : '#6b7280',
+                              background: isSelected ? theme.bgLight : '#fff',
+                              cursor: matchingVar ? 'pointer' : 'not-allowed',
+                              opacity: matchingVar ? 1 : 0.4,
+                              fontFamily: 'inherit', transition: 'all 0.15s',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                            }}
+                          >
+                            {hasImage ? (
+                              <>
+                                <img
+                                  src={matchingVar!.images[0]}
+                                  alt={option}
+                                  style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 6 }}
+                                />
+                                <span style={{ position: 'absolute', bottom: 0, left: 0, right: 0, fontSize: 10, fontWeight: 700, textAlign: 'center', background: isSelected ? theme.primary : 'rgba(0,0,0,0.45)', color: '#fff', padding: '3px 2px', letterSpacing: '0.02em' }}>
+                                  {option}
+                                </span>
+                              </>
+                            ) : option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+                {selectedVariation && !selectedVariation.inStock && (
+                  <p style={{ fontSize: 13, color: '#ef4444', fontWeight: 600 }}>This variant is out of stock</p>
+                )}
+              </div>
+            )}
+
+            {/* Size selector (static products fallback) */}
+            {variationAttrs.length === 0 && product.sizes && product.sizes.length > 0 && (
               <div style={{ marginBottom: 20 }}>
                 <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#6b7280', marginBottom: 10 }}>
                   SIZE / QUANTITY
@@ -454,7 +557,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
         <div style={{ display: 'flex', gap: 10, maxWidth: 600, margin: '0 auto' }}>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <span style={{ fontSize: 12, color: '#9ca3af', fontWeight: 500 }}>Price</span>
-            <span style={{ fontSize: 20, fontWeight: 900, color: '#111', lineHeight: 1 }}>₹{product.price.toLocaleString('en-IN')}</span>
+            <span style={{ fontSize: 20, fontWeight: 900, color: '#111', lineHeight: 1 }}>₹{activePrice.toLocaleString('en-IN')}</span>
           </div>
           <button
             onClick={handleAddToCart}

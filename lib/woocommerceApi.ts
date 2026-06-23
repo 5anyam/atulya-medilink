@@ -11,6 +11,7 @@ export interface Product {
   id: number;
   slug: string;
   name: string;
+  type?: string;
   price: string;
   regular_price: string;
   sale_price: string;
@@ -19,12 +20,25 @@ export interface Product {
   description?: string;
   short_description?: string;
   images?: { id: number; src: string; alt: string }[];
-  attributes?: { name: string; options: string[] }[];
+  attributes?: { id: number; name: string; options: string[]; variation?: boolean }[];
+  variations?: number[];
   categories?: { id: number; name: string; slug: string }[];
   tags?: { id: number; name: string; slug: string }[];
   average_rating?: string;
   rating_count?: number;
   stock_status?: string;
+  sku?: string;
+}
+
+export interface WCVariation {
+  id: number;
+  price: string;
+  regular_price: string;
+  sale_price: string;
+  on_sale: boolean;
+  stock_status: string;
+  attributes: { id: number; name: string; option: string }[];
+  image?: { id: number; src: string; alt: string };
   sku?: string;
 }
 
@@ -148,6 +162,19 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
   if (!res.ok) return null;
   const products: Product[] = await res.json();
   return products[0] ?? null;
+}
+
+// ✅ FETCH VARIATIONS FOR A VARIABLE PRODUCT
+export async function fetchProductVariations(productId: number): Promise<WCVariation[]> {
+  try {
+    const url = `${API_BASE}/products/${productId}/variations?per_page=100&status=publish`;
+    const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
 }
 
 // ✅ FETCH REVIEWS FOR A PRODUCT

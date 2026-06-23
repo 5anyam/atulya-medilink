@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ProductClient from './product-client';
-import { fetchProductBySlug } from '../../../../lib/woocommerceApi';
+import { fetchProductBySlug, fetchProductVariations } from '../../../../lib/woocommerceApi';
 import { wcProductToStatic } from '../../../../lib/wc-mapper';
 import { getProductBySlug } from '../../../../lib/products-data';
 
@@ -17,7 +17,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let product;
   try {
     const wcProduct = await fetchProductBySlug(slug);
-    product = wcProduct ? wcProductToStatic(wcProduct) : getProductBySlug(slug);
+    if (wcProduct) {
+      const variations = wcProduct.type === 'variable' ? await fetchProductVariations(wcProduct.id) : [];
+      product = wcProductToStatic(wcProduct, variations);
+    } else {
+      product = getProductBySlug(slug);
+    }
   } catch {
     product = getProductBySlug(slug);
   }
@@ -63,7 +68,12 @@ export default async function Page({ params }: Props) {
   let product;
   try {
     const wcProduct = await fetchProductBySlug(slug);
-    product = wcProduct ? wcProductToStatic(wcProduct) : getProductBySlug(slug);
+    if (wcProduct) {
+      const variations = wcProduct.type === 'variable' ? await fetchProductVariations(wcProduct.id) : [];
+      product = wcProductToStatic(wcProduct, variations);
+    } else {
+      product = getProductBySlug(slug);
+    }
   } catch {
     product = getProductBySlug(slug);
   }
