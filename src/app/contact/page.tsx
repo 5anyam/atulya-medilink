@@ -60,7 +60,7 @@ export default function ContactPage() {
         <div className="contact-info-strip" style={{ maxWidth: 1100, margin: '0 auto' }}>
           {([
             { icon: Phone,   text: '+91 011 4144 7223',                   href: 'tel:01141447223' },
-            { icon: Mail,    text: 'info@atulyamedilinkpvtltd.com',       href: 'mailto:info@atulyamedilinkpvtltd.com' },
+            { icon: Mail,    text: 'info.atulyamedilink@gmail.com',       href: 'mailto:info.atulyamedilink@gmail.com' },
             { icon: MapPin,  text: 'Ring Road Mall, Rohini, Delhi – 110085', href: undefined },
           ] as { icon: React.ElementType; text: string; href: string | undefined }[]).map(({ icon: Icon, text, href }) => (
             href
@@ -225,7 +225,7 @@ export default function ContactPage() {
             >
               <Phone size={13} /> +91 011 4144 7223
             </a>
-            <a href="mailto:info@atulyamedilinkpvtltd.com"
+            <a href="mailto:info.atulyamedilink@gmail.com"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', padding: '13px 24px', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'border-color 0.2s' }}
               onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = `rgba(${theme.primaryRgb},0.6)`)}
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)')}
