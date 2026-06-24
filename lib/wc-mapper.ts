@@ -64,6 +64,23 @@ function mapWCVariation(v: WCVariation, parentImages: string[]): ProductVariatio
   };
 }
 
+function getMeta(p: Product, key: string): string {
+  return p.meta_data?.find(m => m.key === key)?.value?.trim() ?? '';
+}
+
+function parseBenefits(raw: string): string[] {
+  if (!raw) return [];
+  return raw.split('|').map(b => b.trim()).filter(Boolean);
+}
+
+function parseIngredients(raw: string): { name: string; dose: string; benefit: string }[] {
+  if (!raw) return [];
+  return raw.split('||').map(entry => {
+    const parts = entry.split(':::').map(p => p.trim());
+    return { name: parts[0] ?? '', dose: parts[1] ?? '', benefit: parts[2] ?? '' };
+  }).filter(i => i.name);
+}
+
 export function wcProductToStatic(p: Product, wcVariations?: WCVariation[]): StaticProduct {
   const price = parseFloat(p.price) || 0;
   const regularPrice = parseFloat(p.regular_price) || price;
@@ -85,6 +102,10 @@ export function wcProductToStatic(p: Product, wcVariations?: WCVariation[]): Sta
     ? Math.min(...variations.map(v => v.regularPrice).filter(Boolean))
     : regularPrice;
 
+  const metaHowToUse = getMeta(p, 'product_how_to_use');
+  const metaBenefits = parseBenefits(getMeta(p, 'product_benefits'));
+  const metaIngredients = parseIngredients(getMeta(p, 'product_ingredients'));
+
   return {
     id: p.id,
     slug: p.slug,
@@ -94,9 +115,9 @@ export function wcProductToStatic(p: Product, wcVariations?: WCVariation[]): Sta
     price: basePrice || price,
     regularPrice: baseRegularPrice || regularPrice,
     images: parentImages,
-    benefits: [],
-    ingredients: [],
-    howToUse: stripHtml(p.description ?? ''),
+    benefits: metaBenefits,
+    ingredients: metaIngredients,
+    howToUse: metaHowToUse || stripHtml(p.description ?? ''),
     category,
     type: detectType(p),
     sizes: [],

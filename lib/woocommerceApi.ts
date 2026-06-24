@@ -28,6 +28,7 @@ export interface Product {
   rating_count?: number;
   stock_status?: string;
   sku?: string;
+  meta_data?: { key: string; value: string }[];
 }
 
 export interface WCVariation {
