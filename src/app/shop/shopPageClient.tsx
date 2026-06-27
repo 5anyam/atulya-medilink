@@ -8,6 +8,9 @@ import { StaticProduct } from '../../../lib/products-data';
 import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand, BrandMode } from '../../../lib/brand-context';
 import Categories from '../../../components/Categories';
+import PackagingPopup from '../../../components/PackagingPopup';
+
+const NEW_PACKAGING_SLUGS = ['atulya-omega-3-capsules', 'atulya-daily-multivitamin'];
 
 
 interface Props {
@@ -16,54 +19,78 @@ interface Props {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
+  const [showPackagingPopup, setShowPackagingPopup] = useState(false);
+  const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;
 
+  function handleClick(e: React.MouseEvent) {
+    if (isNewPackaging) {
+      e.preventDefault();
+      setShowPackagingPopup(true);
+    }
+  }
+
   return (
-    <Link
-      href={`/product/${product.slug}`}
-      style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = `0 12px 32px rgba(${theme.primaryRgb},0.15)`; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
-    >
-      <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight, overflow: 'hidden' }}>
-        <Image src={product.images[0]} alt={product.name} fill style={{ objectFit: 'contain', padding: '20px', transition: 'transform 0.5s' }} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        {product.badge && (
-          <span style={{ position: 'absolute', top: 12, left: 12, background: theme.primary, color: '#fff', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4, textTransform: 'uppercase' }}>{product.badge}</span>
-        )}
-        {discount > 0 && (
-          <span style={{ position: 'absolute', top: 12, right: 12, background: '#111', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>{discount}% OFF</span>
-        )}
-      </div>
-      <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.25 }}>{product.name}</h3>
-        <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.tagline}</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          <div style={{ display: 'flex', gap: 2 }}>
-            {[1,2,3,4,5].map(i => (
-              <Star key={i} style={{ width: 12, height: 12, fill: i <= Math.round(product.rating) ? theme.primary : '#e5e7eb', color: i <= Math.round(product.rating) ? theme.primary : '#e5e7eb' }} />
-            ))}
-          </div>
-          <span style={{ fontSize: 11, color: '#9ca3af' }}>({product.reviewCount})</span>
+    <>
+      {showPackagingPopup && (
+        <PackagingPopup
+          productName={product.name}
+          productHref={`/product/${product.slug}`}
+          onClose={() => setShowPackagingPopup(false)}
+        />
+      )}
+      <Link
+        href={`/product/${product.slug}`}
+        onClick={handleClick}
+        style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = `0 12px 32px rgba(${theme.primaryRgb},0.15)`; }}
+        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+      >
+        <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight, overflow: 'hidden' }}>
+          <Image src={product.images[0]} alt={product.name} fill style={{ objectFit: 'contain', padding: '20px', transition: 'transform 0.5s' }} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+          {product.badge && (
+            <span style={{ position: 'absolute', top: 12, left: 12, background: theme.primary, color: '#fff', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4, textTransform: 'uppercase' }}>{product.badge}</span>
+          )}
+          {discount > 0 && (
+            <span style={{ position: 'absolute', top: 12, right: 12, background: '#111', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>{discount}% OFF</span>
+          )}
+          {isNewPackaging && (
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#d97706', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px', textAlign: 'center' }}>
+              📦 New Packaging Coming Soon
+            </div>
+          )}
         </div>
-        <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>₹{product.price.toLocaleString('en-IN')}</span>
-            {product.regularPrice > product.price && (
-              <span style={{ fontSize: 13, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
-            )}
+        <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.25 }}>{product.name}</h3>
+          <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.tagline}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <div style={{ display: 'flex', gap: 2 }}>
+              {[1,2,3,4,5].map(i => (
+                <Star key={i} style={{ width: 12, height: 12, fill: i <= Math.round(product.rating) ? theme.primary : '#e5e7eb', color: i <= Math.round(product.rating) ? theme.primary : '#e5e7eb' }} />
+              ))}
+            </div>
+            <span style={{ fontSize: 11, color: '#9ca3af' }}>({product.reviewCount})</span>
           </div>
-          <div
-            style={{ background: theme.primary, color: '#fff', textAlign: 'center', padding: '11px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
-          >
-            VIEW DETAILS <ChevronRight size={13} />
+          <div style={{ marginTop: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 12 }}>
+              <span style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>₹{product.price.toLocaleString('en-IN')}</span>
+              {product.regularPrice > product.price && (
+                <span style={{ fontSize: 13, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
+              )}
+            </div>
+            <div
+              style={{ background: theme.primary, color: '#fff', textAlign: 'center', padding: '11px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 8, transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
+            >
+              VIEW DETAILS <ChevronRight size={13} />
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </>
   );
 }
 

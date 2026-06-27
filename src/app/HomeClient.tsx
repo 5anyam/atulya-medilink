@@ -1,16 +1,19 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
 import HeroCarousel from '../../components/HeroCarousel';
 import Categories from '../../components/Categories';
+import PackagingPopup from '../../components/PackagingPopup';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
   FlaskConical, Heart, Package, BadgeCheck
 } from 'lucide-react';
+
+const NEW_PACKAGING_SLUGS = ['atulya-omega-3-capsules', 'atulya-daily-multivitamin'];
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -47,68 +50,92 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
+  const [showPackagingPopup, setShowPackagingPopup] = useState(false);
+  const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;
 
+  function handleClick(e: React.MouseEvent) {
+    if (isNewPackaging) {
+      e.preventDefault();
+      setShowPackagingPopup(true);
+    }
+  }
+
   return (
-    <Link
-      href={`/product/${product.slug}`}
-      className="product-card"
-      style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 14, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', border: '1px solid #f0f0f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-5px)'; el.style.boxShadow = `0 16px 36px rgba(${theme.primaryRgb},0.15)`; }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
-    >
-      <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight, overflow: 'hidden' }}>
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          style={{ objectFit: 'contain', padding: '20px', transition: 'transform 0.5s' }}
-          sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; }}
+    <>
+      {showPackagingPopup && (
+        <PackagingPopup
+          productName={product.name}
+          productHref={`/product/${product.slug}`}
+          onClose={() => setShowPackagingPopup(false)}
         />
-        {product.badge && (
-          <span style={{ position: 'absolute', top: 12, left: 12, background: theme.primary, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4, textTransform: 'uppercase' }}>
-            {product.badge}
-          </span>
-        )}
-        {discount > 0 && (
-          <span style={{ position: 'absolute', top: 12, right: 12, background: '#1a1a1a', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>
-            {discount}% OFF
-          </span>
-        )}
-      </div>
-
-      <div style={{ padding: '18px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3 }}>{product.name}</h3>
-        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {product.tagline}
-        </p>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          <StarRating rating={product.rating} size={13} />
-          <span style={{ fontSize: 12, color: '#9ca3af' }}>({product.reviewCount})</span>
+      )}
+      <Link
+        href={`/product/${product.slug}`}
+        onClick={handleClick}
+        className="product-card"
+        style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 14, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', border: '1px solid #f0f0f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-5px)'; el.style.boxShadow = `0 16px 36px rgba(${theme.primaryRgb},0.15)`; }}
+        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+      >
+        <div style={{ position: 'relative', aspectRatio: '1', background: theme.bgLight, overflow: 'hidden' }}>
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            style={{ objectFit: 'contain', padding: '20px', transition: 'transform 0.5s' }}
+            sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; }}
+          />
+          {product.badge && (
+            <span style={{ position: 'absolute', top: 12, left: 12, background: theme.primary, color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '4px 10px', borderRadius: 4, textTransform: 'uppercase' }}>
+              {product.badge}
+            </span>
+          )}
+          {discount > 0 && (
+            <span style={{ position: 'absolute', top: 12, right: 12, background: '#1a1a1a', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>
+              {discount}% OFF
+            </span>
+          )}
+          {isNewPackaging && (
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#d97706', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px', textAlign: 'center' }}>
+              📦 New Packaging Coming Soon
+            </div>
+          )}
         </div>
 
-        <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>₹{product.price.toLocaleString('en-IN')}</span>
-            {product.regularPrice > product.price && (
-              <span style={{ fontSize: 14, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
-            )}
+        <div style={{ padding: '18px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3 }}>{product.name}</h3>
+          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {product.tagline}
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <StarRating rating={product.rating} size={13} />
+            <span style={{ fontSize: 12, color: '#9ca3af' }}>({product.reviewCount})</span>
           </div>
-          <div
-            style={{ background: theme.primary, color: '#fff', textAlign: 'center', padding: '12px 16px', fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.2s' }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
-          >
-            VIEW PRODUCT <ChevronRight size={14} />
+
+          <div style={{ marginTop: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
+              <span style={{ fontSize: 22, fontWeight: 800, color: '#111' }}>₹{product.price.toLocaleString('en-IN')}</span>
+              {product.regularPrice > product.price && (
+                <span style={{ fontSize: 14, color: '#9ca3af', textDecoration: 'line-through' }}>₹{product.regularPrice.toLocaleString('en-IN')}</span>
+              )}
+            </div>
+            <div
+              style={{ background: theme.primary, color: '#fff', textAlign: 'center', padding: '12px 16px', fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.2s' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primaryDark)}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
+            >
+              VIEW PRODUCT <ChevronRight size={14} />
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </>
   );
 }
 
