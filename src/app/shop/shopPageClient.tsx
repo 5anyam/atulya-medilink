@@ -10,7 +10,7 @@ import { useBrand, BrandMode } from '../../../lib/brand-context';
 import Categories from '../../../components/Categories';
 import PackagingPopup from '../../../components/PackagingPopup';
 
-const NEW_PACKAGING_SLUGS = ['atulya-omega-3-capsules', 'atulya-daily-multivitamin'];
+const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
 
 interface Props {

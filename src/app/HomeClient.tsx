@@ -13,7 +13,7 @@ import {
   FlaskConical, Heart, Package, BadgeCheck
 } from 'lucide-react';
 
-const NEW_PACKAGING_SLUGS = ['atulya-omega-3-capsules', 'atulya-daily-multivitamin'];
+const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
