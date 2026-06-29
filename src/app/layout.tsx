@@ -9,7 +9,6 @@ import Script from 'next/script';
 import AnnouncementBar from '../../components/anouncement';
 import SecurityBar from '../../components/SecurityBar';
 import { Suspense } from 'react';
-import LeadCapture from '../../components/LeadCapture';
 import Loading from './loading';
 import { AuthProvider } from '../../lib/auth-context';
 import { BrandProvider } from '../../lib/brand-context';
@@ -103,9 +102,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </main>
                   <Footer />
                 </div>
-                <Suspense fallback={null}>
-                  <LeadCapture />
-                </Suspense>
                 <Suspense fallback={null}>
                   <FacebookPixel pixelId={1648859765778662} />
                 </Suspense>
