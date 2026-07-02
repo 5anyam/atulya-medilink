@@ -140,7 +140,7 @@ export interface OrderPayload {
 export async function fetchProducts(page = 1, perPage = 100, search?: string): Promise<Product[]> {
   let url = `${API_BASE}/products?per_page=${perPage}&page=${page}&status=publish`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
-  const res = await fetch(url, { cache: 'no-store', headers: wcAuthHeader() });
+  const res = await fetch(url, { next: { revalidate: 300 }, headers: wcAuthHeader() });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`WooCommerce products fetch failed (${res.status}): ${text.slice(0, 200)}`);

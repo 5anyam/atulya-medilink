@@ -3,7 +3,7 @@ import { fetchProducts } from '../../../lib/woocommerceApi';
 import { wcProductsToStatic } from '../../../lib/wc-mapper';
 import { PRODUCTS } from '../../../lib/products-data';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300; // re-fetch from WooCommerce every 5 minutes
 
 export default async function ShopPage() {
   let products;

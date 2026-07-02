@@ -154,6 +154,65 @@ export default function ShopPageClient({ products }: Props) {
 
       <Categories productCounts={productCounts} title="BROWSE BY CATEGORY" />
 
+      {/* ── CATEGORY BANNER ── */}
+      {activeType !== 'all' && (() => {
+        const banners = {
+          cosmetics: {
+            title: 'Cosmetics & Skincare',
+            subtitle: 'Premium skincare, creams & personal care for radiant skin',
+            emoji: '✨',
+            bg: 'linear-gradient(135deg, #fff4ef 0%, #ffe4d8 50%, #ffd0bc 100%)',
+            accent: '#ff5f1f',
+            tag: 'GLOW UP',
+          },
+          nutraceuticals: {
+            title: 'Nutraceuticals & Supplements',
+            subtitle: 'Vitamins, capsules & health supplements for your daily wellness',
+            emoji: '💊',
+            bg: 'linear-gradient(135deg, #f0fdf9 0%, #ccfbf1 50%, #99f6e4 100%)',
+            accent: '#0d9488',
+            tag: 'STAY HEALTHY',
+          },
+          ayurveda: {
+            title: 'Ayurveda & Herbal',
+            subtitle: 'Time-tested herbal formulations rooted in ancient Indian wisdom',
+            emoji: '🌿',
+            bg: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
+            accent: '#008000',
+            tag: 'NATURAL',
+          },
+        };
+        const b = banners[activeType];
+        return (
+          <div style={{ background: b.bg, padding: '36px 32px', borderBottom: `3px solid ${b.accent}20` }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+              <div style={{ fontSize: 56, lineHeight: 1, flexShrink: 0 }}>{b.emoji}</div>
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: b.accent, display: 'inline-block', marginBottom: 8, background: `${b.accent}18`, padding: '3px 10px', borderRadius: 4 }}>
+                  ✦ {b.tag}
+                </span>
+                <h1 style={{ fontSize: 'clamp(22px,3vw,36px)', fontWeight: 900, color: '#111', letterSpacing: '-0.02em', lineHeight: 1.1, margin: '8px 0 10px', fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+                  {b.title}
+                </h1>
+                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6, maxWidth: 480 }}>{b.subtitle}</p>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                {[
+                  { label: productCounts[activeType] + ' Products', sub: 'In stock' },
+                  { label: '100% Genuine', sub: 'Certified' },
+                  { label: 'Free Delivery', sub: 'Pan India' },
+                ].map((item, i) => (
+                  <div key={i} className="banner-stat" style={{ textAlign: 'center', padding: '12px 16px', background: '#fff', border: `1px solid ${b.accent}30`, borderRadius: 12, minWidth: 80 }}>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: b.accent, lineHeight: 1.2 }}>{item.label}</p>
+                    <p style={{ fontSize: 10, color: '#9ca3af', fontWeight: 600, marginTop: 2 }}>{item.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="shop-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px' }}>
 
         {/* Search + Filter */}
@@ -207,6 +266,7 @@ export default function ShopPageClient({ products }: Props) {
         @media (max-width: 900px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }
           .shop-inner { padding: 28px 20px !important; }
+          .banner-stat { display: none; }
         }
         @media (max-width: 480px) {
           .shop-grid { grid-template-columns: 1fr 1fr !important; }

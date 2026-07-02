@@ -57,7 +57,7 @@ export default function Categories({ productCounts }: CategoriesProps) {
       <div style={{ maxWidth: 1280, margin: '0 auto' }} className="categories-wrapper">
 
         <div className="categories-row" style={{ display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9ca3af', flexShrink: 0, whiteSpace: 'nowrap' }}>
+          <span className="shop-by-label" style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9ca3af', flexShrink: 0, whiteSpace: 'nowrap' }}>
             Shop by:
           </span>
 
@@ -69,6 +69,7 @@ export default function Categories({ productCounts }: CategoriesProps) {
                 key={type}
                 href={href}
                 onClick={() => setMode(type)}
+                className="cat-link"
                 style={{ textDecoration: 'none', flexShrink: 0 }}
               >
                 <div
@@ -125,12 +126,29 @@ export default function Categories({ productCounts }: CategoriesProps) {
         .categories-wrapper { padding: 0 32px; }
         .cat-chip { padding: 10px 18px; }
 
-        /* Mobile — bigger touch targets, tighter padding */
+        /* Mobile — grid so all 3 show in 1 line */
         @media (max-width: 639px) {
           .categories-section { padding: 0; }
           .categories-wrapper { padding: 0; }
-          .categories-row { padding: 14px 16px; gap: 8px; }
-          .cat-chip { padding: 9px 14px; }
+          .shop-by-label { display: none; }
+          .categories-row {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            overflow: visible !important;
+            padding: 12px 12px !important;
+            gap: 8px !important;
+          }
+          .cat-link { flex-shrink: unset !important; }
+          .cat-chip {
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 10px 6px !important;
+            border-radius: 12px !important;
+            gap: 5px !important;
+            width: 100% !important;
+          }
           .cat-chip-sub { display: none; }
         }
       `}</style>
