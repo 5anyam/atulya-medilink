@@ -409,6 +409,56 @@ function ProductsSection({ products }: { products: StaticProduct[] }) {
   );
 }
 
+/* ─── ALL PRODUCTS SECTION ─── */
+function AllProductsSection({ products }: { products: StaticProduct[] }) {
+  const { theme } = useBrand();
+  const ref = useReveal();
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? products : products.slice(0, 8);
+
+  return (
+    <section style={{ padding: '72px 0', background: '#fff' }} id="all-products">
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+        <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
+          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 700, display: 'block', marginBottom: 12 }}>
+            ✦ Complete Collection
+          </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+            <h2 style={{ fontSize: 'clamp(30px,5vw,60px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+              ALL<br />
+              <span style={{ color: theme.primary }}>PRODUCTS.</span>
+            </h2>
+            <Link href="/shop"
+              style={{ background: '#111', color: '#fff', padding: '13px 26px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
+            >
+              SHOP ALL →
+            </Link>
+          </div>
+        </div>
+
+        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+          {visible.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+
+        {!showAll && products.length > 8 && (
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <button
+              onClick={() => setShowAll(true)}
+              style={{ background: 'transparent', border: `2px solid ${theme.primary}`, color: theme.primary, padding: '14px 40px', borderRadius: 8, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}
+              onMouseEnter={e => { const el = e.currentTarget; el.style.background = theme.primary; el.style.color = '#fff'; }}
+              onMouseLeave={e => { const el = e.currentTarget; el.style.background = 'transparent'; el.style.color = theme.primary; }}
+            >
+              LOAD MORE ({products.length - 8} more products)
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 /* ─── SOCIAL MEDIA VIDEOS ─── */
 const SOCIAL_VIDEOS = [
   { src: '/video-1.mp4', label: 'Vitamin C Serum Results' },
@@ -635,7 +685,10 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
       {/* 7. Products Section */}
       <ProductsSection products={products} />
 
-      {/* 8. Social Media Videos */}
+      {/* 8. All Products */}
+      <AllProductsSection products={products} />
+
+      {/* 9. Social Media Videos */}
       <SocialVideosSection />
 
       {/* 9. Why Atulya */}
