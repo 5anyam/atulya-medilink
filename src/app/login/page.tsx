@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../../../lib/auth-context';
+import { Suspense } from 'react';
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,9 +14,11 @@ export default function LoginPage() {
 
   const { login, user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/my-account';
 
   if (user) {
-    router.push('/my-account');
+    router.push(redirect);
     return null;
   }
 
@@ -32,7 +35,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push('/my-account');
+      router.push(redirect);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
       setError(errorMessage);
@@ -159,5 +162,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" /></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

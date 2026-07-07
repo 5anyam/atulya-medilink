@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../../../lib/cart';
+import { useAuth } from '../../../lib/auth-context';
 import { toast } from '../../../hooks/use-toast';
-import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap, LogIn, UserPlus } from 'lucide-react';
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_BuTLIdi7g6nzab';
 
@@ -156,6 +157,7 @@ function OrderSummary({
 
 export default function Checkout() {
   const { items, clear } = useCart();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price) * i.quantity, 0);
@@ -190,6 +192,57 @@ export default function Checkout() {
           <Link href="/shop" style={{ display: 'inline-block', background: '#0D9488', color: '#fff', padding: '13px 28px', border: '2.5px solid #0f1117', boxShadow: '4px 4px 0 #0f1117', fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', textDecoration: 'none' }}>
             SHOP NOW →
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Login gate — user must be logged in to place order ──────────────────────
+  if (!authLoading && !user) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#faf7f2' }}>
+        <div className="max-w-[1024px] mx-auto px-4 py-10 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 lg:gap-8 items-start">
+
+            {/* Login prompt */}
+            <div style={{ border: '3px solid #0f1117', background: '#fff', boxShadow: '4px 4px 0 #0f1117', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 24px', borderBottom: '3px solid #0f1117', background: '#0f1117', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <Lock style={{ width: 18, height: 18, color: '#0D9488' }} />
+                <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 18, color: '#0D9488', letterSpacing: '0.08em' }}>LOGIN REQUIRED</h2>
+              </div>
+              <div style={{ padding: '36px 28px', textAlign: 'center' }}>
+                <div style={{ fontSize: 52, marginBottom: 16 }}>🔐</div>
+                <h3 style={{ fontSize: 20, fontWeight: 900, color: '#0f1117', marginBottom: 10, letterSpacing: '-0.01em' }}>
+                  Please login to place your order
+                </h3>
+                <p style={{ fontSize: 14, color: 'rgba(15,17,23,0.55)', lineHeight: 1.7, marginBottom: 32, maxWidth: 380, margin: '0 auto 32px' }}>
+                  Login to your account to complete your purchase. Your cart items are saved — they will be here when you come back.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 320, margin: '0 auto' }}>
+                  <Link
+                    href={`/login?redirect=/checkout`}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#0D9488', color: '#fff', padding: '14px 24px', border: '2.5px solid #0f1117', boxShadow: '4px 4px 0 #0f1117', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none' }}
+                  >
+                    <LogIn style={{ width: 15, height: 15 }} /> LOGIN TO CONTINUE
+                  </Link>
+                  <Link
+                    href={`/register?redirect=/checkout`}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#fff', color: '#0f1117', padding: '13px 24px', border: '2.5px solid #0f1117', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none' }}
+                  >
+                    <UserPlus style={{ width: 15, height: 15 }} /> CREATE NEW ACCOUNT
+                  </Link>
+                </div>
+                <p style={{ fontSize: 11, color: 'rgba(15,17,23,0.35)', marginTop: 20 }}>
+                  Your cart is saved. Login anytime to complete your order.
+                </p>
+              </div>
+            </div>
+
+            {/* Order summary still visible */}
+            <div className="lg:sticky lg:top-6">
+              <OrderSummary items={items} total={subtotal} delivery={delivery} />
+            </div>
+          </div>
         </div>
       </div>
     );

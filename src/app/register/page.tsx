@@ -1,29 +1,30 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, FormEvent, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../lib/auth-context';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  
+
   const { register, user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/my-account';
 
   if (user) {
-    router.push('/my-account');
+    router.push(redirect);
     return null;
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Password match check
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -39,7 +40,7 @@ export default function RegisterPage() {
 
     try {
       await register(email, password, name);
-      router.push('/my-account');
+      router.push(redirect);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Registration failed';
       setError(errorMessage);
@@ -142,5 +143,13 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" /></div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }
