@@ -12,6 +12,22 @@ import PackagingPopup from '../../../components/PackagingPopup';
 
 const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
+// Category hero banner images — same as the home page HeroCarousel, per category
+const HERO_BY_TYPE: Record<'cosmetics' | 'nutraceuticals' | 'ayurveda', { src: string; alt: string }> = {
+  cosmetics: {
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg.jpeg',
+    alt: 'Atulya Cosmetics — Premium Beauty',
+  },
+  nutraceuticals: {
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
+    alt: 'Atulya Nutraceuticals — Health & Wellness',
+  },
+  ayurveda: {
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
+    alt: 'Atulya Ayurveda — Herbal Formulations',
+  },
+};
+
 
 interface Props {
   products: StaticProduct[];
@@ -153,6 +169,25 @@ export default function ShopPageClient({ products }: Props) {
       </div>
 
       <Categories productCounts={productCounts} title="BROWSE BY CATEGORY" />
+
+      {/* ── CATEGORY HERO IMAGE BANNER (same as home page, per category) ── */}
+      {activeType !== 'all' && (
+        <div className="w-full relative overflow-hidden bg-gray-50">
+          <div className="shop-hero-inner w-full relative overflow-hidden">
+            <img
+              src={HERO_BY_TYPE[activeType].src}
+              alt={HERO_BY_TYPE[activeType].alt}
+              className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
+          </div>
+          <style>{`
+            .shop-hero-inner { aspect-ratio: 16/5; min-height: 200px; }
+            @media (max-width: 639px) { .shop-hero-inner { aspect-ratio: 1920/700; min-height: unset; } }
+          `}</style>
+        </div>
+      )}
 
       {/* ── CATEGORY BANNER ── */}
       {activeType !== 'all' && (() => {
