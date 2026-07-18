@@ -6,8 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { StaticProduct } from '../../../lib/products-data';
 import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
-import { useBrand, BrandMode } from '../../../lib/brand-context';
-import Categories from '../../../components/Categories';
+import { useBrand } from '../../../lib/brand-context';
 import PackagingPopup from '../../../components/PackagingPopup';
 
 const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
@@ -28,6 +27,19 @@ const HERO_BY_TYPE: Record<'cosmetics' | 'nutraceuticals' | 'ayurveda', { src: s
   },
 };
 
+
+// Shop-by-Concern → keywords matched against product name / category / tagline.
+// These are all skin & hair concerns, so they resolve to the relevant products
+// (mostly cosmetics) instead of defaulting to the nutraceuticals view.
+const CONCERNS: Record<string, { label: string; keywords: string[] }> = {
+  'acne':           { label: 'Acne & Pimples', keywords: ['face wash', 'cleanser', 'neem', 'wash'] },
+  'dry-skin':       { label: 'Dry Skin',       keywords: ['cream', 'moistur', 'winter', 'heel', 'soap', 'body', 'lotion'] },
+  'oily-skin':      { label: 'Oily Skin',      keywords: ['face wash', 'cleanser', 'wash', 'gel'] },
+  'pigmentation':   { label: 'Pigmentation',   keywords: ['serum', 'vitamin c', 'brighten', 'soap'] },
+  'sun-protection': { label: 'Sun Protection', keywords: ['serum', 'vitamin c', 'cream', 'spf', 'sun'] },
+  'hair-fall':      { label: 'Hair Fall',      keywords: ['hair', 'shampoo'] },
+  'anti-aging':     { label: 'Anti-Aging',     keywords: ['serum', 'vitamin c', 'cream', 'anti'] },
+};
 
 interface Props {
   products: StaticProduct[];
@@ -111,11 +123,12 @@ function ProductCard({ product }: { product: StaticProduct }) {
 }
 
 export default function ShopPageClient({ products }: Props) {
-  const { theme, mode, setMode } = useBrand();
+  const { theme } = useBrand();
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
+  const [activeConcern, setActiveConcern] = useState('');
 
   const productCounts = {
     cosmetics: products.filter(p => p.type === 'cosmetics').length,
@@ -123,11 +136,19 @@ export default function ShopPageClient({ products }: Props) {
     ayurveda: products.filter(p => p.type === 'ayurveda').length,
   };
 
-  // Sync type filter with URL query param
+  // Sync type / concern filters with URL query params
   useEffect(() => {
     const typeParam = searchParams.get('type');
     if (typeParam === 'cosmetics' || typeParam === 'nutraceuticals' || typeParam === 'ayurveda') {
       setActiveType(typeParam);
+    }
+    const concernParam = searchParams.get('concern');
+    if (concernParam && CONCERNS[concernParam]) {
+      setActiveConcern(concernParam);
+      // Concern results span categories, so don't lock into a single type view.
+      setActiveType('all');
+    } else {
+      setActiveConcern('');
     }
   }, [searchParams]);
 
@@ -137,13 +158,18 @@ export default function ShopPageClient({ products }: Props) {
   }, [products, activeType]);
 
   const filtered = useMemo(() => {
+    const concernKeywords = activeConcern ? CONCERNS[activeConcern]?.keywords ?? [] : [];
     return products.filter(p => {
       if (activeType !== 'all' && p.type !== activeType) return false;
       if (searchTerm && !p.name.toLowerCase().includes(searchTerm.toLowerCase()) && !p.category.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       if (selectedCategory && p.category !== selectedCategory) return false;
+      if (concernKeywords.length > 0) {
+        const haystack = `${p.name} ${p.category} ${p.tagline ?? ''}`.toLowerCase();
+        if (!concernKeywords.some(k => haystack.includes(k))) return false;
+      }
       return true;
     });
-  }, [products, searchTerm, selectedCategory, activeType]);
+  }, [products, searchTerm, selectedCategory, activeType, activeConcern]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
@@ -167,8 +193,6 @@ export default function ShopPageClient({ products }: Props) {
           })}
         </div>
       </div>
-
-      <Categories productCounts={productCounts} title="BROWSE BY CATEGORY" />
 
       {/* ── CATEGORY HERO IMAGE BANNER (same as home page, per category) ── */}
       {activeType !== 'all' && (
@@ -276,6 +300,19 @@ export default function ShopPageClient({ products }: Props) {
           </select>
         </div>
 
+        {activeConcern && CONCERNS[activeConcern] && (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 20, background: `${theme.primary}12`, border: `1px solid ${theme.primary}40`, color: theme.primary, padding: '8px 14px', borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
+            <span>Concern: {CONCERNS[activeConcern].label}</span>
+            <button
+              onClick={() => setActiveConcern('')}
+              aria-label="Clear concern filter"
+              style={{ background: 'none', border: 'none', color: theme.primary, cursor: 'pointer', fontSize: 15, lineHeight: 1, padding: 0, fontFamily: 'inherit' }}
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 24 }}>
           {filtered.length} product{filtered.length !== 1 ? 's' : ''} found
         </p>
@@ -284,7 +321,7 @@ export default function ShopPageClient({ products }: Props) {
           <div style={{ textAlign: 'center', padding: '80px 32px' }}>
             <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 24 }}>No products match your search.</p>
             <button
-              onClick={() => { setSearchTerm(''); setSelectedCategory(''); setActiveType('all'); }}
+              onClick={() => { setSearchTerm(''); setSelectedCategory(''); setActiveType('all'); setActiveConcern(''); }}
               style={{ background: theme.primary, color: '#fff', padding: '12px 28px', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit' }}
             >
               CLEAR FILTERS
