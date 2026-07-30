@@ -6,19 +6,19 @@ import { useBrand, BrandMode } from '../lib/brand-context';
 const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string }[]> = {
   cosmetics: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg.jpeg',
+      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
       alt: 'Atulya Cosmetics — Premium Beauty',
     },
   ],
   nutraceuticals: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
+      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
       alt: 'Atulya Nutraceuticals — Health & Wellness',
     },
   ],
   ayurveda: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
+      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
       alt: 'Atulya Ayurveda — Herbal Formulations',
     },
   ],

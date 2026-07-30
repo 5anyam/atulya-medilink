@@ -14,15 +14,15 @@ const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 // Category hero banner images — same as the home page HeroCarousel, per category
 const HERO_BY_TYPE: Record<'cosmetics' | 'nutraceuticals' | 'ayurveda', { src: string; alt: string }> = {
   cosmetics: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/gLUTATHIONE-rICE-WATER-FACE-WASH.jpg.jpeg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
     alt: 'Atulya Cosmetics — Premium Beauty',
   },
   nutraceuticals: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700.jpg-1-scaled.jpeg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
     alt: 'Atulya Nutraceuticals — Health & Wellness',
   },
   ayurveda: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/06/Shop-Website-1920X700-Shilajit.jpg-2-scaled.jpeg',
+    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
     alt: 'Atulya Ayurveda — Herbal Formulations',
   },
 };
