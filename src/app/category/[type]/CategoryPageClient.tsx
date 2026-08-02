@@ -105,15 +105,13 @@ export default function CategoryPageClient({ type, products }: { type: CatType; 
           <img
             src={cfg.banner}
             alt={cfg.label}
-            className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
+            className="w-full h-full object-contain object-center bg-gray-50"
             loading="eager"
             onError={(e) => { const el = e.currentTarget; if (el.src !== cfg.fallback) el.src = cfg.fallback; }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
         </div>
         <style>{`
-          .cat-hero-inner { aspect-ratio: 16/5; min-height: 200px; }
-          @media (max-width: 639px) { .cat-hero-inner { aspect-ratio: 1920/700; min-height: unset; } }
+          .cat-hero-inner { aspect-ratio: 1920/700; min-height: unset; }
         `}</style>
       </div>
 

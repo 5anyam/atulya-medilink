@@ -85,7 +85,7 @@ export default function HeroCarousel() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
+                  className="w-full h-full object-contain object-center bg-gray-50"
                   loading={index === 0 ? 'eager' : 'lazy'}
                   onError={(e) => {
                     const el = e.currentTarget;
@@ -153,15 +153,10 @@ export default function HeroCarousel() {
         .carousel-fade-in {
           animation: carouselFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
+        /* Match the banner's own ratio (1920×700) so it is never cropped top/bottom. */
         .hero-carousel-inner {
-          aspect-ratio: 16/5;
-          min-height: 200px;
-        }
-        @media (max-width: 639px) {
-          .hero-carousel-inner {
-            aspect-ratio: 1920/700;
-            min-height: unset;
-          }
+          aspect-ratio: 1920/700;
+          min-height: unset;
         }
       `}</style>
     </>

@@ -33,7 +33,8 @@ const navItems: NavItem[] = [
 ];
 
 function BrandSwitcher() {
-  const { mode, setMode, theme } = useBrand();
+  const { mode, setMode } = useBrand();
+  const router = useRouter();
 
   return (
     <div
@@ -66,7 +67,7 @@ function BrandSwitcher() {
         return (
           <button
             key={m}
-            onClick={() => setMode(m)}
+            onClick={() => { setMode(m); router.push(`/category/${m}`); }}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -386,7 +387,7 @@ export default function Header() {
                   return (
                     <button
                       key={m}
-                      onClick={() => setMode(m)}
+                      onClick={() => { setMode(m); setMobileMenuOpen(false); router.push(`/category/${m}`); }}
                       style={{
                         flex: 1, padding: '10px 8px', fontSize: 11, fontWeight: 600,
                         borderRadius: 8, border: `1.5px solid ${active ? colors[m] : '#e5e7eb'}`,

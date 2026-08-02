@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
 import HeroCarousel from '../../components/HeroCarousel';
-import Categories from '../../components/Categories';
 import PackagingPopup from '../../components/PackagingPopup';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
@@ -565,19 +564,14 @@ function CTASection() {
   );
 }
 
-/* ─── CATEGORY SHOWCASE ─── */
-// Banners come from the WordPress "Atulya Banner Manager" plugin (fixed links).
-// `fallback` = previous image, shown only if the managed file isn't there yet.
-const HOME_BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
-
+/* ─── SHOP BY CATEGORY ─── */
 type ShowcaseConfig = {
   type: 'cosmetics' | 'nutraceuticals' | 'ayurveda';
   label: string;
   eyebrow: string;
   tagline: string;
   accent: string;
-  banner: string;
-  bannerFallback: string;
+  bg: string;
 };
 
 const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
@@ -587,8 +581,7 @@ const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
     eyebrow: 'Skincare & Beauty',
     tagline: 'Skincare, creams & personal care for radiant skin',
     accent: '#ff5f1f',
-    banner: `${HOME_BANNER_BASE}/home-cosmetics.jpg`,
-    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
+    bg: '#fff4ef',
   },
   {
     type: 'nutraceuticals',
@@ -596,8 +589,7 @@ const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
     eyebrow: 'Health & Wellness',
     tagline: 'Vitamins, capsules & supplements for daily wellness',
     accent: '#0d9488',
-    banner: `${HOME_BANNER_BASE}/home-nutraceuticals.jpg`,
-    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
+    bg: '#f0fdf9',
   },
   {
     type: 'ayurveda',
@@ -605,16 +597,15 @@ const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
     eyebrow: 'Herbal & Natural',
     tagline: 'Time-tested herbal formulations & natural care',
     accent: '#008000',
-    banner: `${HOME_BANNER_BASE}/home-ayurveda.jpg`,
-    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
+    bg: '#f0fdf4',
   },
 ];
 
-function CategoryBanners() {
+function CategoryBanners({ products }: { products: StaticProduct[] }) {
   const ref = useReveal();
 
   return (
-    <section className="home-section" style={{ padding: '72px 0', background: '#fff' }} id="shop-by-category">
+    <section className="home-section" style={{ padding: '72px 0', background: '#fafafa' }} id="shop-by-category">
       <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
         <div ref={ref} className="reveal" style={{ textAlign: 'center', marginBottom: 44 }}>
           <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ff5f1f', fontWeight: 700, display: 'block', marginBottom: 12 }}>
@@ -625,49 +616,64 @@ function CategoryBanners() {
           </h2>
         </div>
 
-        <div className="cat-banners-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }}>
-          {CATEGORY_SHOWCASES.map((c) => (
-            <Link
-              key={c.type}
-              href={`/category/${c.type}`}
-              className="cat-banner-card"
-              style={{ position: 'relative', display: 'block', borderRadius: 18, overflow: 'hidden', textDecoration: 'none', border: '1px solid #f0f0f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'transform 0.25s, box-shadow 0.25s' }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 18px 40px rgba(0,0,0,0.14)'; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
-            >
-              <div style={{ position: 'relative', aspectRatio: '4/5', background: '#f4f4f5' }}>
-                <img
-                  src={c.banner}
-                  alt={c.label}
-                  loading="lazy"
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  onError={(e) => { const el = e.currentTarget; if (c.bannerFallback && el.src !== c.bannerFallback) el.src = c.bannerFallback; }}
-                />
-                {/* dark gradient for text legibility */}
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%)' }} />
-                {/* top accent bar */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: c.accent }} />
-
-                <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '26px 24px' }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', background: c.accent, padding: '4px 10px', borderRadius: 4, display: 'inline-block', marginBottom: 12 }}>
+        <div className="cat-banners-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {CATEGORY_SHOWCASES.map((c) => {
+            const items = products.filter(p => p.type === c.type);
+            const image = items[0]?.images?.[0];
+            const count = items.length;
+            return (
+              <Link
+                key={c.type}
+                href={`/category/${c.type}`}
+                className="cat-card"
+                style={{ display: 'flex', flexDirection: 'column', borderRadius: 18, overflow: 'hidden', textDecoration: 'none', background: '#fff', border: '1px solid #eee', boxShadow: '0 1px 4px rgba(0,0,0,0.05)', transition: 'transform 0.25s, box-shadow 0.25s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = `0 20px 44px ${c.accent}26`; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.05)'; }}
+              >
+                {/* Product image on a soft category-tinted panel */}
+                <div style={{ position: 'relative', aspectRatio: '1/1', background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: c.accent }} />
+                  <span style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', background: c.accent, padding: '5px 11px', borderRadius: 5 }}>
                     {c.eyebrow}
                   </span>
-                  <h3 style={{ fontSize: 26, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.05, marginBottom: 8, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
-                    {c.label}
-                  </h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.5, marginBottom: 16, maxWidth: 300 }}>{c.tagline}</p>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.35)', padding: '10px 18px', borderRadius: 8, backdropFilter: 'blur(4px)' }}>
+                  {image ? (
+                    <img
+                      src={image}
+                      alt={c.label}
+                      loading="lazy"
+                      style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '34px', display: 'block' }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: 48 }}>{c.type === 'cosmetics' ? '✨' : c.type === 'nutraceuticals' ? '💊' : '🌿'}</span>
+                  )}
+                </div>
+
+                {/* Text panel */}
+                <div style={{ padding: '22px 24px 26px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 8 }}>
+                    <h3 style={{ fontSize: 22, fontWeight: 900, color: '#111', letterSpacing: '-0.02em', lineHeight: 1.05, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+                      {c.label}
+                    </h3>
+                    {count > 0 && (
+                      <span style={{ fontSize: 11, fontWeight: 700, color: c.accent, background: c.bg, padding: '4px 10px', borderRadius: 999, whiteSpace: 'nowrap' }}>
+                        {count} product{count !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
+                  <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 20 }}>{c.tagline}</p>
+                  <span style={{ marginTop: 'auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', background: c.accent, padding: '12px 18px', borderRadius: 9 }}>
                     Shop Now <ChevronRight size={14} />
                   </span>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 900px) { .cat-banners-grid { grid-template-columns: 1fr !important; gap: 18px !important; } .cat-banner-card > div { aspect-ratio: 16/9 !important; } }
+        @media (max-width: 900px) { .cat-banners-grid { grid-template-columns: 1fr !important; gap: 18px !important; } }
+        @media (max-width: 900px) and (min-width: 601px) { .cat-banners-grid { grid-template-columns: 1fr 1fr !important; } }
       `}</style>
     </section>
   );
@@ -684,19 +690,10 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const productCounts = {
-    cosmetics: products.filter(p => p.type === 'cosmetics').length,
-    nutraceuticals: products.filter(p => p.type === 'nutraceuticals').length,
-    ayurveda: products.filter(p => p.type === 'ayurveda').length,
-  };
-
   return (
     <div style={{ minHeight: '100vh', background: '#fff', overflowX: 'hidden' }}>
       {/* 1. Hero Carousel */}
       <HeroCarousel />
-
-      {/* 2. Categories */}
-      <Categories productCounts={productCounts} />
 
       {/* 3. Best Sellers */}
       <BestSellersSection products={products} />
@@ -707,8 +704,8 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
       {/* 4. Marquee Belt */}
       <MarqueeBelt />
 
-      {/* 5. Shop by Category — banners that link to each category page */}
-      <CategoryBanners />
+      {/* 5. Shop by Category — cards that link to each category page */}
+      <CategoryBanners products={products} />
 
       {/* 6. Trust Bar */}
       <TrustBar />

@@ -208,7 +208,7 @@ export default function ShopPageClient({ products }: Props) {
             <img
               src={HERO_BY_TYPE[activeType].src}
               alt={HERO_BY_TYPE[activeType].alt}
-              className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
+              className="w-full h-full object-contain object-center bg-gray-50"
               loading="eager"
               onError={(e) => {
                 const el = e.currentTarget;
@@ -219,8 +219,7 @@ export default function ShopPageClient({ products }: Props) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
           </div>
           <style>{`
-            .shop-hero-inner { aspect-ratio: 16/5; min-height: 200px; }
-            @media (max-width: 639px) { .shop-hero-inner { aspect-ratio: 1920/700; min-height: unset; } }
+            .shop-hero-inner { aspect-ratio: 1920/700; min-height: unset; }
           `}</style>
         </div>
       )}
