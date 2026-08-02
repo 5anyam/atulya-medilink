@@ -572,9 +572,9 @@ const HOME_BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploa
 
 type ShowcaseConfig = {
   type: 'cosmetics' | 'nutraceuticals' | 'ayurveda';
+  label: string;
   eyebrow: string;
-  title: string;
-  titleAccent: string;
+  tagline: string;
   accent: string;
   banner: string;
   bannerFallback: string;
@@ -583,91 +583,107 @@ type ShowcaseConfig = {
 const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
   {
     type: 'cosmetics',
+    label: 'Cosmetics',
     eyebrow: 'Skincare & Beauty',
-    title: 'COSMETICS',
-    titleAccent: 'FOR YOUR SKIN.',
+    tagline: 'Skincare, creams & personal care for radiant skin',
     accent: '#ff5f1f',
     banner: `${HOME_BANNER_BASE}/home-cosmetics.jpg`,
     bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
   },
   {
     type: 'nutraceuticals',
+    label: 'Nutraceuticals',
     eyebrow: 'Health & Wellness',
-    title: 'NUTRACEUTICALS',
-    titleAccent: '& SUPPLEMENTS.',
+    tagline: 'Vitamins, capsules & supplements for daily wellness',
     accent: '#0d9488',
     banner: `${HOME_BANNER_BASE}/home-nutraceuticals.jpg`,
     bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
   },
   {
     type: 'ayurveda',
+    label: 'Ayurveda',
     eyebrow: 'Herbal & Natural',
-    title: 'AYURVEDA',
-    titleAccent: '& HERBAL.',
+    tagline: 'Time-tested herbal formulations & natural care',
     accent: '#008000',
     banner: `${HOME_BANNER_BASE}/home-ayurveda.jpg`,
     bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
   },
 ];
 
-function CategoryShowcase({ config, products, altBg }: { config: ShowcaseConfig; products: StaticProduct[]; altBg: boolean }) {
+function CategoryBanners() {
   const ref = useReveal();
-  const items = products.filter(p => p.type === config.type).slice(0, 4);
-  if (items.length === 0) return null;
-
-  const href = `/shop?type=${config.type}`;
 
   return (
-    <section className="home-section" style={{ padding: '72px 0', background: altBg ? '#fafafa' : '#fff' }} id={`cat-${config.type}`}>
+    <section className="home-section" style={{ padding: '72px 0', background: '#fff' }} id="shop-by-category">
       <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
-        <div ref={ref} className="reveal">
+        <div ref={ref} className="reveal" style={{ textAlign: 'center', marginBottom: 44 }}>
+          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ff5f1f', fontWeight: 700, display: 'block', marginBottom: 12 }}>
+            ✦ Explore Our Ranges
+          </span>
+          <h2 style={{ fontSize: 'clamp(30px,4.5vw,56px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+            SHOP BY CATEGORY.
+          </h2>
+        </div>
 
-          {/* Heading */}
-          <div style={{ marginBottom: 28 }}>
-            <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: config.accent, fontWeight: 700, display: 'block', marginBottom: 12 }}>
-              ✦ {config.eyebrow}
-            </span>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
-              <h2 style={{ fontSize: 'clamp(28px,4.5vw,54px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
-                {config.title}<br /><span style={{ color: config.accent }}>{config.titleAccent}</span>
-              </h2>
-              <Link href={href}
-                style={{ background: '#111', color: '#fff', padding: '13px 26px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
-                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = config.accent)}
-                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
-              >
-                VIEW ALL →
-              </Link>
-            </div>
-          </div>
+        <div className="cat-banners-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }}>
+          {CATEGORY_SHOWCASES.map((c) => (
+            <Link
+              key={c.type}
+              href={`/category/${c.type}`}
+              className="cat-banner-card"
+              style={{ position: 'relative', display: 'block', borderRadius: 18, overflow: 'hidden', textDecoration: 'none', border: '1px solid #f0f0f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'transform 0.25s, box-shadow 0.25s' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 18px 40px rgba(0,0,0,0.14)'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+            >
+              <div style={{ position: 'relative', aspectRatio: '4/5', background: '#f4f4f5' }}>
+                <img
+                  src={c.banner}
+                  alt={c.label}
+                  loading="lazy"
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  onError={(e) => { const el = e.currentTarget; if (c.bannerFallback && el.src !== c.bannerFallback) el.src = c.bannerFallback; }}
+                />
+                {/* dark gradient for text legibility */}
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%)' }} />
+                {/* top accent bar */}
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: c.accent }} />
 
-          {/* Banner */}
-          <Link href={href} style={{ display: 'block', marginBottom: 32, borderRadius: 16, overflow: 'hidden', border: '1px solid #f0f0f0' }}>
-            <img
-              src={config.banner}
-              alt={`${config.title} — ${config.eyebrow}`}
-              className="cat-banner-img"
-              loading="lazy"
-              style={{ width: '100%', display: 'block', objectFit: 'cover', aspectRatio: '1920/540', background: '#f4f4f5' }}
-              onError={(e) => {
-                const el = e.currentTarget;
-                if (config.bannerFallback && el.src !== config.bannerFallback) el.src = config.bannerFallback;
-              }}
-            />
-          </Link>
-
-          {/* Products */}
-          <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-            {items.map(p => <ProductCard key={p.id} product={p} />)}
-          </div>
+                <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '26px 24px' }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', background: c.accent, padding: '4px 10px', borderRadius: 4, display: 'inline-block', marginBottom: 12 }}>
+                    {c.eyebrow}
+                  </span>
+                  <h3 style={{ fontSize: 26, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.05, marginBottom: 8, fontFamily: "'Plus Jakarta Sans','Inter',sans-serif" }}>
+                    {c.label}
+                  </h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.5, marginBottom: 16, maxWidth: 300 }}>{c.tagline}</p>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.35)', padding: '10px 18px', borderRadius: 8, backdropFilter: 'blur(4px)' }}>
+                    Shop Now <ChevronRight size={14} />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) { .cat-banners-grid { grid-template-columns: 1fr !important; gap: 18px !important; } .cat-banner-card > div { aspect-ratio: 16/9 !important; } }
+      `}</style>
     </section>
   );
 }
 
 /* ─── HOME PAGE ─── */
 export default function Homepage({ products }: { products: StaticProduct[] }) {
+  const { setMode } = useBrand();
+
+  // Home always uses the main (cosmetics) colour, regardless of the last
+  // category the visitor browsed.
+  useEffect(() => {
+    setMode('cosmetics');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const productCounts = {
     cosmetics: products.filter(p => p.type === 'cosmetics').length,
     nutraceuticals: products.filter(p => p.type === 'nutraceuticals').length,
@@ -691,10 +707,8 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
       {/* 4. Marquee Belt */}
       <MarqueeBelt />
 
-      {/* 5. Category-wise showcases (Cosmetics / Nutraceuticals / Ayurveda) */}
-      {CATEGORY_SHOWCASES.map((config, i) => (
-        <CategoryShowcase key={config.type} config={config} products={products} altBg={i % 2 === 1} />
-      ))}
+      {/* 5. Shop by Category — banners that link to each category page */}
+      <CategoryBanners />
 
       {/* 6. Trust Bar */}
       <TrustBar />

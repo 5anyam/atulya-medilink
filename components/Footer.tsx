@@ -78,8 +78,9 @@ export default function Footer() {
             <h4 style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#fff', marginBottom: 20, fontWeight: 700 }}>PRODUCTS</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                { name: 'Cosmetics', to: '/shop?type=cosmetics' },
-                { name: 'Nutraceuticals', to: '/shop?type=nutraceuticals' },
+                { name: 'Cosmetics', to: '/category/cosmetics' },
+                { name: 'Nutraceuticals', to: '/category/nutraceuticals' },
+                { name: 'Ayurveda', to: '/category/ayurveda' },
                 { name: 'Face Care', to: '/shop?cat=face' },
                 { name: 'Hair Care', to: '/shop?cat=hair' },
                 { name: 'Vitamins & Supplements', to: '/shop?cat=vitamins' },

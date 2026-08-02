@@ -18,9 +18,9 @@ const navItems: NavItem[] = [
     name: 'Products',
     to: '/shop',
     submenu: [
-      { name: 'Cosmetics', to: '/shop?type=cosmetics' },
-      { name: 'Nutraceuticals', to: '/shop?type=nutraceuticals' },
-      { name: 'Ayurveda', to: '/shop?type=ayurveda' },
+      { name: 'Cosmetics', to: '/category/cosmetics' },
+      { name: 'Nutraceuticals', to: '/category/nutraceuticals' },
+      { name: 'Ayurveda', to: '/category/ayurveda' },
       { name: 'Face Care', to: '/shop?cat=face' },
       { name: 'Hair Care', to: '/shop?cat=hair' },
       { name: 'Body Care', to: '/shop?cat=body' },

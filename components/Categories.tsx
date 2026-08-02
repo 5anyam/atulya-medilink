@@ -21,7 +21,7 @@ const BRAND_CATEGORIES: {
     icon: Sparkles,
     color: '#ff5f1f',
     bg: '#fff8f5',
-    href: '/shop?type=cosmetics',
+    href: '/category/cosmetics',
   },
   {
     type: 'nutraceuticals',
@@ -30,7 +30,7 @@ const BRAND_CATEGORIES: {
     icon: Pill,
     color: '#0d9488',
     bg: '#f0fdf9',
-    href: '/shop?type=nutraceuticals',
+    href: '/category/nutraceuticals',
   },
   {
     type: 'ayurveda',
@@ -39,7 +39,7 @@ const BRAND_CATEGORIES: {
     icon: Leaf,
     color: '#008000',
     bg: '#f0fdf4',
-    href: '/shop?type=ayurveda',
+    href: '/category/ayurveda',
   },
 ];
 
