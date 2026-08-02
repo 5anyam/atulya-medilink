@@ -373,92 +373,6 @@ function ShopByConcern() {
   );
 }
 
-/* ─── ALL PRODUCTS SECTION ─── */
-function ProductsSection({ products }: { products: StaticProduct[] }) {
-  const { theme, mode } = useBrand();
-  const ref = useReveal();
-  const displayProducts = products.filter(p => p.type === mode).slice(0, 8);
-
-  return (
-    <section className="home-section" style={{ padding: '72px 0', background: '#fafafa' }} id="products">
-      <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
-        <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
-          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 700, display: 'block', marginBottom: 12 }}>
-            ✦ {mode === 'cosmetics' ? 'Skincare & Beauty' : 'Health & Wellness'}
-          </span>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
-            <h2 style={{ fontSize: 'clamp(30px,5vw,60px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
-              {mode === 'cosmetics' ? 'TOP PICKS FOR' : 'BESTSELLING'}<br />
-              <span style={{ color: theme.primary }}>{mode === 'cosmetics' ? 'YOUR SKIN.' : 'SUPPLEMENTS.'}</span>
-            </h2>
-            <Link href="/shop"
-              style={{ background: '#111', color: '#fff', padding: '13px 26px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
-            >
-              VIEW ALL →
-            </Link>
-          </div>
-        </div>
-
-        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-          {displayProducts.map(p => <ProductCard key={p.id} product={p} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── ALL PRODUCTS SECTION ─── */
-function AllProductsSection({ products }: { products: StaticProduct[] }) {
-  const { theme } = useBrand();
-  const ref = useReveal();
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? products : products.slice(0, 8);
-
-  return (
-    <section style={{ padding: '72px 0', background: '#fff' }} id="all-products">
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
-        <div ref={ref} className="reveal" style={{ marginBottom: 48 }}>
-          <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.primary, fontWeight: 700, display: 'block', marginBottom: 12 }}>
-            ✦ Complete Collection
-          </span>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
-            <h2 style={{ fontSize: 'clamp(30px,5vw,60px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
-              ALL<br />
-              <span style={{ color: theme.primary }}>PRODUCTS.</span>
-            </h2>
-            <Link href="/shop"
-              style={{ background: '#111', color: '#fff', padding: '13px 26px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = theme.primary)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
-            >
-              SHOP ALL →
-            </Link>
-          </div>
-        </div>
-
-        <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-          {visible.map(p => <ProductCard key={p.id} product={p} />)}
-        </div>
-
-        {!showAll && products.length > 8 && (
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <button
-              onClick={() => setShowAll(true)}
-              style={{ background: 'transparent', border: `2px solid ${theme.primary}`, color: theme.primary, padding: '14px 40px', borderRadius: 8, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}
-              onMouseEnter={e => { const el = e.currentTarget; el.style.background = theme.primary; el.style.color = '#fff'; }}
-              onMouseLeave={e => { const el = e.currentTarget; el.style.background = 'transparent'; el.style.color = theme.primary; }}
-            >
-              LOAD MORE ({products.length - 8} more products)
-            </button>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
 /* ─── SOCIAL MEDIA VIDEOS ─── */
 const SOCIAL_VIDEOS = [
   { src: '/video-1.mp4', label: 'Vitamin C Serum Results' },
@@ -651,6 +565,107 @@ function CTASection() {
   );
 }
 
+/* ─── CATEGORY SHOWCASE ─── */
+// Banners come from the WordPress "Atulya Banner Manager" plugin (fixed links).
+// `fallback` = previous image, shown only if the managed file isn't there yet.
+const HOME_BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
+
+type ShowcaseConfig = {
+  type: 'cosmetics' | 'nutraceuticals' | 'ayurveda';
+  eyebrow: string;
+  title: string;
+  titleAccent: string;
+  accent: string;
+  banner: string;
+  bannerFallback: string;
+};
+
+const CATEGORY_SHOWCASES: ShowcaseConfig[] = [
+  {
+    type: 'cosmetics',
+    eyebrow: 'Skincare & Beauty',
+    title: 'COSMETICS',
+    titleAccent: 'FOR YOUR SKIN.',
+    accent: '#ff5f1f',
+    banner: `${HOME_BANNER_BASE}/home-cosmetics.jpg`,
+    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
+  },
+  {
+    type: 'nutraceuticals',
+    eyebrow: 'Health & Wellness',
+    title: 'NUTRACEUTICALS',
+    titleAccent: '& SUPPLEMENTS.',
+    accent: '#0d9488',
+    banner: `${HOME_BANNER_BASE}/home-nutraceuticals.jpg`,
+    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
+  },
+  {
+    type: 'ayurveda',
+    eyebrow: 'Herbal & Natural',
+    title: 'AYURVEDA',
+    titleAccent: '& HERBAL.',
+    accent: '#008000',
+    banner: `${HOME_BANNER_BASE}/home-ayurveda.jpg`,
+    bannerFallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
+  },
+];
+
+function CategoryShowcase({ config, products, altBg }: { config: ShowcaseConfig; products: StaticProduct[]; altBg: boolean }) {
+  const ref = useReveal();
+  const items = products.filter(p => p.type === config.type).slice(0, 4);
+  if (items.length === 0) return null;
+
+  const href = `/shop?type=${config.type}`;
+
+  return (
+    <section className="home-section" style={{ padding: '72px 0', background: altBg ? '#fafafa' : '#fff' }} id={`cat-${config.type}`}>
+      <div className="section-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
+        <div ref={ref} className="reveal">
+
+          {/* Heading */}
+          <div style={{ marginBottom: 28 }}>
+            <span style={{ fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: config.accent, fontWeight: 700, display: 'block', marginBottom: 12 }}>
+              ✦ {config.eyebrow}
+            </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+              <h2 style={{ fontSize: 'clamp(28px,4.5vw,54px)', fontWeight: 900, letterSpacing: '-0.025em', color: '#111', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}>
+                {config.title}<br /><span style={{ color: config.accent }}>{config.titleAccent}</span>
+              </h2>
+              <Link href={href}
+                style={{ background: '#111', color: '#fff', padding: '13px 26px', borderRadius: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = config.accent)}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = '#111')}
+              >
+                VIEW ALL →
+              </Link>
+            </div>
+          </div>
+
+          {/* Banner */}
+          <Link href={href} style={{ display: 'block', marginBottom: 32, borderRadius: 16, overflow: 'hidden', border: '1px solid #f0f0f0' }}>
+            <img
+              src={config.banner}
+              alt={`${config.title} — ${config.eyebrow}`}
+              className="cat-banner-img"
+              loading="lazy"
+              style={{ width: '100%', display: 'block', objectFit: 'cover', aspectRatio: '1920/540', background: '#f4f4f5' }}
+              onError={(e) => {
+                const el = e.currentTarget;
+                if (config.bannerFallback && el.src !== config.bannerFallback) el.src = config.bannerFallback;
+              }}
+            />
+          </Link>
+
+          {/* Products */}
+          <div className="products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+            {items.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── HOME PAGE ─── */
 export default function Homepage({ products }: { products: StaticProduct[] }) {
   const productCounts = {
@@ -676,19 +691,18 @@ export default function Homepage({ products }: { products: StaticProduct[] }) {
       {/* 4. Marquee Belt */}
       <MarqueeBelt />
 
-      {/* 5. Trust Bar */}
+      {/* 5. Category-wise showcases (Cosmetics / Nutraceuticals / Ayurveda) */}
+      {CATEGORY_SHOWCASES.map((config, i) => (
+        <CategoryShowcase key={config.type} config={config} products={products} altBg={i % 2 === 1} />
+      ))}
+
+      {/* 6. Trust Bar */}
       <TrustBar />
 
-      {/* 6. Shop by Concern */}
+      {/* 7. Shop by Concern */}
       <ShopByConcern />
 
-      {/* 7. Products Section */}
-      <ProductsSection products={products} />
-
-      {/* 8. All Products */}
-      <AllProductsSection products={products} />
-
-      {/* 9. Social Media Videos */}
+      {/* 8. Social Media Videos */}
       <SocialVideosSection />
 
       {/* 9. Why Atulya */}

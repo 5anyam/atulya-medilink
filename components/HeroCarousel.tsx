@@ -3,22 +3,30 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useBrand, BrandMode } from '../lib/brand-context';
 
-const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string }[]> = {
+// Banner images are managed from WordPress (Atulya Banner Manager plugin).
+// `src` is the fixed link the plugin overwrites; `fallback` is the previous
+// image, shown only if the managed file doesn't exist yet — so banners are
+// never blank.
+const BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
+const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string; fallback: string }[]> = {
   cosmetics: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
+      src: `${BANNER_BASE}/home-cosmetics.jpg`,
+      fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
       alt: 'Atulya Cosmetics — Premium Beauty',
     },
   ],
   nutraceuticals: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
+      src: `${BANNER_BASE}/home-nutraceuticals.jpg`,
+      fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
       alt: 'Atulya Nutraceuticals — Health & Wellness',
     },
   ],
   ayurveda: [
     {
-      src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
+      src: `${BANNER_BASE}/home-ayurveda.jpg`,
+      fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
       alt: 'Atulya Ayurveda — Herbal Formulations',
     },
   ],
@@ -79,6 +87,10 @@ export default function HeroCarousel() {
                   alt={img.alt}
                   className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
                   loading={index === 0 ? 'eager' : 'lazy'}
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    if (img.fallback && el.src !== img.fallback) el.src = img.fallback;
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
               </div>

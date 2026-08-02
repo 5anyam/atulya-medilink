@@ -12,17 +12,24 @@ import PackagingPopup from '../../../components/PackagingPopup';
 const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
 // Category hero banner images — same as the home page HeroCarousel, per category
-const HERO_BY_TYPE: Record<'cosmetics' | 'nutraceuticals' | 'ayurveda', { src: string; alt: string }> = {
+// Banners are managed from WordPress (Atulya Banner Manager plugin). `src` is the
+// fixed link the plugin overwrites on upload; `fallback` is the previous image,
+// shown only if the managed file doesn't exist yet — so a banner is never blank.
+const BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
+const HERO_BY_TYPE: Record<'cosmetics' | 'nutraceuticals' | 'ayurveda', { src: string; alt: string; fallback: string }> = {
   cosmetics: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
+    src: `${BANNER_BASE}/shop-cosmetics.jpg`,
+    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
     alt: 'Atulya Cosmetics — Premium Beauty',
   },
   nutraceuticals: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
+    src: `${BANNER_BASE}/shop-nutraceuticals.jpg`,
+    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
     alt: 'Atulya Nutraceuticals — Health & Wellness',
   },
   ayurveda: {
-    src: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
+    src: `${BANNER_BASE}/shop-ayurveda.jpg`,
+    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
     alt: 'Atulya Ayurveda — Herbal Formulations',
   },
 };
@@ -203,6 +210,11 @@ export default function ShopPageClient({ products }: Props) {
               alt={HERO_BY_TYPE[activeType].alt}
               className="w-full h-full object-contain sm:object-cover object-center bg-gray-50"
               loading="eager"
+              onError={(e) => {
+                const el = e.currentTarget;
+                const fb = HERO_BY_TYPE[activeType].fallback;
+                if (fb && el.src !== fb) el.src = fb;
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
           </div>
