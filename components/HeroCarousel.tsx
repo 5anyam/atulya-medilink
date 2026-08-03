@@ -32,9 +32,17 @@ const IMAGES_BY_MODE: Record<BrandMode, { src: string; alt: string; fallback: st
   ],
 };
 
+// On the homepage we show all three category banners together in one carousel
+// (Cosmetics first, then Nutraceuticals, then Ayurveda) — regardless of mode.
+const HOME_BANNERS = [
+  ...IMAGES_BY_MODE.cosmetics,
+  ...IMAGES_BY_MODE.nutraceuticals,
+  ...IMAGES_BY_MODE.ayurveda,
+];
+
 export default function HeroCarousel() {
   const { theme, mode } = useBrand();
-  const images = IMAGES_BY_MODE[mode];
+  const images = HOME_BANNERS;
   const [current, setCurrent] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   // Increments on every mode change — used as key to trigger fade animation
