@@ -11,26 +11,19 @@ type CatType = 'cosmetics' | 'nutraceuticals' | 'ayurveda';
 
 const BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
 
-const CONFIG: Record<CatType, { label: string; eyebrow: string; tagline: string; banner: string; fallback: string }> = {
+// Banner + colour are driven by the parent type (cosmetics / nutraceuticals /
+// ayurveda). Sub-categories (Face Care, Vitamins, …) reuse their parent's banner.
+const BANNER: Record<CatType, { src: string; fallback: string }> = {
   cosmetics: {
-    label: 'Cosmetics & Skincare',
-    eyebrow: 'Skincare & Beauty',
-    tagline: 'Premium skincare, creams & personal care for radiant skin',
-    banner: `${BANNER_BASE}/shop-cosmetics.jpg`,
+    src: `${BANNER_BASE}/shop-cosmetics.jpg`,
     fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
   },
   nutraceuticals: {
-    label: 'Nutraceuticals & Supplements',
-    eyebrow: 'Health & Wellness',
-    tagline: 'Vitamins, capsules & health supplements for your daily wellness',
-    banner: `${BANNER_BASE}/shop-nutraceuticals.jpg`,
+    src: `${BANNER_BASE}/shop-nutraceuticals.jpg`,
     fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
   },
   ayurveda: {
-    label: 'Ayurveda & Herbal',
-    eyebrow: 'Herbal & Natural',
-    tagline: 'Time-tested herbal formulations rooted in ancient Indian wisdom',
-    banner: `${BANNER_BASE}/shop-ayurveda.jpg`,
+    src: `${BANNER_BASE}/shop-ayurveda.jpg`,
     fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
   },
 };
@@ -86,15 +79,16 @@ function ProductCard({ product }: { product: StaticProduct }) {
   );
 }
 
-export default function CategoryPageClient({ type, products }: { type: CatType; products: StaticProduct[] }) {
+export default function CategoryPageClient({ parentType, label, eyebrow, tagline, products }: { parentType: CatType; label: string; eyebrow: string; tagline: string; products: StaticProduct[] }) {
   const { theme, setMode } = useBrand();
-  const cfg = CONFIG[type];
+  const b = BANNER[parentType];
+  const cfg = { banner: b.src, fallback: b.fallback, label, eyebrow, tagline };
 
-  // Colour the whole page in this category's theme.
+  // Colour the whole page in the parent category's theme.
   useEffect(() => {
-    setMode(type);
+    setMode(parentType);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+  }, [parentType]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>

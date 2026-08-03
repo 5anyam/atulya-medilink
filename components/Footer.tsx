@@ -81,9 +81,10 @@ export default function Footer() {
                 { name: 'Cosmetics', to: '/category/cosmetics' },
                 { name: 'Nutraceuticals', to: '/category/nutraceuticals' },
                 { name: 'Ayurveda', to: '/category/ayurveda' },
-                { name: 'Face Care', to: '/shop?cat=face' },
-                { name: 'Hair Care', to: '/shop?cat=hair' },
-                { name: 'Vitamins & Supplements', to: '/shop?cat=vitamins' },
+                { name: 'Face Care', to: '/category/face-care' },
+                { name: 'Bath & Body', to: '/category/body-care' },
+                { name: 'Vitamins & Supplements', to: '/category/vitamins' },
+                { name: 'Protein & Fitness', to: '/category/protein' },
                 { name: 'All Products', to: '/shop' },
               ].map(({ name, to }) => (
                 <li key={name}>
