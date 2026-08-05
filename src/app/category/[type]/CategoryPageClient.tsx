@@ -6,27 +6,10 @@ import Image from 'next/image';
 import { Star, ChevronRight } from 'lucide-react';
 import { StaticProduct } from '../../../../lib/products-data';
 import { useBrand } from '../../../../lib/brand-context';
+import BannerCarousel, { useValidBanners } from '../../../../components/BannerCarousel';
+import { bannerCandidates, legacyBanner } from '../../../../lib/banners';
 
 type CatType = 'cosmetics' | 'nutraceuticals' | 'ayurveda';
-
-const BANNER_BASE = 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners';
-
-// Banner + colour are driven by the parent type (cosmetics / nutraceuticals /
-// ayurveda). Sub-categories (Face Care, Vitamins, …) reuse their parent's banner.
-const BANNER: Record<CatType, { src: string; fallback: string }> = {
-  cosmetics: {
-    src: `${BANNER_BASE}/shop-cosmetics.jpg`,
-    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/cosmetics-banner.png',
-  },
-  nutraceuticals: {
-    src: `${BANNER_BASE}/shop-nutraceuticals.jpg`,
-    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/nutra-banner.png',
-  },
-  ayurveda: {
-    src: `${BANNER_BASE}/shop-ayurveda.jpg`,
-    fallback: 'https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/2026/07/ayurveda-banner.png',
-  },
-};
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
@@ -81,8 +64,8 @@ function ProductCard({ product }: { product: StaticProduct }) {
 
 export default function CategoryPageClient({ parentType, label, eyebrow, tagline, products }: { parentType: CatType; label: string; eyebrow: string; tagline: string; products: StaticProduct[] }) {
   const { theme, setMode } = useBrand();
-  const b = BANNER[parentType];
-  const cfg = { banner: b.src, fallback: b.fallback, label, eyebrow, tagline };
+  const cfg = { label, eyebrow, tagline };
+  const banners = useValidBanners(bannerCandidates(`shop-${parentType}`), [legacyBanner(`shop-${parentType}`)]);
 
   // Colour the whole page in the parent category's theme.
   useEffect(() => {
@@ -93,21 +76,8 @@ export default function CategoryPageClient({ parentType, label, eyebrow, tagline
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
 
-      {/* ── Category banner ── */}
-      <div className="w-full relative overflow-hidden bg-gray-50">
-        <div className="cat-hero-inner w-full relative overflow-hidden">
-          <img
-            src={cfg.banner}
-            alt={cfg.label}
-            className="w-full h-full object-contain object-center bg-gray-50"
-            loading="eager"
-            onError={(e) => { const el = e.currentTarget; if (el.src !== cfg.fallback) el.src = cfg.fallback; }}
-          />
-        </div>
-        <style>{`
-          .cat-hero-inner { aspect-ratio: 1920/700; min-height: unset; }
-        `}</style>
-      </div>
+      {/* ── Category banner(s) ── */}
+      <BannerCarousel images={banners} alt={cfg.label} />
 
       {/* ── Heading ── */}
       <div style={{ background: '#fff', borderBottom: `3px solid ${theme.primary}` }}>

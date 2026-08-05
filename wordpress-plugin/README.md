@@ -3,17 +3,20 @@
 Team members ke liye banner change karne ka simple tareeka — **bina coding, bina website chede.**
 
 ## Ye karta kya hai
-Website ke har banner ki jagah ("slot") ek **fixed link** se judi hui hai, jaise:
+Website ke har banner ki jagah ("slot") me ab **4 tak banners** upload ho sakte hain (Banner 1, 2, 3, 4) jo website pe **carousel me apne aap rotate** hote hain. Har banner ek **fixed link** se judა hai, jaise:
 
 ```
-https://cms.atulyamedilinkpvtltd.shop/wp-content/uploads/atulya-banners/home-cosmetics.jpg
+.../atulya-banners/home-cosmetics-1.jpg   (Banner 1)
+.../atulya-banners/home-cosmetics-2.jpg   (Banner 2)  ... -4 tak
 ```
 
-Jab koi team member is plugin se nayi image upload karta hai, to plugin **usi fixed link pe file replace** kar deta hai. Link kabhi nahi badalta, isliye website apne aap nayi image dikhane lagti hai — frontend me kuch nahi karna padta.
+Jab koi team member upload karta hai, plugin **usi fixed link pe file replace** kar deta hai. Link kabhi nahi badalta — website apne aap nayi image dikhati hai, frontend me kuch nahi karna padta. Jitne banners bharoge utne rotate honge; jo empty chhodoge wo skip ho jayenge.
 
 ## Slots (kahan-kahan banner hai)
-**Home Page:** Cosmetics, Nutraceuticals, Ayurveda
-**Shop Category Pages:** Cosmetics, Nutraceuticals, Ayurveda
+**Home Page:** Cosmetics, Nutraceuticals, Ayurveda — (home carousel me teeno ke saare banners rotate honge)
+**Category Pages:** Cosmetics, Nutraceuticals, Ayurveda — (us category ke page + shop pe rotate honge)
+
+Har slot me **Banner 1–4** ke boxes hain.
 
 ## Install kaise karein (ek baar)
 1. `atulya-banner-manager.php` file ko ZIP me daalo (ya seedha `wp-content/plugins/` folder me upload karo).
@@ -24,9 +27,12 @@ Jab koi team member is plugin se nayi image upload karta hai, to plugin **usi fi
 
 ## Roz ka use (team ke liye)
 1. WordPress admin me left menu me **"Atulya Banners"** kholo.
-2. Jis jagah ka banner badalna hai uska card dhoondo (naam pe likha hai — jaise "Home Page — Cosmetics").
-3. **Choose file** → nayi image chuno → **Update this banner**.
-4. Ho gaya. Website pe same link pe nayi image live.
+2. Jis jagah ka banner chahiye uska card dhoondo (jaise "Home Page — Cosmetics").
+3. Us card me **Banner 1 / Banner 2 / Banner 3 / Banner 4** ke boxes hain. Jitne banners chahiye, un boxes me image chuno → **Save Banner** dabao.
+4. Ho gaya. Website pe wo banners carousel me rotate hone lagenge.
+5. Koi banner hatana ho to uske box me **"Remove"** dabao — wo carousel se hat jayega.
+
+**Note:** Ek banner rakhoge to sirf wahi dikhega (koi rotation nahi). 2–4 rakhoge to rotate honge.
 
 **Best image size:** ~1920 × 700 px (chaudi). Bade images auto-optimize/resize ho jaayenge.
 

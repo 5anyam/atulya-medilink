@@ -8,6 +8,8 @@ import { StaticProduct } from '../../../lib/products-data';
 import { Star, ChevronRight, Sparkles, Pill, Leaf } from 'lucide-react';
 import { useBrand } from '../../../lib/brand-context';
 import PackagingPopup from '../../../components/PackagingPopup';
+import BannerCarousel, { useValidBanners } from '../../../components/BannerCarousel';
+import { bannerCandidates, legacyBanner } from '../../../lib/banners';
 
 const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
@@ -137,6 +139,12 @@ export default function ShopPageClient({ products }: Props) {
   const [activeType, setActiveType] = useState<'all' | 'cosmetics' | 'nutraceuticals' | 'ayurveda'>('all');
   const [activeConcern, setActiveConcern] = useState('');
 
+  // Banner(s) for the active category — probes shop-<type>-1..4.jpg (multi-banner).
+  const shopBanners = useValidBanners(
+    activeType === 'all' ? [] : bannerCandidates(`shop-${activeType}`),
+    activeType === 'all' ? [] : [legacyBanner(`shop-${activeType}`)],
+  );
+
   const productCounts = {
     cosmetics: products.filter(p => p.type === 'cosmetics').length,
     nutraceuticals: products.filter(p => p.type === 'nutraceuticals').length,
@@ -201,27 +209,9 @@ export default function ShopPageClient({ products }: Props) {
         </div>
       </div>
 
-      {/* ── CATEGORY HERO IMAGE BANNER (same as home page, per category) ── */}
+      {/* ── CATEGORY HERO BANNER(S) (same as home page, per category) ── */}
       {activeType !== 'all' && (
-        <div className="w-full relative overflow-hidden bg-gray-50">
-          <div className="shop-hero-inner w-full relative overflow-hidden">
-            <img
-              src={HERO_BY_TYPE[activeType].src}
-              alt={HERO_BY_TYPE[activeType].alt}
-              className="w-full h-full object-contain object-center bg-gray-50"
-              loading="eager"
-              onError={(e) => {
-                const el = e.currentTarget;
-                const fb = HERO_BY_TYPE[activeType].fallback;
-                if (fb && el.src !== fb) el.src = fb;
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
-          </div>
-          <style>{`
-            .shop-hero-inner { aspect-ratio: 1920/700; min-height: unset; }
-          `}</style>
-        </div>
+        <BannerCarousel images={shopBanners} alt={HERO_BY_TYPE[activeType].alt} />
       )}
 
       {/* ── CATEGORY BANNER ── */}
