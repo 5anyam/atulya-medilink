@@ -7,7 +7,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
 interface FacebookPixelProps {
-  pixelId: 1648859765778662;
+  pixelId: string;
 }
 
 export default function FacebookPixel({ pixelId }: FacebookPixelProps): React.ReactElement {
@@ -24,7 +24,7 @@ export default function FacebookPixel({ pixelId }: FacebookPixelProps): React.Re
   return (
     <React.Fragment>
       <Script
-        id="1648859765778662"
+        id="facebook-pixel"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `

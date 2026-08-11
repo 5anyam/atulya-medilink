@@ -40,7 +40,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const fbPixelId = '821676473858360';
+  const fbPixelId = '1366996188303432';
   const gtagId = 'AW-17423083060';
 
   return (
@@ -49,20 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Preconnect to CMS image server for faster hero image loading */}
         <link rel="preconnect" href="https://cms.atulyamedilinkpvtltd.shop" />
         <link rel="dns-prefetch" href="https://cms.atulyamedilinkpvtltd.shop" />
-        <Script id="facebook-pixel" strategy="afterInteractive">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${fbPixelId}');
-            fbq('track', 'PageView');
-          `}
-        </Script>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
           strategy="afterInteractive"
@@ -103,7 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Footer />
                 </div>
                 <Suspense fallback={null}>
-                  <FacebookPixel pixelId={1648859765778662} />
+                  <FacebookPixel pixelId={fbPixelId} />
                 </Suspense>
               </AuthProvider>
             </CartProvider>
