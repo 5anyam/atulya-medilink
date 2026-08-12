@@ -2,6 +2,7 @@
 
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "../lib/cart";
+import { bogoFreeQty, bogoTotalQty, BOGO_SHORT } from "../lib/offers";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -142,6 +143,11 @@ export default function CartIcon() {
                           <p className="text-sm text-gray-500 mt-1">
                              ₹{Number(item.price).toLocaleString()}
                           </p>
+                          {item.offer && (
+                             <span className="inline-flex items-center gap-1 mt-2 bg-orange-50 border border-orange-500 text-orange-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                                🎁 {BOGO_SHORT} · +{bogoFreeQty(item.quantity)} FREE (you get {bogoTotalQty(item.quantity)})
+                             </span>
+                          )}
                        </div>
 
                        {/* Quantity Control */}
@@ -173,6 +179,11 @@ export default function CartIcon() {
         {/* Footer (Subtotal & Checkout) */}
         {items.length > 0 && (
            <div className="border-t border-gray-100 p-6 bg-gray-50">
+              {items.some((i) => i.offer) && (
+                 <div className="flex items-center gap-2 mb-3 bg-orange-50 border border-orange-500 text-orange-700 text-xs font-bold px-3 py-2 rounded-lg">
+                    🎁 Offer applied — free units included. You pay for the paid quantity only.
+                 </div>
+              )}
               <div className="flex items-center justify-between mb-4">
                  <span className="text-gray-500">Subtotal</span>
                  <span className="text-lg font-bold text-gray-900">₹{subtotal.toLocaleString()}</span>
