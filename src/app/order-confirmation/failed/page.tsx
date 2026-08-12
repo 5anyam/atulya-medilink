@@ -109,7 +109,7 @@ function FailedContent() {
             </p>
             <div className="space-y-3">
               <a
-                href={`mailto:care@amraj.in?subject=Payment%20Failed%20-%20Order%20%23${orderId || 'N/A'}`}
+                href={`mailto:info.atulyamedilink@gmail.com?subject=Payment%20Failed%20-%20Order%20%23${orderId || 'N/A'}`}
                 className="flex items-center gap-3 bg-white p-4 rounded-lg hover:shadow-md transition-all"
               >
                 <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -117,12 +117,12 @@ function FailedContent() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Email Support</p>
-                  <p className="text-sm text-emerald-600">care@amraj.in</p>
+                  <p className="text-sm text-emerald-600">info.atulyamedilink@gmail.com</p>
                 </div>
               </a>
               
               <a 
-                href="https://wa.me/919818400981?text=Hi,%20I%20need%20help%20with%20my%20payment"
+                href="https://wa.me/918851180015?text=Hi,%20I%20need%20help%20with%20my%20payment"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white p-4 rounded-lg hover:shadow-md transition-all"
@@ -132,7 +132,7 @@ function FailedContent() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">WhatsApp Support</p>
-                  <p className="text-sm text-green-600">+91 98184 00981</p>
+                  <p className="text-sm text-green-600">+91 88511 80015</p>
                 </div>
               </a>
             </div>
