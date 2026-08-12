@@ -47,22 +47,8 @@ export default function ImageGallery({ images }: { images: Image[] }) {
 
   const displayImages = images && images.length > 0 ? images : [];
 
-  // --- Optimized Background Images Logic ---
-  const backgroundImages: Record<string, string> = useMemo(() => ({
-    liver: "https://cms.amraj.in/wp-content/uploads/2025/07/liver-bg.png",
-    prostate: "https://cms.amraj.in/wp-content/uploads/2025/07/prostate-bg.png",
-    weight: "https://cms.amraj.in/wp-content/uploads/2025/07/weight-bg.png",
-    diabetes: "https://cms.amraj.in/wp-content/uploads/2025/07/diabetes-bg.png",
-    default: "https://cms.amraj.in/wp-content/uploads/2025/07/default-bg.png"
-  }), []);
-
-  const bgImage = useMemo(() => {
-    if (backgroundImages[currentSlug]) return backgroundImages[currentSlug];
-    for (const [key, image] of Object.entries(backgroundImages)) {
-      if (key !== 'default' && currentSlug.includes(key)) return image;
-    }
-    return backgroundImages.default;
-  }, [currentSlug, backgroundImages]);
+  // Decorative background — a soft neutral gradient (no external images).
+  void currentSlug;
 
   // --- Preload adjacent images for faster navigation ---
   useEffect(() => {
@@ -252,13 +238,10 @@ export default function ImageGallery({ images }: { images: Image[] }) {
         >
           {/* Optimized Background with will-change */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 opacity-20">
+            <div className="absolute inset-0 opacity-40">
               <div
-                className="w-full h-full bg-cover bg-center bg-no-repeat"
-                style={{ 
-                  backgroundImage: `url(${bgImage})`,
-                  willChange: 'transform'
-                }}
+                className="w-full h-full"
+                style={{ background: 'radial-gradient(circle at 30% 20%, #f0fdf9 0%, #ffffff 60%)' }}
               />
             </div>
           </div>

@@ -353,7 +353,7 @@ export default function MyAccountPage() {
             <p style={{ fontSize: 13, fontWeight: 700, color: '#111' }}>Need help with an order?</p>
             <p style={{ fontSize: 12, color: '#9ca3af' }}>Contact us on WhatsApp or email for quick support.</p>
           </div>
-          <a href="https://wa.me/919818400981" target="_blank" rel="noreferrer"
+          <a href="https://wa.me/918851180015" target="_blank" rel="noreferrer"
             style={{ background: '#22c55e', color: '#fff', fontSize: 12, fontWeight: 700, padding: '8px 16px', borderRadius: 8, textDecoration: 'none' }}>
             WhatsApp
           </a>

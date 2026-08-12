@@ -57,7 +57,7 @@ function RegisterForm() {
             Create Account
           </h2>
           <p className="mt-2 text-gray-600">
-            Join Amraj to track your orders and save your details
+            Join Atulya Medilink to track your orders and save your details
           </p>
         </div>
 
