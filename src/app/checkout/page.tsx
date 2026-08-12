@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
+import { bogoFreeQty, bogoTotalQty } from '../../../lib/offers';
 import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_BuTLIdi7g6nzab';
@@ -119,7 +120,7 @@ function OrderSummary({
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#0f1117', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</p>
                 <p style={{ fontSize: 10, color: 'rgba(15,17,23,0.45)', letterSpacing: '0.06em' }}>
                   Qty: {item.quantity}
-                  {item.offer && <span style={{ color: '#c2410c', fontWeight: 800 }}> · +{item.quantity} FREE 🎁</span>}
+                  {item.offer && <span style={{ color: '#c2410c', fontWeight: 800 }}> · +{bogoFreeQty(item.quantity)} FREE 🎁</span>}
                 </p>
               </div>
               <p style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 18, color: '#0f1117', flexShrink: 0 }}>
@@ -246,14 +247,16 @@ export default function Checkout() {
         country: 'IN',
       },
       line_items: items.map((item) => {
-        // Buy 1 Get 1 Free: ship double the units but charge for the paid qty only.
+        // Buy 1 Get 2 Free: ship 3× the units but charge for the paid qty only.
         if (item.offer) {
-          const paid = (parseFloat(item.price) * item.quantity);
+          const unit = parseFloat(item.price);
+          const paidAmount = unit * item.quantity;      // what the customer pays
+          const totalUnits = bogoTotalQty(item.quantity); // paid + free
           return {
             product_id: item.id,
-            quantity: item.quantity * 2,
-            subtotal: (paid * 2).toFixed(2), // full price of all units
-            total: paid.toFixed(2),          // discounted: free half is ₹0
+            quantity: totalUnits,
+            subtotal: (unit * totalUnits).toFixed(2),   // full retail of all units
+            total: paidAmount.toFixed(2),               // discounted: free units ₹0
           };
         }
         return { product_id: item.id, quantity: item.quantity };

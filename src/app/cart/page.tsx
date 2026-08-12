@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useCart } from '../../../lib/cart';
 import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag } from 'lucide-react';
-import { BOGO_SHORT } from '../../../lib/offers';
+import { BOGO_SHORT, bogoFreeQty, bogoTotalQty } from '../../../lib/offers';
 
 export default function CartPage() {
   const { items, increment, decrement, removeFromCart } = useCart();
@@ -79,7 +79,7 @@ export default function CartPage() {
 
                       {item.offer && (
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff4ef', border: '1.5px solid #ff5f1f', color: '#c2410c', fontSize: 11, fontWeight: 800, letterSpacing: '0.02em', padding: '4px 10px', borderRadius: 999, marginBottom: 12 }}>
-                          🎁 {BOGO_SHORT} · +{item.quantity} FREE (you get {item.quantity * 2})
+                          🎁 {BOGO_SHORT} · +{bogoFreeQty(item.quantity)} FREE (you get {bogoTotalQty(item.quantity)})
                         </div>
                       )}
 

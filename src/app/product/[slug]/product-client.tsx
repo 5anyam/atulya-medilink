@@ -318,7 +318,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                 <span style={{ fontSize: 26, lineHeight: 1 }}>🎁</span>
                 <div>
                   <p style={{ fontSize: 15, fontWeight: 900, color: '#c2410c', letterSpacing: '-0.01em' }}>{BOGO_LABEL}!</p>
-                  <p style={{ fontSize: 12, color: '#7c2d12', lineHeight: 1.4 }}>Add 1 — the 2nd one is on us. Free unit added automatically at cart.</p>
+                  <p style={{ fontSize: 12, color: '#7c2d12', lineHeight: 1.4 }}>Pay for 1, get 3 — 2 extra on us. Free units added automatically at cart.</p>
                 </div>
               </div>
             )}
