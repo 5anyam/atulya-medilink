@@ -7,6 +7,7 @@ export type Product = {
   price: string;
   regular_price: string;
   images: { src: string }[];
+  offer?: boolean; // true = Buy 1 Get 1 Free (free units shipped, charged for paid qty only)
 };
 
 export type CartItem = Product & { quantity: number };

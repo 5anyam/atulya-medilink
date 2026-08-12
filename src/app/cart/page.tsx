@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useCart } from '../../../lib/cart';
 import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { BOGO_SHORT } from '../../../lib/offers';
 
 export default function CartPage() {
   const { items, increment, decrement, removeFromCart } = useCart();
@@ -75,6 +76,12 @@ export default function CartPage() {
                         {hasDiscount && <span style={{ fontSize: 12, color: 'rgba(15,17,23,0.35)', textDecoration: 'line-through' }}>₹{parseFloat(rp!).toLocaleString()}</span>}
                         <span style={{ fontSize: 10, color: 'rgba(15,17,23,0.4)', letterSpacing: '0.06em' }}>each</span>
                       </div>
+
+                      {item.offer && (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff4ef', border: '1.5px solid #ff5f1f', color: '#c2410c', fontSize: 11, fontWeight: 800, letterSpacing: '0.02em', padding: '4px 10px', borderRadius: 999, marginBottom: 12 }}>
+                          🎁 {BOGO_SHORT} · +{item.quantity} FREE (you get {item.quantity * 2})
+                        </div>
+                      )}
 
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                         {/* Qty */}

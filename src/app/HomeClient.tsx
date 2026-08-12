@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
 import HeroCarousel from '../../components/HeroCarousel';
+import { isBogoProduct, BOGO_SHORT } from '../../lib/offers';
 import PackagingPopup from '../../components/PackagingPopup';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
@@ -108,6 +109,9 @@ function ProductCard({ product }: { product: StaticProduct }) {
 
         <div style={{ padding: '18px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3 }}>{product.name}</h3>
+          {isBogoProduct(product) && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {BOGO_SHORT}</span>
+          )}
           <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {product.tagline}
           </p>
