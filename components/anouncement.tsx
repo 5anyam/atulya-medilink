@@ -21,8 +21,8 @@ export default function AnnouncementBar() {
   if (!isVisible) return null;
 
   const message = mode === 'cosmetics'
-    ? '✦ Free Delivery on orders above ₹499 &nbsp;|&nbsp; Dermatologist Tested &nbsp;|&nbsp; Cruelty Free'
-    : '✦ Free Delivery on orders above ₹499 &nbsp;|&nbsp; GMP Certified &nbsp;|&nbsp; Third-Party Tested';
+    ? '✦ Fast Delivery &nbsp;|&nbsp; Dermatologist Tested &nbsp;|&nbsp; Cruelty Free'
+    : '✦ Fast Delivery &nbsp;|&nbsp; GMP Certified &nbsp;|&nbsp; Third-Party Tested';
 
   return (
     <div

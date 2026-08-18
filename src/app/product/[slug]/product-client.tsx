@@ -470,7 +470,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
             {/* Delivery note */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151', marginBottom: 20, padding: '12px 16px', background: theme.bgLight, border: `1px solid ${theme.border}`, borderRadius: 10 }}>
               <Truck style={{ width: 16, height: 16, color: theme.primary, flexShrink: 0 }} />
-              <span><strong>Free delivery</strong> · Dispatched within 24 hours · Pan-India</span>
+              <span><strong>Fast delivery</strong> · Dispatched within 24 hours · Pan-India</span>
             </div>
 
             {/* Trust Grid */}

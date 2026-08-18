@@ -9,7 +9,7 @@ import { useBrand } from '../../../lib/brand-context';
 
 const OFFER_BANNERS = [
   { emoji: '🎁', title: 'Flat 30% OFF', sub: 'On all face serums', tag: 'Limited Time', color: '#fff7ed', accent: '#ea580c' },
-  { emoji: '🚚', title: 'Free Delivery', sub: 'Orders above ₹499', tag: 'Always On', color: '#f0fdf4', accent: '#16a34a' },
+  { emoji: '🚚', title: 'Fast Delivery', sub: 'Pan-India delivery', tag: 'Always On', color: '#f0fdf4', accent: '#16a34a' },
   { emoji: '💊', title: 'Buy 2 Get 1', sub: 'On nutraceutical range', tag: 'This Week', color: '#f0f9ff', accent: '#0284c7' },
   { emoji: '✨', title: 'New Arrivals', sub: '15% off on first order', tag: 'New Users', color: '#fdf4ff', accent: '#9333ea' },
 ];
@@ -136,7 +136,7 @@ export default function OffersClient({ products }: { products: StaticProduct[] }
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 32px', justifyContent: 'center', alignItems: 'center' }}>
             {[
               { icon: Tag, text: 'Up to 30% OFF on select products' },
-              { icon: Truck, text: 'Free delivery above ₹499' },
+              { icon: Truck, text: 'Fast delivery' },
               { icon: ShieldCheck, text: '100% genuine & certified' },
               { icon: Clock, text: 'Limited time offers' },
             ].map((t, i) => (

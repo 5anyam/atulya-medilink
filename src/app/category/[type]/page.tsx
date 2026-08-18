@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   return {
     title: `${def.label} | Atulya Medilink`,
-    description: `${def.tagline}. Free delivery across India.`,
+    description: `${def.tagline}. Fast delivery across India.`,
     alternates: { canonical: `https://atulyamedilinkpvtltd.com/category/${type}` },
     robots: { index: true, follow: true },
   };

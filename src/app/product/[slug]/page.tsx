@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `${product.name} | Atulya Medilink`;
-  const description = product.tagline || `Buy ${product.name} online. Free delivery across India.`;
+  const description = product.tagline || `Buy ${product.name} online. Fast delivery across India.`;
   const imageUrl = product.images[0];
   const canonical = `https://atulyamedilinkpvtltd.com/product/${product.slug}`;
 

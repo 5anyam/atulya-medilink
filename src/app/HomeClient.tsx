@@ -185,7 +185,7 @@ function OffersBanner() {
 
   const offers = [
     { icon: '🎁', title: 'UP TO 30% OFF', sub: 'Limited-period offers on selected products', tag: 'Limited Time' },
-    { icon: '🚚', title: 'FREE DELIVERY', sub: 'On all orders above ₹499 — pan-India', tag: 'Always On' },
+    { icon: '🚚', title: 'FAST DELIVERY', sub: 'Pan-India, dispatched in 24 hrs', tag: 'Always On' },
     { icon: '🔒', title: '100% AUTHENTIC', sub: 'GMP certified, cruelty-free & lab-tested', tag: 'Guaranteed' },
   ];
 
@@ -268,14 +268,14 @@ function TrustBar() {
         { icon: Leaf, label: 'Natural Ingredients' },
         { icon: ShieldCheck, label: 'Dermatologist Tested' },
         { icon: Heart, label: 'Cruelty Free' },
-        { icon: Truck, label: 'Free Delivery ₹499+' },
+        { icon: Truck, label: 'Fast Delivery' },
         { icon: Award, label: 'No Harmful Chemicals' },
       ]
     : [
         { icon: FlaskConical, label: 'Clinical Grade' },
         { icon: ShieldCheck, label: 'GMP Certified' },
         { icon: BadgeCheck, label: 'Third-Party Tested' },
-        { icon: Truck, label: 'Free Delivery ₹499+' },
+        { icon: Truck, label: 'Fast Delivery' },
         { icon: Package, label: 'Pure Formulas' },
       ];
 
@@ -557,7 +557,7 @@ function CTASection() {
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, flexWrap: 'wrap', marginTop: 36 }}>
-          {['Free Delivery', 'Natural Ingredients', 'Secure Payment', 'Easy Returns'].map((t) => (
+          {['Fast Delivery', 'Natural Ingredients', 'Secure Payment', 'Easy Returns'].map((t) => (
             <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.04em' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: theme.primary, display: 'inline-block' }} /> {t}
             </span>

@@ -148,7 +148,7 @@ function OrderSummary({
         {delivery === 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, padding: '8px 10px', background: 'rgba(204,255,0,0.15)', border: '2px solid rgba(15,17,23,0.15)' }}>
             <Truck style={{ width: 12, height: 12, color: '#0f1117' }} />
-            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#0f1117' }}>Free delivery on orders above ₹500</p>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#0f1117' }}>Fast delivery</p>
           </div>
         )}
       </div>
@@ -163,7 +163,7 @@ export default function Checkout() {
   const router = useRouter();
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price) * i.quantity, 0);
-  const delivery = subtotal >= 500 ? 0 : 50;
+  const delivery = 99; // flat ₹99 delivery charge on every order
   const finalTotal = subtotal + delivery;
 
   const [form, setForm] = useState({ name: '', phone: '', address: '' });

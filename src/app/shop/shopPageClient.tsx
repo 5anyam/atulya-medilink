@@ -264,7 +264,7 @@ export default function ShopPageClient({ products }: Props) {
                 {[
                   { label: productCounts[activeType] + ' Products', sub: 'In stock' },
                   { label: '100% Genuine', sub: 'Certified' },
-                  { label: 'Free Delivery', sub: 'Pan India' },
+                  { label: 'Fast Delivery', sub: 'Pan India' },
                 ].map((item, i) => (
                   <div key={i} className="banner-stat" style={{ textAlign: 'center', padding: '12px 16px', background: '#fff', border: `1px solid ${b.accent}30`, borderRadius: 12, minWidth: 80 }}>
                     <p style={{ fontSize: 13, fontWeight: 800, color: b.accent, lineHeight: 1.2 }}>{item.label}</p>
