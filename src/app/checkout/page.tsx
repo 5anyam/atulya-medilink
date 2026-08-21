@@ -95,13 +95,15 @@ async function updateWooOrder(
 function OrderSummary({
   items,
   total,
+  gst,
   delivery,
 }: {
   items: { id: number; name: string; price: string; quantity: number; images?: { src: string }[]; offer?: boolean }[];
   total: number;
+  gst: number;
   delivery: number;
 }) {
-  const finalTotal = total + delivery;
+  const finalTotal = total + gst + delivery;
   return (
     <div style={{ border: '3px solid #0f1117', background: '#fff', overflow: 'hidden' }}>
       <div style={{ padding: '14px 20px', borderBottom: '3px solid #0f1117', background: '#0f1117' }}>
@@ -133,6 +135,9 @@ function OrderSummary({
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(15,17,23,0.55)' }}>
             <span>Subtotal</span><span>₹{total.toLocaleString()}</span>
           </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(15,17,23,0.55)' }}>
+            <span>GST (5%)</span><span style={{ color: '#0f1117' }}>₹{gst.toFixed(2)}</span>
+          </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
             <span style={{ color: 'rgba(15,17,23,0.55)' }}>Delivery</span>
             {delivery === 0
@@ -163,8 +168,9 @@ export default function Checkout() {
   const router = useRouter();
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price) * i.quantity, 0);
+  const gst = subtotal * 0.05; // 5% GST on the product subtotal
   const delivery = 99; // flat ₹99 delivery charge on every order
-  const finalTotal = subtotal + delivery;
+  const finalTotal = subtotal + gst + delivery;
 
   const [form, setForm] = useState({ name: '', phone: '', address: '' });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
@@ -265,6 +271,8 @@ export default function Checkout() {
         delivery > 0
           ? [{ method_id: 'flat_rate', method_title: 'Standard Delivery', total: delivery.toString() }]
           : [],
+      // GST added as a fee line so the WooCommerce order total matches the amount charged.
+      fee_lines: [{ name: 'GST (5%)', total: gst.toFixed(2), tax_status: 'none' }],
       customer_note: `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}`,
       meta_data: [
         { key: 'customer_name', value: form.name.trim() },
@@ -468,7 +476,7 @@ export default function Checkout() {
 
             {/* RIGHT: Summary */}
             <div className="lg:sticky lg:top-6">
-              <OrderSummary items={items} total={subtotal} delivery={delivery} />
+              <OrderSummary items={items} total={subtotal} gst={gst} delivery={delivery} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12 }}>
                 {[{ icon: ShieldCheck, text: 'Secure' }, { icon: Truck, text: 'Fast' }, { icon: RotateCcw, text: 'Returns' }].map(({ icon: Icon, text }) => (
                   <div key={text} style={{ padding: '10px 8px', background: '#fff', border: '2px solid rgba(15,17,23,0.15)', textAlign: 'center' }}>
