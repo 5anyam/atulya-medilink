@@ -124,8 +124,14 @@ function OrderCard({ order, token, onCancelled }: { order: Order; token: string;
   const [cancelling, setCancelling]     = useState(false);
   const [cancelError, setCancelError]   = useState('');
   const [showConfirm, setShowConfirm]   = useState(false);
+  const [showReturn, setShowReturn]     = useState(false);
+  const [returnReason, setReturnReason] = useState('');
+  const [returning, setReturning]       = useState(false);
+  const [returnError, setReturnError]   = useState('');
+  const [returnDone, setReturnDone]     = useState(false);
 
   const canCancel = ['pending', 'processing', 'on-hold'].includes(order.status);
+  const canReturn = ['completed', 'shipped'].includes(order.status);
   const date = new Date(order.date_created).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
   const total = typeof order.total === 'number' ? order.total.toLocaleString('en-IN') : Number(order.total).toLocaleString('en-IN');
 
@@ -148,6 +154,29 @@ function OrderCard({ order, token, onCancelled }: { order: Order; token: string;
       setCancelError('Network error. Please try again.');
     } finally {
       setCancelling(false);
+    }
+  }
+
+  async function handleReturn() {
+    setReturning(true);
+    setReturnError('');
+    try {
+      const res = await fetch(`/api/orders/${order.id}/return`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: returnReason }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setReturnDone(true);
+        setShowReturn(false);
+      } else {
+        setReturnError(data.message || 'Could not submit request.');
+      }
+    } catch {
+      setReturnError('Network error. Please try again.');
+    } finally {
+      setReturning(false);
     }
   }
 
@@ -224,6 +253,52 @@ function OrderCard({ order, token, onCancelled }: { order: Order; token: string;
                       style={{ padding: '8px 18px', background: '#f4f4f5', color: '#6b7280', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
                     >
                       Keep Order
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Return / Refund request (delivered orders) */}
+          {canReturn && (
+            <div style={{ marginTop: 16 }}>
+              {returnDone ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12 }}>
+                  <span style={{ fontSize: 16 }}>✓</span>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Return request submitted. Our team will contact you within 24–48 hours.</p>
+                </div>
+              ) : !showReturn ? (
+                <button
+                  onClick={() => setShowReturn(true)}
+                  style={{ fontSize: 13, fontWeight: 600, color: '#c2410c', background: '#fff4ef', border: '1px solid #fed7aa', borderRadius: 8, padding: '8px 18px', cursor: 'pointer' }}
+                >
+                  Request Return / Refund
+                </button>
+              ) : (
+                <div style={{ background: '#fff7f2', border: '1px solid #fed7aa', borderRadius: 12, padding: '14px 16px' }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 10 }}>Why do you want to return this order?</p>
+                  <textarea
+                    value={returnReason}
+                    onChange={(e) => setReturnReason(e.target.value)}
+                    rows={2}
+                    placeholder="Reason (e.g. wrong item, damaged product, changed mind)"
+                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', resize: 'none', outline: 'none', boxSizing: 'border-box', marginBottom: 10 }}
+                  />
+                  {returnError && <p style={{ fontSize: 12, color: '#b91c1c', marginBottom: 10 }}>{returnError}</p>}
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button
+                      onClick={handleReturn}
+                      disabled={returning || !returnReason.trim()}
+                      style={{ padding: '8px 18px', background: '#ea580c', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: returning || !returnReason.trim() ? 'not-allowed' : 'pointer', opacity: returning || !returnReason.trim() ? 0.6 : 1 }}
+                    >
+                      {returning ? 'Submitting...' : 'Submit Request'}
+                    </button>
+                    <button
+                      onClick={() => setShowReturn(false)}
+                      style={{ padding: '8px 18px', background: '#f4f4f5', color: '#6b7280', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                    >
+                      Back
                     </button>
                   </div>
                 </div>

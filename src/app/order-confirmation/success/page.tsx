@@ -11,6 +11,7 @@ function SuccessContent() {
   const orderId = searchParams.get('orderId');
   const paymentId = searchParams.get('paymentId');
   const total = searchParams.get('total');
+  const method = searchParams.get('method');
 
   useEffect(() => {
     // Prevent back button
@@ -59,12 +60,16 @@ function SuccessContent() {
               </div>
             </div>
 
-            {paymentId && (
+            {paymentId ? (
               <div className="mt-4 bg-gray-50 rounded-xl p-4">
                 <p className="text-sm text-gray-600 mb-1">Payment ID</p>
                 <p className="text-sm font-mono text-gray-700 break-all">{paymentId}</p>
               </div>
-            )}
+            ) : method === 'cod' ? (
+              <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <p className="text-sm font-semibold text-amber-700">💵 Cash on Delivery — pay ₹{total} when your order arrives.</p>
+              </div>
+            ) : null}
           </div>
 
           {/* Delivery Timeline */}

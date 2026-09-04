@@ -8,7 +8,7 @@ import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
 import { offerFreeUnits, offerTotalUnits, CartOffer } from '../../../lib/offers';
 import { useSiteConfig } from '../../../lib/use-site-config';
-import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap, Package } from 'lucide-react';
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_BuTLIdi7g6nzab';
 
@@ -100,6 +100,8 @@ function OrderSummary({
   gstRate,
   delivery,
   freeAbove,
+  discount,
+  couponCode,
 }: {
   items: { id: number; name: string; price: string; quantity: number; images?: { src: string }[]; offer?: CartOffer }[];
   total: number;
@@ -107,8 +109,10 @@ function OrderSummary({
   gstRate: number;
   delivery: number;
   freeAbove: number;
+  discount: number;
+  couponCode?: string;
 }) {
-  const finalTotal = total + gst + delivery;
+  const finalTotal = Math.max(0, total + gst + delivery - discount);
   const amountToFree = freeAbove > 0 ? Math.max(0, freeAbove - total) : 0;
   return (
     <div style={{ border: '3px solid #0f1117', background: '#fff', overflow: 'hidden' }}>
@@ -153,6 +157,11 @@ function OrderSummary({
               : <span style={{ color: '#0f1117' }}>₹{delivery}</span>
             }
           </div>
+          {discount > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 700, color: '#0D9488' }}>
+              <span>Coupon{couponCode ? ` (${couponCode.toUpperCase()})` : ''}</span><span>− ₹{discount.toFixed(2)}</span>
+            </div>
+          )}
           <div style={{ borderTop: '2px solid #0f1117', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0f1117' }}>Total</span>
             <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, color: '#0D9488', letterSpacing: '0.02em' }}>₹{finalTotal.toLocaleString()}</span>
@@ -176,10 +185,18 @@ function OrderSummary({
 
 // ── Main Checkout ─────────────────────────────────────────────────────────────
 
+type AppliedCoupon = { code: string; discount_type: 'percent' | 'fixed_cart'; amount: number; minimum_amount: number };
+
 export default function Checkout() {
   const { items, clear } = useCart();
   const router = useRouter();
-  const cfg = useSiteConfig(); // shipping / GST / etc. managed from WordPress
+  const cfg = useSiteConfig(); // shipping / GST / offers / COD managed from WordPress
+
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
+  const [couponInput, setCouponInput] = useState('');
+  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponMsg, setCouponMsg] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price) * i.quantity, 0);
   // Delivery: free above the threshold (₹999), otherwise the flat charge (₹99).
@@ -187,7 +204,42 @@ export default function Checkout() {
   const delivery = freeAbove > 0 && subtotal >= freeAbove ? 0 : cfg.shipping.delivery_charge;
   const gstRate = cfg.gst.enabled ? cfg.gst.rate : 0;
   const gst = subtotal * (gstRate / 100);
-  const finalTotal = subtotal + gst + delivery;
+  const discount = coupon && subtotal >= coupon.minimum_amount
+    ? Math.min(coupon.discount_type === 'percent' ? subtotal * (coupon.amount / 100) : coupon.amount, subtotal)
+    : 0;
+  const finalTotal = Math.max(0, subtotal + gst + delivery - discount);
+  const codEnabled = cfg.cod.enabled;
+  const isCod = paymentMethod === 'cod' && codEnabled;
+
+  async function applyCoupon() {
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponMsg('');
+    try {
+      const res = await fetch(`/api/coupon?code=${encodeURIComponent(code)}`);
+      const data = await res.json();
+      if (!data.valid) {
+        setCoupon(null);
+        setCouponMsg(data.error || 'Invalid coupon.');
+      } else if (subtotal < (data.minimum_amount || 0)) {
+        setCoupon(null);
+        setCouponMsg(`Minimum order of ₹${data.minimum_amount} required for this coupon.`);
+      } else {
+        setCoupon({ code: data.code, discount_type: data.discount_type, amount: data.amount, minimum_amount: data.minimum_amount || 0 });
+        setCouponMsg('');
+      }
+    } catch {
+      setCouponMsg('Could not validate coupon. Try again.');
+    }
+    setCouponLoading(false);
+  }
+
+  function removeCoupon() {
+    setCoupon(null);
+    setCouponInput('');
+    setCouponMsg('');
+  }
 
   const [form, setForm] = useState({ name: '', phone: '', address: '' });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
@@ -236,7 +288,7 @@ export default function Checkout() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!validate()) return;
-    if (!rzpLoaded || !window.Razorpay) {
+    if (!isCod && (!rzpLoaded || !window.Razorpay)) {
       toast({ title: 'Payment loading...', description: 'Please wait a moment and try again.' });
       return;
     }
@@ -246,9 +298,9 @@ export default function Checkout() {
     let wooOrder: WooOrder | null = null;
 
     const orderData = {
-      payment_method: 'razorpay',
-      payment_method_title: 'Razorpay',
-      status: 'pending',
+      payment_method: isCod ? 'cod' : 'razorpay',
+      payment_method_title: isCod ? 'Cash on Delivery' : 'Razorpay',
+      status: isCod ? 'processing' : 'pending',
       billing: {
         first_name: form.name.trim(),
         last_name: '',
@@ -288,16 +340,34 @@ export default function Checkout() {
         delivery > 0
           ? [{ method_id: 'flat_rate', method_title: 'Standard Delivery', total: delivery.toString() }]
           : [],
-      // GST added as a fee line so the WooCommerce order total matches the amount charged.
-      fee_lines: gst > 0 ? [{ name: `GST (${gstRate}%)`, total: gst.toFixed(2), tax_status: 'none' }] : [],
+      // GST + coupon as fee lines so the WooCommerce order total matches the charge.
+      fee_lines: [
+        ...(gst > 0 ? [{ name: `GST (${gstRate}%)`, total: gst.toFixed(2), tax_status: 'none' }] : []),
+        ...(discount > 0 && coupon ? [{ name: `Coupon (${coupon.code})`, total: (-discount).toFixed(2), tax_status: 'none' }] : []),
+      ],
       customer_note: `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}`,
       meta_data: [
         { key: 'customer_name', value: form.name.trim() },
         { key: 'customer_phone', value: form.phone.trim() },
         { key: 'delivery_address', value: form.address.trim() },
+        ...(coupon ? [{ key: 'coupon_code', value: coupon.code }] : []),
       ],
     };
 
+    // ── Cash on Delivery: create the order and go straight to success ──
+    if (isCod) {
+      try {
+        wooOrder = await createWooOrder(orderData);
+        clear();
+        router.push(`/order-confirmation/success?orderId=${wooOrder?.id ?? 'N/A'}&total=${finalTotal.toFixed(2)}&method=cod`);
+      } catch {
+        toast({ title: 'Order failed', description: 'Could not place your order. Please try again.', variant: 'destructive' });
+        setLoading(false);
+      }
+      return;
+    }
+
+    // ── Online payment (Razorpay) ──
     // Try creating WooCommerce order — non-fatal so Razorpay always opens
     try {
       wooOrder = await createWooOrder(orderData);
@@ -354,6 +424,7 @@ export default function Checkout() {
         },
       };
 
+      if (!window.Razorpay) throw new Error('Payment system not loaded');
       const rzp = new window.Razorpay(rzpOptions);
       rzp.on('payment.failed', async (response: RazorpayFailure) => {
         paymentHandledRef.current = true;
@@ -451,23 +522,61 @@ export default function Checkout() {
                     <p style={{ fontSize: 10, color: 'rgba(15,17,23,0.4)', marginTop: 6, letterSpacing: '0.04em' }}>Include city, state and pincode for accurate delivery</p>
                   </div>
 
+                  {/* Coupon code */}
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: 'block', fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#0f1117', marginBottom: 8 }}>Coupon Code</label>
+                    {coupon ? (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '11px 14px', border: '2.5px solid #0D9488', background: '#f0fdf9' }}>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: '#0D9488' }}>✓ {coupon.code.toUpperCase()} applied — you save ₹{discount.toFixed(0)}</span>
+                        <button type="button" onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#d95f1a', fontSize: 11, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}>Remove</button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input value={couponInput} onChange={(e) => setCouponInput(e.target.value)} placeholder="Enter code"
+                          style={{ flex: 1, padding: '11px 14px', border: '2.5px solid #0f1117', background: '#faf7f2', color: '#0f1117', fontSize: 13, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', textTransform: 'uppercase' }} />
+                        <button type="button" onClick={applyCoupon} disabled={couponLoading}
+                          style={{ padding: '11px 18px', background: '#0f1117', color: '#fff', border: 'none', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: couponLoading ? 'wait' : 'pointer', flexShrink: 0 }}>
+                          {couponLoading ? '...' : 'Apply'}
+                        </button>
+                      </div>
+                    )}
+                    {couponMsg && <p style={{ color: '#d95f1a', fontSize: 10, marginTop: 6, fontWeight: 600 }}>{couponMsg}</p>}
+                  </div>
+
+                  {/* Payment method (COD toggle from Control Panel) */}
+                  {codEnabled && (
+                    <div style={{ marginBottom: 20 }}>
+                      <label style={{ display: 'block', fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#0f1117', marginBottom: 8 }}>Payment Method</label>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {([['online', 'Pay Online — UPI / Card / Netbanking'], ['cod', 'Cash on Delivery']] as ['online' | 'cod', string][]).map(([val, label]) => (
+                          <label key={val} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', border: `2.5px solid ${paymentMethod === val ? '#0D9488' : '#0f1117'}`, background: paymentMethod === val ? '#f0fdf9' : '#faf7f2', cursor: 'pointer' }}>
+                            <input type="radio" name="paymethod" checked={paymentMethod === val} onChange={() => setPaymentMethod(val)} />
+                            <span style={{ fontSize: 12, fontWeight: 700, color: '#0f1117' }}>{label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Pay Button */}
                   <button
                     type="submit"
-                    disabled={loading || !rzpLoaded}
+                    disabled={loading || (!isCod && !rzpLoaded)}
                     style={{
-                      width: '100%', padding: '16px 20px', background: loading || !rzpLoaded ? 'rgba(15,17,23,0.5)' : '#0D9488',
-                      color: '#fff', border: '2.5px solid #0f1117', boxShadow: loading || !rzpLoaded ? 'none' : '4px 4px 0 #0f1117',
+                      width: '100%', padding: '16px 20px', background: loading || (!isCod && !rzpLoaded) ? 'rgba(15,17,23,0.5)' : '#0D9488',
+                      color: '#fff', border: '2.5px solid #0f1117', boxShadow: loading || (!isCod && !rzpLoaded) ? 'none' : '4px 4px 0 #0f1117',
                       fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase',
-                      cursor: loading || !rzpLoaded ? 'not-allowed' : 'pointer',
+                      cursor: loading || (!isCod && !rzpLoaded) ? 'not-allowed' : 'pointer',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontFamily: 'inherit',
                       transition: 'transform 0.15s, box-shadow 0.15s',
                     }}
-                    onMouseEnter={e => { if (!loading && rzpLoaded) { (e.currentTarget as HTMLElement).style.transform = 'translate(-2px,-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '6px 6px 0 #0f1117'; }}}
+                    onMouseEnter={e => { if (!loading && (isCod || rzpLoaded)) { (e.currentTarget as HTMLElement).style.transform = 'translate(-2px,-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '6px 6px 0 #0f1117'; }}}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = '4px 4px 0 #0f1117'; }}
                   >
                     {loading ? (
                       <><span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid #fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />PROCESSING...</>
+                    ) : isCod ? (
+                      <><Package style={{ width: 16, height: 16 }} />PLACE ORDER · ₹{finalTotal.toLocaleString()} (COD)</>
                     ) : !rzpLoaded ? (
                       <><span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid #fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />LOADING PAYMENT...</>
                     ) : (
@@ -493,7 +602,7 @@ export default function Checkout() {
 
             {/* RIGHT: Summary */}
             <div className="lg:sticky lg:top-6">
-              <OrderSummary items={items} total={subtotal} gst={gst} gstRate={gstRate} delivery={delivery} freeAbove={freeAbove} />
+              <OrderSummary items={items} total={subtotal} gst={gst} gstRate={gstRate} delivery={delivery} freeAbove={freeAbove} discount={discount} couponCode={coupon?.code} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12 }}>
                 {[{ icon: ShieldCheck, text: 'Secure' }, { icon: Truck, text: 'Fast' }, { icon: RotateCcw, text: 'Returns' }].map(({ icon: Icon, text }) => (
                   <div key={text} style={{ padding: '10px 8px', background: '#fff', border: '2px solid rgba(15,17,23,0.15)', textAlign: 'center' }}>

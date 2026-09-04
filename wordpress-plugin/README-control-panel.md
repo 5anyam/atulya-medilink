@@ -37,5 +37,10 @@ Frontend isse padhke apply karta hai (Next.js `/api/site-config` ke through, COR
 
 > Jab tak plugin install nahi, frontend safe defaults use karta hai (₹99 / free above ₹999 / GST 5% / default BOGO on facewash). Kuch tootega nahi.
 
+- **Lucky Customer Coupon Generator**: pick discount type/amount/usage-limit/expiry → **Generate Coupon** → a random code is created (works at checkout instantly). Share it with your lucky customer.
+
+## Returns / Refunds
+Customers can request a return on delivered orders from **My Account** — this adds a note on the order in WooCommerce (WooCommerce → Orders → the order → Order notes). Process the refund there; the order status becomes **Refunded** and the customer sees it in My Account.
+
 ## Aage (roadmap)
-COD checkout flow, coupons, combos, lucky coupon, refunds/returns — agle phases me isi panel me add honge.
+Combos (buy 2 of X + 1 different product free) — a later phase.
