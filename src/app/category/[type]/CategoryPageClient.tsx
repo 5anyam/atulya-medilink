@@ -6,14 +6,17 @@ import Image from 'next/image';
 import { Star, ChevronRight } from 'lucide-react';
 import { StaticProduct } from '../../../../lib/products-data';
 import { useBrand } from '../../../../lib/brand-context';
+import { useSiteConfig } from '../../../../lib/use-site-config';
 import BannerCarousel, { useValidBanners } from '../../../../components/BannerCarousel';
 import { bannerCandidates, legacyBanner } from '../../../../lib/banners';
-import { isBogoProduct, BOGO_SHORT } from '../../../../lib/offers';
+import { matchOffer } from '../../../../lib/offers';
 
 type CatType = 'cosmetics' | 'nutraceuticals' | 'ayurveda';
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
+  const { offers } = useSiteConfig();
+  const offer = matchOffer(product, offers);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;
@@ -36,8 +39,8 @@ function ProductCard({ product }: { product: StaticProduct }) {
       </div>
       <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.25 }}>{product.name}</h3>
-        {isBogoProduct(product) && (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {BOGO_SHORT}</span>
+        {offer && (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {offer.label}</span>
         )}
         <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.tagline}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>

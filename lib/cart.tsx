@@ -1,13 +1,16 @@
 'use client';
 import React, { useContext, createContext, useReducer, useEffect } from "react";
 
+import type { CartOffer } from './offers';
+
 export type Product = {
   id: number;
   name: string;
   price: string;
   regular_price: string;
   images: { src: string }[];
-  offer?: boolean; // true = Buy 1 Get 1 Free (free units shipped, charged for paid qty only)
+  // Buy X Get Y Free offer (from WordPress). Free units shipped; charged for paid qty only.
+  offer?: CartOffer;
 };
 
 export type CartItem = Product & { quantity: number };
@@ -75,7 +78,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) {
-      dispatch({ type: "load", items: JSON.parse(stored) });
+      try {
+        const parsed = JSON.parse(stored) as CartItem[];
+        // Migrate old carts where `offer` was a boolean (Buy 1 Get 2 Free).
+        const items = parsed.map((it) => {
+          const o = it.offer as unknown;
+          if (o === true) return { ...it, offer: { buy: 1, free: 2, label: 'Buy 1 Get 2 Free' } };
+          if (o === false) return { ...it, offer: undefined };
+          return it;
+        });
+        dispatch({ type: "load", items });
+      } catch {
+        /* corrupt cart — ignore */
+      }
     }
   }, []);
 

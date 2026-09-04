@@ -13,7 +13,8 @@ import { StaticProduct, ProductVariation } from '../../../../lib/products-data';
 import { useCart } from '../../../../lib/cart';
 import { toast } from '../../../../hooks/use-toast';
 import { useBrand } from '../../../../lib/brand-context';
-import { isBogoProduct, BOGO_LABEL } from '../../../../lib/offers';
+import { matchOffer, toCartOffer } from '../../../../lib/offers';
+import { useSiteConfig } from '../../../../lib/use-site-config';
 
 const ProductReviews = dynamic(() => import('../../../../components/ProductReviews'), { ssr: false });
 
@@ -206,7 +207,8 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
     ? Math.round(((activeRegularPrice - activePrice) / activeRegularPrice) * 100)
     : 0;
 
-  const bogoEligible = isBogoProduct({ name: product.name, slug: product.slug, category: product.category });
+  const cfg = useSiteConfig();
+  const offer = matchOffer({ name: product.name, slug: product.slug, category: product.category }, cfg.offers);
 
   const handleAddToCart = () => {
     setIsAddingToCart(true);
@@ -214,7 +216,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
     const cartName = selectedVariation
       ? `${product.name} – ${selectedVariation.attributes.map(a => a.option).join(', ')}`
       : product.name;
-    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })), offer: bogoEligible });
+    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })), offer: offer ? toCartOffer(offer) : undefined });
     toast({ title: 'Added to Cart', description: `${product.shortName} added to your cart.` });
     setTimeout(() => setIsAddingToCart(false), 600);
   };
@@ -225,7 +227,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
     const cartName = selectedVariation
       ? `${product.name} – ${selectedVariation.attributes.map(a => a.option).join(', ')}`
       : product.name;
-    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })), offer: bogoEligible });
+    addToCart({ id: cartId, name: cartName, price: activePrice.toString(), regular_price: activeRegularPrice.toString(), images: activeImages.map((src) => ({ src })), offer: offer ? toCartOffer(offer) : undefined });
     router.push('/checkout');
   };
 
@@ -312,13 +314,13 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
               )}
             </div>
 
-            {/* Buy 1 Get 1 Free offer */}
-            {bogoEligible && (
+            {/* Buy X Get Y Free offer (from Control Panel) */}
+            {offer && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, padding: '14px 18px', background: 'linear-gradient(135deg,#fff4ef,#ffe4d8)', border: '2px dashed #ff5f1f', borderRadius: 12 }}>
                 <span style={{ fontSize: 26, lineHeight: 1 }}>🎁</span>
                 <div>
-                  <p style={{ fontSize: 15, fontWeight: 900, color: '#c2410c', letterSpacing: '-0.01em' }}>{BOGO_LABEL}!</p>
-                  <p style={{ fontSize: 12, color: '#7c2d12', lineHeight: 1.4 }}>Pay for 1, get 3 — 2 extra on us. Free units added automatically at cart.</p>
+                  <p style={{ fontSize: 15, fontWeight: 900, color: '#c2410c', letterSpacing: '-0.01em' }}>{offer.label}!</p>
+                  <p style={{ fontSize: 12, color: '#7c2d12', lineHeight: 1.4 }}>Pay for {offer.buy}, get {offer.buy + offer.free} — {offer.free} extra on us. Free units added automatically at cart.</p>
                 </div>
               </div>
             )}

@@ -6,7 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../../../lib/cart';
 import { toast } from '../../../hooks/use-toast';
-import { bogoFreeQty, bogoTotalQty } from '../../../lib/offers';
+import { offerFreeUnits, offerTotalUnits, CartOffer } from '../../../lib/offers';
+import { useSiteConfig } from '../../../lib/use-site-config';
 import { ShieldCheck, Truck, RotateCcw, ChevronRight, Lock, Zap } from 'lucide-react';
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_BuTLIdi7g6nzab';
@@ -96,14 +97,19 @@ function OrderSummary({
   items,
   total,
   gst,
+  gstRate,
   delivery,
+  freeAbove,
 }: {
-  items: { id: number; name: string; price: string; quantity: number; images?: { src: string }[]; offer?: boolean }[];
+  items: { id: number; name: string; price: string; quantity: number; images?: { src: string }[]; offer?: CartOffer }[];
   total: number;
   gst: number;
+  gstRate: number;
   delivery: number;
+  freeAbove: number;
 }) {
   const finalTotal = total + gst + delivery;
+  const amountToFree = freeAbove > 0 ? Math.max(0, freeAbove - total) : 0;
   return (
     <div style={{ border: '3px solid #0f1117', background: '#fff', overflow: 'hidden' }}>
       <div style={{ padding: '14px 20px', borderBottom: '3px solid #0f1117', background: '#0f1117' }}>
@@ -122,7 +128,7 @@ function OrderSummary({
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#0f1117', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</p>
                 <p style={{ fontSize: 10, color: 'rgba(15,17,23,0.45)', letterSpacing: '0.06em' }}>
                   Qty: {item.quantity}
-                  {item.offer && <span style={{ color: '#c2410c', fontWeight: 800 }}> · +{bogoFreeQty(item.quantity)} FREE 🎁</span>}
+                  {item.offer && <span style={{ color: '#c2410c', fontWeight: 800 }}> · +{offerFreeUnits(item.quantity, item.offer)} FREE 🎁</span>}
                 </p>
               </div>
               <p style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 18, color: '#0f1117', flexShrink: 0 }}>
@@ -135,9 +141,11 @@ function OrderSummary({
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(15,17,23,0.55)' }}>
             <span>Subtotal</span><span>₹{total.toLocaleString()}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(15,17,23,0.55)' }}>
-            <span>GST (5%)</span><span style={{ color: '#0f1117' }}>₹{gst.toFixed(2)}</span>
-          </div>
+          {gst > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(15,17,23,0.55)' }}>
+              <span>GST ({gstRate}%)</span><span style={{ color: '#0f1117' }}>₹{gst.toFixed(2)}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
             <span style={{ color: 'rgba(15,17,23,0.55)' }}>Delivery</span>
             {delivery === 0
@@ -150,12 +158,17 @@ function OrderSummary({
             <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, color: '#0D9488', letterSpacing: '0.02em' }}>₹{finalTotal.toLocaleString()}</span>
           </div>
         </div>
-        {delivery === 0 && (
+        {delivery === 0 ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, padding: '8px 10px', background: 'rgba(204,255,0,0.15)', border: '2px solid rgba(15,17,23,0.15)' }}>
             <Truck style={{ width: 12, height: 12, color: '#0f1117' }} />
-            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#0f1117' }}>Fast delivery</p>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: '#0f1117' }}>You got FREE delivery! 🎉</p>
           </div>
-        )}
+        ) : amountToFree > 0 ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, padding: '8px 10px', background: 'rgba(13,148,136,0.08)', border: '2px solid rgba(13,148,136,0.25)' }}>
+            <Truck style={{ width: 12, height: 12, color: '#0D9488' }} />
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.04em', color: '#0f1117' }}>Add ₹{amountToFree.toLocaleString()} more for FREE delivery</p>
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -166,10 +179,14 @@ function OrderSummary({
 export default function Checkout() {
   const { items, clear } = useCart();
   const router = useRouter();
+  const cfg = useSiteConfig(); // shipping / GST / etc. managed from WordPress
 
   const subtotal = items.reduce((s, i) => s + parseFloat(i.price) * i.quantity, 0);
-  const gst = subtotal * 0.05; // 5% GST on the product subtotal
-  const delivery = 99; // flat ₹99 delivery charge on every order
+  // Delivery: free above the threshold (₹999), otherwise the flat charge (₹99).
+  const freeAbove = cfg.shipping.free_above;
+  const delivery = freeAbove > 0 && subtotal >= freeAbove ? 0 : cfg.shipping.delivery_charge;
+  const gstRate = cfg.gst.enabled ? cfg.gst.rate : 0;
+  const gst = subtotal * (gstRate / 100);
   const finalTotal = subtotal + gst + delivery;
 
   const [form, setForm] = useState({ name: '', phone: '', address: '' });
@@ -253,11 +270,11 @@ export default function Checkout() {
         country: 'IN',
       },
       line_items: items.map((item) => {
-        // Buy 1 Get 2 Free: ship 3× the units but charge for the paid qty only.
+        // Buy X Get Y Free: ship all units but charge for the paid qty only.
         if (item.offer) {
           const unit = parseFloat(item.price);
-          const paidAmount = unit * item.quantity;      // what the customer pays
-          const totalUnits = bogoTotalQty(item.quantity); // paid + free
+          const paidAmount = unit * item.quantity;                     // what the customer pays
+          const totalUnits = offerTotalUnits(item.quantity, item.offer); // paid + free
           return {
             product_id: item.id,
             quantity: totalUnits,
@@ -272,7 +289,7 @@ export default function Checkout() {
           ? [{ method_id: 'flat_rate', method_title: 'Standard Delivery', total: delivery.toString() }]
           : [],
       // GST added as a fee line so the WooCommerce order total matches the amount charged.
-      fee_lines: [{ name: 'GST (5%)', total: gst.toFixed(2), tax_status: 'none' }],
+      fee_lines: gst > 0 ? [{ name: `GST (${gstRate}%)`, total: gst.toFixed(2), tax_status: 'none' }] : [],
       customer_note: `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}`,
       meta_data: [
         { key: 'customer_name', value: form.name.trim() },
@@ -476,7 +493,7 @@ export default function Checkout() {
 
             {/* RIGHT: Summary */}
             <div className="lg:sticky lg:top-6">
-              <OrderSummary items={items} total={subtotal} gst={gst} delivery={delivery} />
+              <OrderSummary items={items} total={subtotal} gst={gst} gstRate={gstRate} delivery={delivery} freeAbove={freeAbove} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12 }}>
                 {[{ icon: ShieldCheck, text: 'Secure' }, { icon: Truck, text: 'Fast' }, { icon: RotateCcw, text: 'Returns' }].map(({ icon: Icon, text }) => (
                   <div key={text} style={{ padding: '10px 8px', background: '#fff', border: '2px solid rgba(15,17,23,0.15)', textAlign: 'center' }}>

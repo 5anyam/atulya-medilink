@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useBrand } from '../lib/brand-context';
+import { useSiteConfig } from '../lib/use-site-config';
 
 export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const { theme, mode } = useBrand();
+  const { announcement } = useSiteConfig();
 
   const handleClose = () => {
     setIsAnimating(true);
@@ -18,9 +20,11 @@ export default function AnnouncementBar() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isVisible) return null;
+  if (!isVisible || !announcement.enabled) return null;
 
-  const message = mode === 'cosmetics'
+  // Team-managed text (from Control Panel) wins; otherwise a sensible default.
+  const customText = (announcement.text || '').trim();
+  const defaultMsg = mode === 'cosmetics'
     ? '✦ Fast Delivery &nbsp;|&nbsp; Dermatologist Tested &nbsp;|&nbsp; Cruelty Free'
     : '✦ Fast Delivery &nbsp;|&nbsp; GMP Certified &nbsp;|&nbsp; Third-Party Tested';
 
@@ -39,10 +43,14 @@ export default function AnnouncementBar() {
     >
       <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div style={{ flex: 1 }} />
-        <p
-          style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', letterSpacing: '0.04em' }}
-          dangerouslySetInnerHTML={{ __html: message }}
-        />
+        {customText ? (
+          <p style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', letterSpacing: '0.04em' }}>{customText}</p>
+        ) : (
+          <p
+            style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', letterSpacing: '0.04em' }}
+            dangerouslySetInnerHTML={{ __html: defaultMsg }}
+          />
+        )}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={handleClose}

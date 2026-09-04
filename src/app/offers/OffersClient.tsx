@@ -10,7 +10,7 @@ import { useBrand } from '../../../lib/brand-context';
 const OFFER_BANNERS = [
   { emoji: '🎁', title: 'Flat 30% OFF', sub: 'On all face serums', tag: 'Limited Time', color: '#fff7ed', accent: '#ea580c' },
   { emoji: '🚚', title: 'Fast Delivery', sub: 'Pan-India delivery', tag: 'Always On', color: '#f0fdf4', accent: '#16a34a' },
-  { emoji: '💊', title: 'Buy 2 Get 1', sub: 'On nutraceutical range', tag: 'This Week', color: '#f0f9ff', accent: '#0284c7' },
+  { emoji: '🎁', title: 'Buy 1 Get 2 Free', sub: 'On all face washes', tag: 'Best Deal', color: '#fff4ef', accent: '#ff5f1f' },
   { emoji: '✨', title: 'New Arrivals', sub: '15% off on first order', tag: 'New Users', color: '#fdf4ff', accent: '#9333ea' },
 ];
 

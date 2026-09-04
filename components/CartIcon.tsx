@@ -2,7 +2,7 @@
 
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "../lib/cart";
-import { bogoFreeQty, bogoTotalQty, BOGO_SHORT } from "../lib/offers";
+import { offerFreeUnits, offerTotalUnits } from "../lib/offers";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -145,7 +145,7 @@ export default function CartIcon() {
                           </p>
                           {item.offer && (
                              <span className="inline-flex items-center gap-1 mt-2 bg-orange-50 border border-orange-500 text-orange-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                                🎁 {BOGO_SHORT} · +{bogoFreeQty(item.quantity)} FREE (you get {bogoTotalQty(item.quantity)})
+                                🎁 {item.offer.label} · +{offerFreeUnits(item.quantity, item.offer)} FREE (you get {offerTotalUnits(item.quantity, item.offer)})
                              </span>
                           )}
                        </div>

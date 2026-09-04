@@ -8,6 +8,8 @@ import FacebookPixel from '../../components/FacebookPixel';
 import Script from 'next/script';
 import AnnouncementBar from '../../components/anouncement';
 import SecurityBar from '../../components/SecurityBar';
+import WhatsAppButton from '../../components/WhatsAppButton';
+import FirstOrderPopup from '../../components/FirstOrderPopup';
 import { Suspense } from 'react';
 import Loading from './loading';
 import { AuthProvider } from '../../lib/auth-context';
@@ -88,6 +90,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </main>
                   <Footer />
                 </div>
+                <WhatsAppButton />
+                <FirstOrderPopup />
                 <Suspense fallback={null}>
                   <FacebookPixel pixelId={fbPixelId} />
                 </Suspense>

@@ -10,7 +10,8 @@ import { useBrand } from '../../../lib/brand-context';
 import PackagingPopup from '../../../components/PackagingPopup';
 import BannerCarousel, { useValidBanners } from '../../../components/BannerCarousel';
 import { bannerCandidates, legacyBanner } from '../../../lib/banners';
-import { isBogoProduct, BOGO_SHORT } from '../../../lib/offers';
+import { matchOffer } from '../../../lib/offers';
+import { useSiteConfig } from '../../../lib/use-site-config';
 
 const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
 
@@ -47,8 +48,14 @@ const CONCERNS: Record<string, { label: string; keywords: string[] }> = {
   'oily-skin':      { label: 'Oily Skin',      keywords: ['face wash', 'cleanser', 'wash', 'gel'] },
   'pigmentation':   { label: 'Pigmentation',   keywords: ['serum', 'vitamin c', 'brighten', 'soap'] },
   'sun-protection': { label: 'Sun Protection', keywords: ['serum', 'vitamin c', 'cream', 'spf', 'sun'] },
-  'hair-fall':      { label: 'Hair Fall',      keywords: ['hair', 'shampoo'] },
+  'hair-fall':      { label: 'Hair Fall',      keywords: ['hair', 'shampoo', 'biotin', 'quick grow'] },
   'anti-aging':     { label: 'Anti-Aging',     keywords: ['serum', 'vitamin c', 'cream', 'anti'] },
+  // Nutraceuticals
+  'immunity':       { label: 'Immunity',        keywords: ['immunity', 'multivitamin', 'vitamin c', 'vitamin', 'omega'] },
+  'joint-pain':     { label: 'Joint Pain',      keywords: ['joint', 'pen go', 'glucosamine', 'pain'] },
+  // Ayurveda
+  'digestion':      { label: 'Digestion',       keywords: ['churan', 'karela', 'aloe', 'digest', 'neem jamun', 'naqabj'] },
+  'wellness':       { label: 'Energy & Wellness', keywords: ['shilajit', 'protein', 'ashwagandha', 'whey', 'bcaa', 'pre workout'] },
 };
 
 interface Props {
@@ -57,6 +64,8 @@ interface Props {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
+  const { offers } = useSiteConfig();
+  const offer = matchOffer(product, offers);
   const [showPackagingPopup, setShowPackagingPopup] = useState(false);
   const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
   const discount = product.regularPrice > product.price
@@ -102,8 +111,8 @@ function ProductCard({ product }: { product: StaticProduct }) {
         </div>
         <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.25 }}>{product.name}</h3>
-          {isBogoProduct(product) && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {BOGO_SHORT}</span>
+          {offer && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {offer.label}</span>
           )}
           <p style={{ fontSize: 12, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.tagline}</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>

@@ -1,34 +1,44 @@
-// "Buy 1 Get 2 Free" offer — pay for 1, receive 3 of the same product. Applies
-// to all face washes plus a few specific products. Eligibility is computed when
-// a product is added to the cart (from slug / name / category) and stored on it.
+// Offer engine — offers are configured in WordPress ("Atulya Control Panel" →
+// Offers) and read from the site config. Each offer is "Buy `buy` Get `free`
+// Free" applied to products matched by slug or keyword.
 
-// Free units received per paid unit (2 free per 1 paid → 3 total).
-export const BOGO_FREE_PER_PAID = 2;
+import { Offer } from './site-config';
 
-export const BOGO_LABEL = 'Buy 1 Get 2 Free';
-export const BOGO_SHORT = 'BUY 1 GET 2 FREE';
+// What we store on a cart item (a snapshot of the matched offer).
+export type CartOffer = { buy: number; free: number; label: string };
 
-// Specific non-facewash products that also get the offer.
-export const BOGO_SLUGS = [
-  'aqua-gel-sunscreen-spf-50',
-  'atulya-cucumber-toner',
-  'sun-protector-moisturizer',
-];
-
-/** True if the product qualifies for the Buy 1 Get 1 Free offer. */
-export function isBogoProduct(p: { name?: string; slug?: string; category?: string }): boolean {
-  const slug = (p.slug || '').toLowerCase();
-  if (BOGO_SLUGS.includes(slug)) return true;
-  const hay = `${p.name || ''} ${p.slug || ''} ${p.category || ''}`.toLowerCase();
-  return /face[\s-]*wash/.test(hay);
+/** First enabled offer whose match tokens hit this product, or null. */
+export function matchOffer(
+  product: { name?: string; slug?: string; category?: string },
+  offers: Offer[] | undefined,
+): Offer | null {
+  if (!offers || offers.length === 0) return null;
+  const slug = (product.slug || '').toLowerCase();
+  const hay = `${product.name || ''} ${product.slug || ''} ${product.category || ''}`.toLowerCase();
+  for (const offer of offers) {
+    if (!offer.enabled || offer.free <= 0) continue;
+    const hit = offer.match.some((tok) => tok === slug || (tok.length > 0 && hay.includes(tok)));
+    if (hit) return offer;
+  }
+  return null;
 }
 
-/** Free units the customer receives for a given paid quantity. */
-export function bogoFreeQty(paidQty: number): number {
-  return paidQty * BOGO_FREE_PER_PAID;
+export function toCartOffer(offer: Offer): CartOffer {
+  return { buy: offer.buy, free: offer.free, label: offer.label };
 }
 
-/** Total units delivered (paid + free) for a given paid quantity. */
-export function bogoTotalQty(paidQty: number): number {
-  return paidQty + bogoFreeQty(paidQty);
+/** Free units received for a given paid quantity. */
+export function offerFreeUnits(paidQty: number, offer?: CartOffer | null): number {
+  if (!offer || offer.buy <= 0) return 0;
+  return Math.floor(paidQty / offer.buy) * offer.free;
+}
+
+/** Total units delivered (paid + free). */
+export function offerTotalUnits(paidQty: number, offer?: CartOffer | null): number {
+  return paidQty + offerFreeUnits(paidQty, offer);
+}
+
+/** Short badge text, e.g. "BUY 1 GET 2 FREE". */
+export function offerShort(offer: { buy: number; free: number }): string {
+  return `BUY ${offer.buy} GET ${offer.free} FREE`;
 }

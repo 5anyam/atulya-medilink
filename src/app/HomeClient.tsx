@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { useBrand } from '../../lib/brand-context';
 import { StaticProduct } from '../../lib/products-data';
 import HeroCarousel from '../../components/HeroCarousel';
-import { isBogoProduct, BOGO_SHORT } from '../../lib/offers';
+import { matchOffer } from '../../lib/offers';
+import { useSiteConfig } from '../../lib/use-site-config';
 import PackagingPopup from '../../components/PackagingPopup';
 import {
   Star, ChevronRight, Leaf, ShieldCheck, Truck, Award,
@@ -50,6 +51,8 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
+  const { offers } = useSiteConfig();
+  const offer = matchOffer(product, offers);
   const [showPackagingPopup, setShowPackagingPopup] = useState(false);
   const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
   const discount = product.regularPrice > product.price
@@ -109,8 +112,8 @@ function ProductCard({ product }: { product: StaticProduct }) {
 
         <div style={{ padding: '18px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3 }}>{product.name}</h3>
-          {isBogoProduct(product) && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {BOGO_SHORT}</span>
+          {offer && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, alignSelf: 'flex-start', background: '#fff4ef', border: '1px solid #ff5f1f', color: '#c2410c', fontSize: 9, fontWeight: 800, letterSpacing: '0.04em', padding: '2px 7px', borderRadius: 999, marginBottom: 8 }}>🎁 {offer.label}</span>
           )}
           <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {product.tagline}
@@ -304,6 +307,12 @@ const CONCERNS = [
   { label: 'Sun Protection', emoji: '☀️', color: '#fff7ed', accent: '#ea580c', query: 'sun-protection' },
   { label: 'Hair Fall', emoji: '🌿', color: '#f0fdf4', accent: '#16a34a', query: 'hair-fall' },
   { label: 'Anti-Aging', emoji: '⏳', color: '#fdf2f8', accent: '#9d174d', query: 'anti-aging' },
+  // Nutraceuticals concerns
+  { label: 'Immunity', emoji: '🛡️', color: '#ecfeff', accent: '#0891b2', query: 'immunity' },
+  { label: 'Joint Pain', emoji: '🦵', color: '#eef2ff', accent: '#4f46e5', query: 'joint-pain' },
+  // Ayurveda concerns
+  { label: 'Digestion', emoji: '🍃', color: '#f0fdf4', accent: '#15803d', query: 'digestion' },
+  { label: 'Energy & Wellness', emoji: '⚡', color: '#fefce8', accent: '#ca8a04', query: 'wellness' },
 ];
 
 function ShopByConcern() {
