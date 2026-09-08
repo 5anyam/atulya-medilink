@@ -32,6 +32,7 @@ class Atulya_Control_Panel {
 			'whatsapp_number'          => '918851180015',
 			'whatsapp_message'         => 'Hi, I need help with my order',
 			'cod_enabled'              => 0,
+			'new_packaging'            => 'omega-3-fish-oil, multivitamin-tablets',
 			'popup_enabled'            => 0,
 			'popup_title'              => 'Get 20% OFF your first order',
 			'popup_text'               => 'Use code WELCOME20 at checkout.',
@@ -106,6 +107,7 @@ class Atulya_Control_Panel {
 			'cod' => array(
 				'enabled' => (bool) $c['cod_enabled'],
 			),
+			'new_packaging' => array_values( array_filter( array_map( 'trim', explode( ',', strtolower( (string) $c['new_packaging'] ) ) ) ) ),
 			'popup' => array(
 				'enabled' => (bool) $c['popup_enabled'],
 				'title'   => (string) $c['popup_title'],
@@ -169,6 +171,7 @@ class Atulya_Control_Panel {
 			'whatsapp_number'          => preg_replace( '/[^0-9]/', '', (string) ( $in['whatsapp_number'] ?? '' ) ),
 			'whatsapp_message'         => sanitize_text_field( $in['whatsapp_message'] ?? '' ),
 			'cod_enabled'              => isset( $in['cod_enabled'] ) ? 1 : 0,
+			'new_packaging'            => sanitize_text_field( $in['new_packaging'] ?? '' ),
 			'popup_enabled'            => isset( $in['popup_enabled'] ) ? 1 : 0,
 			'popup_title'              => sanitize_text_field( $in['popup_title'] ?? '' ),
 			'popup_text'               => sanitize_text_field( $in['popup_text'] ?? '' ),
@@ -329,6 +332,15 @@ class Atulya_Control_Panel {
 						<th scope="row">Enable COD</th>
 						<td><label><input type="checkbox" name="cod_enabled" value="1" <?php echo $chk( 'cod_enabled' ); ?> /> Show the Cash on Delivery option at checkout</label>
 						<p class="description">When enabled, customers can place an order with Cash on Delivery instead of paying online.</p></td>
+					</tr>
+				</table>
+
+				<h2 class="title">📦 "New Packaging Coming Soon" Products</h2>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><label>Product slugs</label></th>
+						<td><input type="text" name="new_packaging" value="<?php echo $txt( 'new_packaging' ); ?>" class="large-text" placeholder="omega-3-fish-oil, multivitamin-tablets" />
+						<p class="description">Comma-separated product <b>slugs</b>. These products show a "📦 New Packaging Coming Soon" badge, and a popup opens instead of the product page. Leave empty for none.</p></td>
 					</tr>
 				</table>
 

@@ -14,8 +14,6 @@ import {
   FlaskConical, Heart, Package, BadgeCheck
 } from 'lucide-react';
 
-const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
-
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -51,10 +49,10 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
-  const { offers } = useSiteConfig();
+  const { offers, new_packaging } = useSiteConfig();
   const offer = matchOffer(product, offers);
   const [showPackagingPopup, setShowPackagingPopup] = useState(false);
-  const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
+  const isNewPackaging = new_packaging.includes(product.slug);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;

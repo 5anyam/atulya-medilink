@@ -22,6 +22,7 @@ Frontend isse padhke apply karta hai (Next.js `/api/site-config` ke through, COR
 - **Announcement bar**: on/off + text (jaise "✦ Rakhi Special — Flat 20% Off"). → live on top bar. *(khali chhodo to default)*
 - **WhatsApp button**: on/off + number + message. → floating button site pe.
 - **First-order popup**: on/off + title + text + coupon code. → naye visitor ko ek baar dikhta hai.
+- **New Packaging Coming Soon products**: comma-separated product slugs. → in products pe "📦 New Packaging Coming Soon" badge + popup (product page ke bajaye).
 - **COD**: on/off toggle. *(checkout flow Phase 4 me wire hoga)*
 - **Offers (Buy X Get Y Free)**: 6 rows. Har offer me — Match (products ke slug/keyword, comma se), Buy, Free. → product page, cards, cart, drawer, checkout sab jagah apne aap.
 

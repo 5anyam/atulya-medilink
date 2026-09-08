@@ -13,8 +13,6 @@ import { bannerCandidates, legacyBanner } from '../../../lib/banners';
 import { matchOffer } from '../../../lib/offers';
 import { useSiteConfig } from '../../../lib/use-site-config';
 
-const NEW_PACKAGING_SLUGS = ['omega-3-fish-oil', 'multivitamin-tablets'];
-
 // Category hero banner images — same as the home page HeroCarousel, per category
 // Banners are managed from WordPress (Atulya Banner Manager plugin). `src` is the
 // fixed link the plugin overwrites on upload; `fallback` is the previous image,
@@ -64,10 +62,10 @@ interface Props {
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
-  const { offers } = useSiteConfig();
+  const { offers, new_packaging } = useSiteConfig();
   const offer = matchOffer(product, offers);
   const [showPackagingPopup, setShowPackagingPopup] = useState(false);
-  const isNewPackaging = NEW_PACKAGING_SLUGS.includes(product.slug);
+  const isNewPackaging = new_packaging.includes(product.slug);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;

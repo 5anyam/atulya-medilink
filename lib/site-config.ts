@@ -10,6 +10,7 @@ export type SiteConfig = {
   announcement: { enabled: boolean; text: string };
   whatsapp: { enabled: boolean; number: string; message: string };
   cod: { enabled: boolean };
+  new_packaging: string[];
   popup: { enabled: boolean; title: string; text: string; code: string };
   offers: Offer[];
 };
@@ -31,6 +32,7 @@ export const DEFAULT_CONFIG: SiteConfig = {
   announcement: { enabled: true, text: '' },
   whatsapp: { enabled: true, number: '918851180015', message: 'Hi, I need help with my order' },
   cod: { enabled: false },
+  new_packaging: ['omega-3-fish-oil', 'multivitamin-tablets'],
   popup: { enabled: false, title: 'Get 20% OFF your first order', text: 'Use code WELCOME20 at checkout.', code: 'WELCOME20' },
   offers: DEFAULT_OFFERS,
 };
@@ -61,6 +63,9 @@ export function normalizeConfig(raw: unknown): SiteConfig {
       message: str(c.whatsapp?.message, DEFAULT_CONFIG.whatsapp.message),
     },
     cod: { enabled: bool(c.cod?.enabled, DEFAULT_CONFIG.cod.enabled) },
+    new_packaging: Array.isArray(c.new_packaging)
+      ? c.new_packaging.map((s) => String(s).trim().toLowerCase()).filter(Boolean)
+      : DEFAULT_CONFIG.new_packaging,
     popup: {
       enabled: bool(c.popup?.enabled, DEFAULT_CONFIG.popup.enabled),
       title: str(c.popup?.title, DEFAULT_CONFIG.popup.title),
