@@ -43,7 +43,8 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const fbPixelId = '1366996188303432';
-  const gtagId = 'AW-17423083060';
+  const gtagId = 'AW-17423083060';       // Google Ads
+  const ga4Id = 'G-1CB6JEJYMB';          // Google Analytics 4
 
   return (
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${gtagId}');
+            gtag('config', '${ga4Id}');
           `}
         </Script>
         <noscript>
