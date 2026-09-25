@@ -209,6 +209,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
 
   const cfg = useSiteConfig();
   const offer = matchOffer({ name: product.name, slug: product.slug, category: product.category }, cfg.offers);
+  const isNewPackaging = cfg.new_packaging.includes(product.slug);
 
   const handleAddToCart = () => {
     setIsAddingToCart(true);
@@ -313,6 +314,17 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                 </div>
               )}
             </div>
+
+            {/* New packaging notice (from Control Panel) */}
+            {isNewPackaging && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, padding: '14px 18px', background: '#fffbeb', border: '2px solid #f59e0b', borderRadius: 12 }}>
+                <span style={{ fontSize: 26, lineHeight: 1 }}>📦</span>
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 900, color: '#b45309' }}>New Packaging Coming Soon!</p>
+                  <p style={{ fontSize: 12, color: '#78350f', lineHeight: 1.4 }}>This product is getting a fresh new look. You may receive either the current or the new packaging — the product inside is exactly the same.</p>
+                </div>
+              </div>
+            )}
 
             {/* Buy X Get Y Free offer (from Control Panel) */}
             {offer && (

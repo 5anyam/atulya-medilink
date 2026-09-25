@@ -107,7 +107,7 @@ class Atulya_Control_Panel {
 			'cod' => array(
 				'enabled' => (bool) $c['cod_enabled'],
 			),
-			'new_packaging' => array_values( array_filter( array_map( 'trim', explode( ',', strtolower( (string) $c['new_packaging'] ) ) ) ) ),
+			'new_packaging' => self::clean_slugs( $c['new_packaging'] ),
 			'popup' => array(
 				'enabled' => (bool) $c['popup_enabled'],
 				'title'   => (string) $c['popup_title'],
@@ -117,6 +117,20 @@ class Atulya_Control_Panel {
 			'offers' => self::offers_for_api( $c ),
 		);
 		return rest_ensure_response( $data );
+	}
+
+	/** "slug", "product/slug" or a full URL → just the slug. */
+	private static function clean_slugs( $csv ) {
+		$out = array();
+		foreach ( explode( ',', strtolower( (string) $csv ) ) as $item ) {
+			$item  = trim( preg_replace( '#^https?://[^/]+#', '', trim( $item ) ) );
+			$item  = strtok( $item, '?' );
+			$parts = array_values( array_filter( explode( '/', (string) $item ) ) );
+			if ( $parts ) {
+				$out[] = sanitize_title( end( $parts ) );
+			}
+		}
+		return array_values( array_unique( array_filter( $out ) ) );
 	}
 
 	/** Normalize stored offers into a clean list for the API. */
@@ -340,7 +354,7 @@ class Atulya_Control_Panel {
 					<tr>
 						<th scope="row"><label>Product slugs</label></th>
 						<td><input type="text" name="new_packaging" value="<?php echo $txt( 'new_packaging' ); ?>" class="large-text" placeholder="omega-3-fish-oil, multivitamin-tablets" />
-						<p class="description">Comma-separated product <b>slugs</b>. These products show a "📦 New Packaging Coming Soon" badge, and a popup opens instead of the product page. Leave empty for none.</p></td>
+						<p class="description">Comma-separated product <b>slugs</b> (you can also paste the product URL — e.g. <code>/product/omega-3-fish-oil</code> — it is cleaned automatically). These products show a "📦 New Packaging Coming Soon" badge, and a popup opens instead of the product page. Leave empty for none.</p></td>
 					</tr>
 				</table>
 

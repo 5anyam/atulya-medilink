@@ -107,6 +107,7 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
                 { name: 'About Us', to: '/about' },
+                { name: 'Blog', to: '/blog' },
                 { name: 'Contact Us', to: '/contact' },
                 { name: 'Privacy Policy', to: '/privacy-policy' },
                 { name: 'Terms & Conditions', to: '/terms-and-conditions' },

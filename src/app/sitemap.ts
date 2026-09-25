@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { fetchProducts } from '../../lib/woocommerceApi';
+import { fetchPosts } from '../../lib/blog';
 
 export const revalidate = 3600;
 
-const SITE = 'https://atulyamedilinkpvtltd.shop';
+const SITE = 'https://www.atulyamedilinkpvtltd.shop';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -15,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE}/category/nutraceuticals`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE}/category/ayurveda`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE}/offers`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${SITE}/blog`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${SITE}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE}/disclaimer`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
@@ -37,5 +39,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     productPages = [];
   }
 
-  return [...staticPages, ...productPages];
+  // Blog posts from WordPress (best-effort).
+  let blogPages: MetadataRoute.Sitemap = [];
+  try {
+    const { posts } = await fetchPosts({ perPage: 100 });
+    blogPages = posts.map((p) => ({
+      url: `${SITE}/blog/${p.slug}`,
+      lastModified: new Date(p.modified),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
+  } catch {
+    blogPages = [];
+  }
+
+  return [...staticPages, ...productPages, ...blogPages];
 }

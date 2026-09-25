@@ -28,6 +28,7 @@ const navItems: NavItem[] = [
     ],
   },
   { name: 'Offers', to: '/offers', highlight: true },
+  { name: 'Blog', to: '/blog' },
   { name: 'About', to: '/about' },
   { name: 'Contact', to: '/contact' },
 ];

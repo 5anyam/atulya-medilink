@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, ChevronRight } from 'lucide-react';
@@ -10,20 +10,32 @@ import { useSiteConfig } from '../../../../lib/use-site-config';
 import BannerCarousel, { useValidBanners } from '../../../../components/BannerCarousel';
 import { bannerCandidates, legacyBanner } from '../../../../lib/banners';
 import { matchOffer } from '../../../../lib/offers';
+import PackagingPopup from '../../../../components/PackagingPopup';
 
 type CatType = 'cosmetics' | 'nutraceuticals' | 'ayurveda';
 
 function ProductCard({ product }: { product: StaticProduct }) {
   const { theme } = useBrand();
-  const { offers } = useSiteConfig();
+  const { offers, new_packaging } = useSiteConfig();
   const offer = matchOffer(product, offers);
+  const isNewPackaging = new_packaging.includes(product.slug);
+  const [showPackagingPopup, setShowPackagingPopup] = useState(false);
   const discount = product.regularPrice > product.price
     ? Math.round(((product.regularPrice - product.price) / product.regularPrice) * 100)
     : 0;
 
   return (
+    <>
+    {showPackagingPopup && (
+      <PackagingPopup
+        productName={product.name}
+        productHref={`/product/${product.slug}`}
+        onClose={() => setShowPackagingPopup(false)}
+      />
+    )}
     <Link
       href={`/product/${product.slug}`}
+      onClick={(e) => { if (isNewPackaging) { e.preventDefault(); setShowPackagingPopup(true); } }}
       style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12, overflow: 'hidden', transition: 'transform 0.25s, box-shadow 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
       onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = `0 12px 32px rgba(${theme.primaryRgb},0.15)`; }}
       onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
@@ -35,6 +47,11 @@ function ProductCard({ product }: { product: StaticProduct }) {
         )}
         {discount > 0 && (
           <span style={{ position: 'absolute', top: 12, right: 12, background: '#111', color: '#fff', fontSize: 9, fontWeight: 700, padding: '4px 8px', borderRadius: 4 }}>{discount}% OFF</span>
+        )}
+        {isNewPackaging && (
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#d97706', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px', textAlign: 'center' }}>
+            📦 New Packaging Coming Soon
+          </div>
         )}
       </div>
       <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -66,6 +83,7 @@ function ProductCard({ product }: { product: StaticProduct }) {
         </div>
       </div>
     </Link>
+    </>
   );
 }
 

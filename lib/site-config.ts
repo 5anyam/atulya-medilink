@@ -64,7 +64,7 @@ export function normalizeConfig(raw: unknown): SiteConfig {
     },
     cod: { enabled: bool(c.cod?.enabled, DEFAULT_CONFIG.cod.enabled) },
     new_packaging: Array.isArray(c.new_packaging)
-      ? c.new_packaging.map((s) => String(s).trim().toLowerCase()).filter(Boolean)
+      ? c.new_packaging.map(cleanSlug).filter(Boolean)
       : DEFAULT_CONFIG.new_packaging,
     popup: {
       enabled: bool(c.popup?.enabled, DEFAULT_CONFIG.popup.enabled),
@@ -90,6 +90,12 @@ function normalizeOffer(raw: unknown): Offer | null {
     buy: Math.max(1, num(o.buy, 1)),
     free: Math.max(0, num(o.free, 0)),
   };
+}
+
+/** Accepts a slug, "product/slug" or a full product URL and returns just the slug. */
+export function cleanSlug(v: unknown): string {
+  const raw = String(v ?? '').trim().toLowerCase().replace(/^https?:\/\/[^/]+/, '').split('?')[0];
+  return raw.split('/').filter(Boolean).pop() ?? '';
 }
 
 function num(v: unknown, d: number) { const n = Number(v); return Number.isFinite(n) ? n : d; }
